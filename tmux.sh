@@ -1,15 +1,16 @@
 #!/bin/bash
 
 sudo pacman -S tmux
-git clone git@github.com:erikw/tmux-powerline.git
 
 cd tmux
+git clone git@github.com:DrPandemic/tmux-powerline.git
 
 tmuxfolder="$(pwd)/"
 tmuxconf="$(pwd)/tmux.conf"
 tmuxpowerline="$(pwd)/tmux-powerlinerc"
+echo $HOME
 ln -s $tmuxfolder $HOME/.config/tmux
-ln -s $tmux $HOME/.tmux.conf
-ln -s $tmuxpowerlinerc $HOME/.tmux-powerlinerc
+ln -s $tmuxconf $HOME/.tmux.conf
+ln -s $tmuxpowerline $HOME/.tmux-powerlinerc
 
 cd ..

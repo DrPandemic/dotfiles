@@ -7,4 +7,4 @@ bash nvim.sh
 bash zsh.sh
 
 # Tmux
-
+bash tmux.sh
