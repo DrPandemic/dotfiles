@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo pacman -S neovim
+yaourt -S python2-neovim
 
 cd nvim
 vim="$(pwd)/"
