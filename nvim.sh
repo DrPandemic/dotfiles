@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# NVIM
 sudo pacman -S neovim
 
 cd nvim

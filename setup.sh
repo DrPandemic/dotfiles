@@ -5,3 +5,6 @@ bash nvim.sh
 
 # ZSH
 bash zsh.sh
+
+# Tmux
+
