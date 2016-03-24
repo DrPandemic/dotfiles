@@ -12,6 +12,7 @@ Plug 'easymotion/vim-easymotion'
 
 " Features
 Plug 'terryma/vim-multiple-cursors'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " Theme
 Plug 'junegunn/seoul256.vim'
@@ -29,19 +30,21 @@ Plug 'tmhedberg/matchit'
 " Web
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'Valloric/MatchTagAlways'
+Plug 'mattn/emmet-vim'
 " JS
 Plug 'pangloss/vim-javascript'
 Plug 'marijnh/tern_for_vim'
-" Web
-Plug 'mattn/emmet-vim'
 " Elixir
 Plug 'elixir-lang/vim-elixir'
 " Scala
 Plug 'derekwyatt/vim-scala'
+" Typescript
+Plug 'leafgarland/typescript-vim'
+Plug 'Quramy/tsuquyomi'
 
 " Linter
 Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --tern-completer' }
 
 " Ctags
 Plug 'xolox/vim-misc'
@@ -174,8 +177,24 @@ let g:syntastic_disabled_filetypes = ['erb', 'rb']
 let g:syntastic_ignore_files = ['*.erb', '*.rb']
 
 " YCM
+let g:ycm_path_to_python_interpreter = '/usr/bin/python3'
 let g:ycm_key_list_select_completion = ['<Down>']
 autocmd FileType javascript setlocal omnifunc=tern#Complete
+let g:ycm_semantic_triggers =  {
+            \   'c' : ['->', '.'],
+            \   'objc' : ['->', '.'],
+            \   'ocaml' : ['.', '#'],
+            \   'cpp,objcpp' : ['->', '.', '::'],
+            \   'perl' : ['->'],
+            \   'php' : ['->', '::', '"', "'", 'use ', 'namespace ', '\'],
+            \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+            \   'html': ['<', '"', '</', ' '],
+            \   'vim' : ['re![_a-za-z]+[_\w]*\.'],
+            \   'ruby' : ['.', '::'],
+            \   'lua' : ['.', ':'],
+            \   'erlang' : [':'],
+            \   'haskell' : ['.', 're!.']
+            \ }
 
 " Ctags
 let g:easytags_languages = {
