@@ -9,6 +9,8 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'bkad/CamelCaseMotion'
 Plug 'easymotion/vim-easymotion'
+" Tmux
+Plug 'christoomey/vim-tmux-navigator'
 
 " Features
 Plug 'terryma/vim-multiple-cursors'
@@ -16,7 +18,6 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " Theme
 Plug 'junegunn/seoul256.vim'
-" Plug 'edkolev/tmuxline.vim'
 Plug 'bling/vim-airline'
 Plug 'nefo-mi/nyan-modoki.vim'
 
@@ -40,11 +41,10 @@ Plug 'elixir-lang/vim-elixir'
 Plug 'derekwyatt/vim-scala'
 " Typescript
 Plug 'leafgarland/typescript-vim'
-Plug 'Quramy/tsuquyomi'
 
 " Linter
 Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --tern-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --system-libclang --tern-completer' }
 
 " Ctags
 Plug 'xolox/vim-misc'
@@ -69,12 +69,6 @@ nmap <silent> <C-R> :CtrlPBufTag<CR>
 " Errors
 nmap <silent> <C-M> :lprev<CR>
 nmap <silent> <C-N> :lnext<CR>
-
-" Panes
-noremap <C-J> <C-W>j
-noremap <C-K> <C-W>k
-noremap <C-L> <C-W>l
-noremap <C-H> <C-W>h
 
 " Save
 cnoreabbrev W w
@@ -195,6 +189,9 @@ let g:ycm_semantic_triggers =  {
             \   'erlang' : [':'],
             \   'haskell' : ['.', 're!.']
             \ }
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
+
 
 " Ctags
 let g:easytags_languages = {
