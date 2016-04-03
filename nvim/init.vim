@@ -170,6 +170,8 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_disabled_filetypes = ['erb', 'rb']
 let g:syntastic_ignore_files = ['*.erb', '*.rb']
 
+let g:typescript_compiler_options  = "--experimentalDecorators"
+
 " YCM
 let g:ycm_path_to_python_interpreter = '/usr/bin/python3'
 let g:ycm_key_list_select_completion = ['<Down>']

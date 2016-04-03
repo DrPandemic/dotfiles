@@ -18,7 +18,7 @@ alias htop TERM=screen htop
 
 if [[ -z $TMUX ]]; then
   if [[ -n $XAUTHORITY ]] then
-    tmux -a || tmux
+    tmux a || tmux
   fi
 fi
 
