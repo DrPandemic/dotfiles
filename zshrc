@@ -15,6 +15,7 @@ export TERM='screen-256color'
 source /usr/share/nvm/init-nvm.sh
 source /usr/share/pvm/init-pvm.sh
 alias htop TERM=screen htop
+alias x=startx
 
 if [[ -z $TMUX ]]; then
   if [[ -n $XAUTHORITY ]] then
