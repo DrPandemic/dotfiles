@@ -43,6 +43,8 @@ values."
      perspectives
      react
      scala
+     java
+     racket
      (colors :variables colors-enable-nyan-cat-progress-bar t)
      )
    ;; List of additional packages that will be installed without being
@@ -103,7 +105,7 @@ values."
                                :size 16
                                :weight normal
                                :width normal
-                               :powerline-scale 1.3)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -222,12 +224,55 @@ user code."
   (global-linum-mode nil)
   (linum-relative-toggle)
 
-  (setq powerline-default-separator 'nil)
-  (flycheck-pos-tip-mode)
+  ;; Powerline
   (fancy-battery-mode)
   (spacemacs/toggle-mode-line-minor-modes-off)
+  (setq powerline-default-separator 'nil)
+  (spaceline-compile)
+
+  ;; Flycheck
+  (flycheck-pos-tip-mode)
+  (flycheck-display-error-at-point)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+
+  ;; auto-complete
+  (global-company-mode)
+  (let ((map company-active-map))
+    ;; use TAB to auto-complete instead of RET
+    (define-key map [return] 'nil)
+    (define-key map (kbd "RET") 'nil)
+    (define-key map [tab] 'company-complete)
+    (define-key map (kbd "TAB") 'company-complete-selection)
+    (define-key map (kbd "<tab>") 'company-complete-selection))
+
+  ;; evil save
+  (evil-ex-define-cmd "W" 'save-buffer)
+
+  ;; misc
   (add-hook 'hack-local-variables-hook (lambda () (setq truncate-lines t)))
+
+  ;; java
+  (setq eclim-eclipse-dirs "/usr/lib/eclipse/"
+        eclim-executable "/usr/lib/eclipse/eclim")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(magit-commit-arguments
+   (quote
+    ("--verbose" "--gpg-sign=DrPandemic <bipbip500@gmail.com>")))
+ '(package-selected-packages
+   (quote
+    (company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
