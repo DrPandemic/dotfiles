@@ -59,6 +59,12 @@ values."
    ;; the list `dotspacemacs-configuration-layers'. (default t)
    dotspacemacs-delete-orphan-packages t))
 
+(defun dotspacemacs/config ()
+  (setq-default
+   flycheck-scalastyle-jar "~/bin/scalastyle_2.11-0.6.0.jar"
+   )
+  )
+
 (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
@@ -75,9 +81,9 @@ values."
    dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
-   ;; Specify the startup banner. Default value is `official', it displays
+   ;; Specify the startup banner. Default value is `offlanguage withicial', it displays
    ;; the official spacemacs logo. An integer value is the index of text
-   ;; banner, `random' chooses a random text banner in `core/banners'
+   ;; banner, `random' choosCloudes a random text banner in `core/banners'
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
@@ -237,6 +243,7 @@ user code."
 
   ;; auto-complete
   (global-company-mode)
+  (setq company-minimum-prefix-length 1)
   (let ((map company-active-map))
     ;; use TAB to auto-complete instead of RET
     (define-key map [return] 'nil)
