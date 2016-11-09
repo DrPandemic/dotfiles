@@ -17,6 +17,7 @@ export NVM_DIR="$HOME/.nvm"
 source /usr/share/pvm/init-pvm.sh
 alias htop TERM=screen htop
 alias x=startx
+alias gclean='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'
 
 eval "$(ntfy shell-integration)"
 
