@@ -1,0 +1,206 @@
+;
+; this config is written for an unreleased version (lemonbuddy "2.0-beta" branch)
+; it might need some tweaking to run on the latest released version... try for yourself
+;
+
+[global/wm]
+margin-top = 5
+margin-bottom = 0
+
+[bar/top]
+width = 100%
+height = 20
+offset-x = 0
+offset-y = 0
+
+background = #ee222222
+foreground = #ccfafafa
+linecolor = #666
+
+border-bottom = 2
+border-bottom-color = #333
+
+spacing = 1
+lineheight = 1
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = fixed:pixelsize=10;0
+font-1 = unifont:size=6;-1
+font-2 = siji:pixelsize=10;0
+
+; modules-left = cpu memory
+modules-center = xwindow
+modules-right = volume cpu memory wifi wired temperature battery date powermenu
+
+tray-position = left
+
+
+[module/xwindow]
+type = internal/xwindow
+label = %title%
+label-maxlen = 30
+parent = true
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+label = %{F#666}%{F#cc} %percentage%
+label-underline = #000000
+
+
+[module/memory]
+type = internal/memory
+interval = 2
+label = %{F#665}%{F#cc} %percentage_used%
+label-underline = #000000
+
+
+[module/wifi]
+type = internal/network
+interface = wlp3s0
+interval = 3.0
+;udspeed-minwidth = 3
+
+format-connected = <ramp-signal> <label-connected>
+;label-connected = %essid% %{F#66}%local_ip%
+label-connected = %{F#666}%{F#cc} %upspeed% %{F#666}%{F#cc} %downspeed%  %essid%
+;label-connected = %{O-6 F#666}%{O2 F#cc}%downspeed%
+label-disconnected = %{F#666}%{F#cc}
+label-disconnected-foreground = #66
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = #666
+
+
+[module/wired]
+type = internal/network
+interface = enp10s0
+interval = 3.0
+
+label-connected = %{T3}%local_ip%%{T-}
+label-disconnected =
+label-disconnected-foreground = #66
+
+
+[module/date]
+type = internal/date
+date = %%{F#666}%{F#cc} %Y-%m-%d  %%{F#cc}%%{F#cc} %H:%M
+date-alt = %%{F#666}%{F#cc} %Y-%m-%d  %%{F#e60053}%%{F#cc} %H:%M:%S
+interval = 5
+
+
+[module/backlight]
+type = internal/backlight
+card = intel_backlight
+format = <ramp> <label>
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = #666
+
+
+[module/battery]
+type = internal/battery
+full-at = 98
+
+format-charging = <animation-charging> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+format-full = %{F#666}%{F#cc}  <label-full>
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-foreground = #666
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-foreground = #666
+animation-charging-framerate = 750
+battery = BAT0
+adapter = ADP0
+
+
+[module/powermenu]
+type = custom/menu
+
+label-open = 
+label-open-foreground = #cc
+label-close =  cancel
+label-close-foreground = #e60053
+label-separator = |
+label-separator-foreground = #55
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = reboot
+
+menu-2-0 = power off
+menu-2-0-exec = poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 80
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+format-warn-underline = #f50a4d
+
+label = %temperature%
+label-warn = %temperature%
+label-warn-foreground = #e60053
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = #55
+
+
+[module/volume]
+type = internal/volume
+
+format-volume = <label-volume> <bar-volume>
+
+label-volume = VOL
+label-volume-foreground = ${root.foreground}
+
+label-muted =  sound muted
+label-muted-foreground = #55
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = │
+bar-volume-indicator-font = 2
+bar-volume-indicator-foreground = #ff
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = #55
