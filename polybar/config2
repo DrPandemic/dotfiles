@@ -44,12 +44,13 @@ font-0 = fixed:pixelsize=10;0
 font-1 = unifont:size=6:heavy:fontformat=truetype;-2
 font-2 = siji:pixelsize=10;0
 
-modules-left = bspwm mpd
-modules-center = xwindow
-modules-right = backlight volume memory cpu wlan eth battery temperature date powermenu
+;modules-left = bspwm mpd
+;modules-center = xwindow
+modules-right = volume
+;memory cpu battery temperature date powermenu
 
-tray-position = right
-tray-padding = 2
+;tray-position = right
+;tray-padding = 2
 ;tray-transparent = true
 ;tray-background = #0063ff
 
