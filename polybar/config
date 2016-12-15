@@ -33,11 +33,12 @@ font-0 = fixed:pixelsize=10;0
 font-1 = unifont:size=6;-1
 font-2 = siji:pixelsize=10;0
 
+tray-position = left
+y-transparent = true
+
 ; modules-left = cpu memory
 modules-center = xwindow
 modules-right = volume cpu memory wifi wired temperature battery date powermenu
-
-tray-position = left
 
 
 [module/xwindow]
