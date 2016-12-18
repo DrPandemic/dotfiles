@@ -1,0 +1,8 @@
+#!/bin/sh
+
+xrandr --output HDMI1 --auto --right-of LVDS1
+setxkbmap -layout us,ca -variant ,fr
+setxkbmap -option 'grp:rctrl_rshift_toggle'
+xmodmap ~/.xmodmap
+
+~/.config/polybar/launch.sh
