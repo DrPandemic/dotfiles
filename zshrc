@@ -10,6 +10,7 @@ export TERM='screen-256color'
 export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PATH="$PATH:$HOME/.nvm/versions/node/v7.0.0/bin" # Add NVM to PATH for scripting
+export PATH="$PATH:$HOME/bin"
 alias htop TERM=screen htop
 alias x=startx
 alias gclean='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'
