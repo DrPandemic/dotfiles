@@ -121,14 +121,15 @@ bindsym $mod+Control+Left move workspace to output left
 bindsym $mod+Control+Right move workspace to output right
 
 # By default, no border
-new_window none
+new_window pixel 5
+hide_edge_borders smart
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exinit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Launch lockscreen
 bindsym $mod+Control+l exec "i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u"
@@ -137,10 +138,15 @@ bindsym $mod+Control+l exec "i3lock -i /home/parasithe/Pictures/lockscreen.png -
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+
+bindsym Print exec gnome-screenshot -ca
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -171,8 +177,17 @@ bindsym $mod+r mode "resize"
 # Custom execs
 exec configure-x
 exec feh --randomize --bg-fill ~/Pictures/Wallpapers/*
+exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
+exec --no-startup-id nm-applet
 
 #i3-gaps
 gaps inner 10
 gaps outer 5
 smart_gaps on
+
+# Workspaces
+assign [class="Chromium"] 1
+# assign [class="Gnome-terminal"] 2
+assign [class="Emacs"] 3
+assign [class="Franz"] 4
+assign [class="Thunderbird"] 4
