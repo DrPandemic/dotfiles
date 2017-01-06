@@ -45,6 +45,7 @@ values."
      java
      racket
      javascript
+     csharp
      (colors :variables colors-enable-nyan-cat-progress-bar t)
      (markdown :variables markdown-live-preview-engine 'vmd)
      )
@@ -63,6 +64,9 @@ values."
 (defun dotspacemacs/config ()
   (setq-default
    flycheck-scalastyle-jar "~/bin/scalastyle_2.11-0.6.0.jar"
+   )
+  (setq-default
+   omnisharp-server-executable-path "/opt/omnisharp-roslyn/OmniSharp.exe"
    )
   )
 
@@ -215,13 +219,13 @@ user code."
 
 (defun dotspacemacs/user-config ()
   ;; js2 mode
- ;; (setq flycheck-eslintrc "~/.eslintrc")
+  (setq flycheck-eslintrc "~/.eslintrc")
   (setq flycheck-checkers '(javascript-eslint))
   ;; disable jshint since we prefer eslint checking
   (setq-default flycheck-disabled-checkers
                 (append flycheck-disabled-checkers
                         '(javascript-jshint)))
-  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  ;; (flycheck-add-mode 'javascript-eslint 'js2-mode)
   ;; indentation
   (setq-default
    ;; js2-mode
@@ -232,7 +236,11 @@ user code."
    web-mode-css-indent-offset 2
    web-mode-code-indent-offset 2
    web-mode-attr-indent-offset 2)
-  (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
+  (add-hook 'js2-mode-hook (lambda ()
+                             (setq js2-basic-offset 2)
+                             (setq js2-mode-show-parse-errors nil)
+                             (setq js2-mode-show-strict-warnings nil)
+                             ))
 
   ;; Make linums relative by default
   (global-linum-mode nil)
@@ -316,7 +324,7 @@ This function is called at the very end of Spacemacs initialization."
     ("--verbose" "--gpg-sign=DrPandemic <bipbip500@gmail.com>")))
  '(package-selected-packages
    (quote
-    (sql-indent evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (omnisharp csharp-mode sql-indent evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

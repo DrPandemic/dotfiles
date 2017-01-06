@@ -3,14 +3,11 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="agnoster"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
+source ~/.zprofile
 
 # User configuration
-export PATH=$PATH"/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/vendor_perl:/usr/bin/core_perl"
 export TERM='screen-256color'
-export NVM_DIR="$HOME/.nvm"
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export PATH="$PATH:$HOME/.nvm/versions/node/v7.0.0/bin" # Add NVM to PATH for scripting
-export PATH="$PATH:$HOME/bin"
+
 alias htop TERM=screen htop
 alias x=startx
 alias gclean='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'

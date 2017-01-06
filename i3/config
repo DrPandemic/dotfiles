@@ -132,7 +132,7 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exinit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Launch lockscreen
-bindsym $mod+Control+l exec "i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u"
+bindsym $mod+Control+l exec lock-suspend
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
@@ -187,7 +187,7 @@ smart_gaps on
 
 # Workspaces
 assign [class="Chromium"] 1
-# assign [class="Gnome-terminal"] 2
+assign [class="Gnome-terminal"] 2
 assign [class="Emacs"] 3
 assign [class="Franz"] 4
 assign [class="Thunderbird"] 4
