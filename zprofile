@@ -8,3 +8,4 @@ export PATH="$PATH:$HOME/.nvm/versions/node/v7.3.0/bin" # Add NVM to PATH for sc
 
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:/opt/omnisharp-roslyn"
+export PATH="$PATH:$HOME/bin/omnisharp-server/OmniSharp/bin/Debug"

@@ -25,7 +25,7 @@ module-margin-right = 2
 
 font-0 = fixed:pixelsize=10;0
 font-1 = unifont:size=6;-1
-font-2 = siji:pixelsize=10;0
+font-2 = FontAwesome:size=10;0
 
 modules-left = i3
 
@@ -53,7 +53,7 @@ module-margin-right = 2
 
 font-0 = fixed:pixelsize=10;0
 font-1 = unifont:size=6;-1
-font-2 = siji:pixelsize=10;0
+font-2 = FontAwesome:size=10;0
 
 tray-position = left
 y-transparent = true
@@ -73,13 +73,13 @@ parent = true
 [module/cpu]
 type = internal/cpu
 interval = 2
-label = %{F#666}%{F#cc} %percentage%
+label = %{F#ddd}%{F#cc} %percentage%
 
 
 [module/memory]
 type = internal/memory
 interval = 2
-label = %{F#665}%{F#cc} %percentage_used%
+label = %{F#ddd}%{F#cc} %percentage_used%
 
 
 [module/wifi]
@@ -90,17 +90,17 @@ interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
 ;label-connected = %essid% %{F#66}%local_ip%
-label-connected = %{F#666}%{F#cc} %upspeed% %{F#666}%{F#cc} %downspeed%  %essid%
+label-connected = %{F#ddd}%{F#cc} %upspeed% %{F#ddd}%{F#cc} %downspeed%  %essid%
 ;label-connected = %{O-6 F#666}%{O2 F#cc}%downspeed%
-label-disconnected = %{F#666}%{F#cc}
+label-disconnected = %{F#ddd}.x%{F#cc}
 label-disconnected-foreground = #66
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
-ramp-signal-foreground = #666
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = #bbb
 
 
 [module/wired]
@@ -115,19 +115,9 @@ label-disconnected-foreground = #66
 
 [module/date]
 type = internal/date
-date = %%{F#666}%{F#cc} %Y-%m-%d  %%{F#cc}%%{F#cc} %H:%M
-date-alt = %%{F#666}%{F#cc} %Y-%m-%d  %%{F#e60053}%%{F#cc} %H:%M:%S
+date = %%{F#ddd}%{F#cc} %Y-%m-%d  %%{F#cc}-%%{F#cc} %H:%M
+date-alt = %%{F#ddd}%{F#cc} %Y-%m-%d  %%{F#e60053}%-%{F#cc} %H:%M:%S
 interval = 5
-
-
-[module/backlight]
-type = internal/backlight
-card = intel_backlight
-format = <ramp> <label>
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
-ramp-foreground = #666
 
 
 [module/battery]
@@ -136,16 +126,16 @@ full-at = 98
 
 format-charging = <animation-charging> <label-charging>
 format-discharging = <ramp-capacity> <label-discharging>
-format-full = %{F#666}%{F#cc}  <label-full>
+format-full = %{F#ddd}%{F#cc}  <label-full>
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
 ramp-capacity-foreground = #666
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
 animation-charging-foreground = #666
 animation-charging-framerate = 750
 battery = BAT0
@@ -155,9 +145,9 @@ adapter = ADP0
 [module/powermenu]
 type = custom/menu
 
-label-open = 
+label-open = 
 label-open-foreground = #cc
-label-close =  cancel
+label-close =  cancel
 label-close-foreground = #e60053
 label-separator = |
 label-separator-foreground = #55
@@ -191,10 +181,10 @@ label = %temperature%
 label-warn = %temperature%
 label-warn-foreground = #e60053
 
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
-ramp-foreground = #55
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = #ddd
 
 
 [module/volume]
@@ -205,7 +195,7 @@ format-volume = <label-volume> <bar-volume>
 label-volume = VOL
 label-volume-foreground = ${root.foreground}
 
-label-muted =  sound muted
+label-muted =  sound muted
 label-muted-foreground = #55
 
 bar-volume-width = 10
@@ -230,8 +220,8 @@ bar-volume-empty-foreground = #55
 [module/xkeyboard]
 type = internal/xkeyboard
 blacklist-0 = num lock
-format-prefix = " "
-format-prefix-foreground = #666
+format-prefix = " "
+format-prefix-foreground = #ddd
 label-layout = %layout%
 label-indicator-padding = 2
 
@@ -261,12 +251,11 @@ wrapping-scroll = false
 reverse-scroll = false
 
 ; ws-icon-[0-9]+ = label;icon
-ws-icon-0 = 1;11
-ws-icon-1 = 2;♛
-ws-icon-2 = 3;♜
-ws-icon-3 = 4;♝
-ws-icon-4 = 5;♞
-ws-icon-default = ♟
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-default = 
 
 ; Available tags:
 ;   <label-state> (default) - gets replaced with <label-(focused|unfocused|visible|urgent)>
@@ -286,7 +275,7 @@ label-mode-background = #e60053
 ;   %index%
 ;   %output%
 ; Default: %icon%  %name%
-label-focused = %index%
+label-focused = %icon%
 label-focused-foreground = #ffffff
 label-focused-background = #3f3f3f
 label-focused-underline = #fba922
@@ -297,7 +286,7 @@ label-focused-padding = 4
 ;   %icon%
 ;   %index%
 ; Default: %icon%  %name%
-label-unfocused = %index%
+label-unfocused = %icon%
 label-unfocused-padding = 4
 
 ; Available tokens:
@@ -305,7 +294,7 @@ label-unfocused-padding = 4
 ;   %icon%
 ;   %index%
 ; Default: %icon%  %name%
-label-visible = %index%
+label-visible = %icon%
 label-visible-underline = #333333
 label-visible-padding = 4
 
@@ -314,7 +303,7 @@ label-visible-padding = 4
 ;   %icon%
 ;   %index%
 ; Default: %icon%  %name%
-label-urgent = %index%
+label-urgent = %icon%
 label-urgent-foreground = #000000
 label-urgent-background = #bd2c40
 label-urgent-padding = 4
