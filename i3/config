@@ -133,6 +133,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # Launch lockscreen
 bindsym $mod+Control+l exec lock-suspend
+bindsym $mod+Control+Shift+l exec i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
