@@ -1,0 +1,25 @@
+[user]
+  email   = "bipbip500@gmail.com"
+  name    = DrPandemic
+	signingkey = DFBEA37F
+[push]
+  default = simple
+[alias]
+  st      = status
+  lg      = log --pretty=format:\"%h %d %s\" --graph --all --decorate
+  co      = checkout
+  ca      = commit -S -am
+  cm      = commit -S -m
+  au      = add -u
+  A       = add -A
+  amend   = commit -S --amend --reuse-message HEAD
+  puf     = "!git push origin +\"$(git rev-parse --abbrev-ref HEAD)\""
+  pu      = "!git push -u origin \"$(git rev-parse --abbrev-ref HEAD)\""
+  bm      = "branch --merged"
+  br      = "branch"
+  bd      = "branch -d"
+  bD      = "branch -D"
+	d = "!f() { [ -z \"$GIT_PREFIX\" ] || cd \"$GIT_PREFIX\" && git diff --color \"$@\" | diff-so-fancy  | less --tabs=4 -RFX; }; f"
+	dc = "!f() { [ -z \"$GIT_PREFIX\" ] || cd \"$GIT_PREFIX\" && git diff --cached --color \"$@\" | diff-so-fancy  | less --tabs=4 -RFX; }; f"
+[diff]
+  tool    = meld
