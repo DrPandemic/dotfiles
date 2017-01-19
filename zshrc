@@ -24,7 +24,7 @@ function :q() {
 
 function pvm() {
   unset -f pvm
-  source /usr/share/pvm/init-pvm.sh
+  source ~/Projects/pvm/init-pvm.sh
   pvm "$@"
 }
 

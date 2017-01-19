@@ -1,7 +1,7 @@
 [user]
   email   = "bipbip500@gmail.com"
   name    = DrPandemic
-	signingkey = DFBEA37F
+	signingkey = E18E2BBDB1407EA7
 [push]
   default = simple
 [alias]
