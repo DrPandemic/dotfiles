@@ -12,6 +12,8 @@ alias htop TERM=screen htop
 alias x=startx
 alias gclean='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'
 
+export EDITOR='vim'
+
 if [[ -z $TMUX ]]; then
   if [[ -n $XAUTHORITY ]] then
     tmux a || tmux

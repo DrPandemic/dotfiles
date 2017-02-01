@@ -30,7 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec gnome-terminal
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -167,10 +167,10 @@ mode "resize" {
         bindsym semicolon resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
@@ -185,6 +185,9 @@ exec feh --randomize --bg-fill ~/Pictures/Wallpapers/*
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
+exec --no-startup-id libinput-gestures-setup start
+exec --no-startup-id xss-lock -- i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
+exec --no-startup-id audio-mic
 
 #i3-gaps
 gaps inner 10
@@ -193,7 +196,7 @@ smart_gaps on
 
 # Workspaces
 assign [class="Chromium"] 1
-assign [class="Gnome-terminal"] 2
+assign [class="Alacritty"] 2
 assign [class="Emacs"] 3
 assign [class="Franz"] 4
-assign [class="Thunderbird"] 4
+assign [class="Thunderbird"] 5
