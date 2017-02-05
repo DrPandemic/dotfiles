@@ -30,7 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec gnome-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -152,6 +152,7 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
 bindsym Print exec gnome-screenshot -ca
+bindsym $mod+Print exec gnome-screenshot -a
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -196,7 +197,7 @@ smart_gaps on
 
 # Workspaces
 assign [class="Chromium"] 1
-assign [class="Alacritty"] 2
+assign [class="Gnome-terminal"] 2
 assign [class="Emacs"] 3
 assign [class="Franz"] 4
 assign [class="Thunderbird"] 5

@@ -61,7 +61,7 @@ y-transparent = true
 
 modules-left = i3
 ;modules-center = i3
-modules-right = volume cpu memory xkeyboard temperature battery date powermenu
+modules-right = wifi volume cpu memory xkeyboard temperature battery date powermenu
 
 
 [module/xwindow]
@@ -85,7 +85,7 @@ label = %{F#ddd}%{F#cc} %percentage_used%
 
 [module/wifi]
 type = internal/network
-interface = wlp3s0
+interface = wlp58s0
 interval = 3.0
 ;udspeed-minwidth = 3
 
