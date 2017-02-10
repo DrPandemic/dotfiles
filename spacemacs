@@ -1,6 +1,7 @@
-;; - * -mode:emacs - lisp - * - ;
-;; This file is loaded by Spacemacs at startup.;
-;; It must be stored in your home directory.
+;
+; - * -mode:emacs - lisp - * - ;
+; This file is loaded by Spacemacs at startup.;
+; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -300,7 +301,8 @@ user code."
   ;; c++
   (add-hook 'before-save-hook 'clang-format-hook)
   (defun clang-format-hook ()
-    (clang-format-buffer))
+    (case major-mode
+      ((c++-mode) (clang-format-buffer))))
 
   (add-hook 'c++-mode-hook 'clang-checker-hook)
   (defun clang-checker-hook ()

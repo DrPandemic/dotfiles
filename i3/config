@@ -181,14 +181,14 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Custom execs
-exec configure-x
-exec feh --randomize --bg-fill ~/Pictures/Wallpapers/*
+exec --no-startup-id configure-x
+exec --no-startup-id feh --randomize --bg-fill ~/Pictures/Wallpapers/*
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
 exec --no-startup-id libinput-gestures-setup start
 exec --no-startup-id xss-lock -- i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
-exec --no-startup-id audio-mic
+exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
 
 #i3-gaps
 gaps inner 10
