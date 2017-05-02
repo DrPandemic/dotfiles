@@ -181,9 +181,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Custom execs
-exec --no-startup-id compton --config ~/Projects/dotfiles/compton.conf -b
 exec --no-startup-id configure-x
-exec --no-startup-id feh --randomize --bg-fill ~/Pictures/Wallpapers/*
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
