@@ -1,8 +1,3 @@
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="agnoster"
-plugins=(git)
-source $ZSH/oh-my-zsh.sh
 source ~/.zprofile
 
 # User configuration
@@ -57,3 +52,6 @@ function nvm {
   load_nvm
   nvm "$@"
 }
+
+# Theme
+source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
