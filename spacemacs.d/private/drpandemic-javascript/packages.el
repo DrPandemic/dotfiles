@@ -63,16 +63,17 @@
 
 (defun drpandemic-javascript/init-flycheck-flow()
   (with-eval-after-load 'flycheck
-    (use-package flycheck-flow
-      :config
-      (progn
-        ;; Don't run flow if there's no @flow pragma
-        (custom-set-variables '(flycheck-javascript-flow-args (quote ("--respect-pragma"))))
-        ;; Run flow in rjsx-mode files
-        (flycheck-add-mode 'javascript-flow 'rjsx-mode)
-        ;; After running js-flow, run js-eslint
-        (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
-        ))))
+    (when drpandemic-javascript-enable-flycheck-flow
+      (use-package flycheck-flow
+        :config
+        (progn
+          ;; Don't run flow if there's no @flow pragma
+          (custom-set-variables '(flycheck-javascript-flow-args (quote ("--respect-pragma"))))
+          ;; Run flow in rjsx-mode files
+          (flycheck-add-mode 'javascript-flow 'rjsx-mode)
+          ;; After running js-flow, run js-eslint
+          (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
+          )))))
 
 (defun drpandemic-javascript/post-init-eldoc()
   (add-hook 'js2-mode-hook #'drpandemic-javascript/enable-eldoc)
