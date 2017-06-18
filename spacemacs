@@ -19,7 +19,7 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-   rust
+     rust
      ruby
      sql
      nginx
@@ -31,7 +31,6 @@ values."
      better-defaults
      emacs-lisp
      git
-     github
      markdown
      (markdown :variables markdown-live-preview-engine 'vmd)
      ;; org
@@ -50,8 +49,9 @@ values."
      c-c++
      semantic
      cscope
-     aj-javascript
-     flow-type
+     drpandemic-javascript
+     ;; flow-type
+     ;; aj-javascript
      (c-c++ :variables c-c++-default-mode-for-headers 'c++-mode)
      (c-c++ :variables c-c++-enable-clang-support t)
      (colors :variables colors-enable-nyan-cat-progress-bar t)
@@ -62,11 +62,12 @@ values."
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages
    '(
-     rjsx-mode
-     company-flow
+     ;; rjsx-mode
+     ;; company-flow
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages
+   '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -112,7 +113,6 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         solarized-light
                          misterioso
                          oldlace
                          seoul256
@@ -229,29 +229,39 @@ user code."
   )
 
 (defun dotspacemacs/user-config ()
-  ;; react mode
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-flow))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
+  ;; rjsx mode
+  ;; (eval-after-load 'company
+  ;;   '(add-to-list 'company-backends 'company-flow))
+  ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+  ;; (eval-after-load 'rjsx-mode
+  ;;   '(flow-minor-enable-automatically))
+  ;; (eval-after-load 'rjsx-mode
+  ;;   '(setq 'company-backend 'company-flow))
+  ;; (eval-after-load 'rjsx-mode
+  ;;   '(flycheck-mode))
+  ;; (remove-hook 'rjsx-mode-hook 'tern-mode)
+  ;; (remove-hook 'rjsx-mode-hook 'emmet-mode)
   ;; (setq flycheck-checkers '(javascript-eslint))
-  ;; indentation
-  (setq-default
-   ;; js2-mode
-   js2-basic-offset 2
-   ;; web-mode
-   css-indent-offset 2
-   web-mode-markup-indent-offset 2
-   web-mode-css-indent-offset 2
-   web-mode-code-indent-offset 2
-   web-mode-attr-indent-offset 2)
-  (add-hook 'js2-mode-hook (lambda ()
-                             (setq js2-basic-offset 2)
-                             (setq js2-mode-show-parse-errors nil)
-                             (setq js2-mode-show-strict-warnings nil)
-                             ))
+  (eval-after-load 'flycheck
+    '(spacemacs/enable-flycheck 'rjsx-mode))
+  (eval-after-load 'rjsx-mode
+    '(add-hook 'rjsx-mode-hook #'add-node-modules-path))
 
-  ;; Show line width
-  (add-hook 'react-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
+  ;; indentation
+  ;; (setq-default
+  ;;  ;; js2-mode
+  ;;  js2-basic-offset 2
+  ;;  ;; web-mode
+  ;;  css-indent-offset 2
+  ;;  web-mode-markup-indent-offset 2
+  ;;  web-mode-css-indent-offset 2
+  ;;  web-mode-code-indent-offset 2
+  ;;  web-mode-attr-indent-offset 2)
+  ;; (add-hook 'js2-mode-hook (lambda ()
+  ;;                            (setq js2-basic-offset 2)
+  ;;                            (setq js2-mode-show-parse-errors nil)
+  ;;                            (setq js2-mode-show-strict-warnings nil)
+  ;;                            ))
 
   ;; Make linums relative by default
   (linum-relative-global-mode)
@@ -288,7 +298,8 @@ user code."
     (define-key map (kbd "TAB") 'company-complete-selection)
     (define-key map (kbd "<tab>") 'company-complete-selection))
 
-  (global-set-key (kbd "C-SPC") 'company-complete)
+  ;; (global-set-key (kbd "C-SPC") 'company-complete)
+  (global-set-key (kbd "C-SPC") 'company-flow)
 
   ;; evil save
   (evil-ex-define-cmd "W" 'save-buffer)
@@ -308,7 +319,7 @@ user code."
 
   ;; parens
   (remove-hook 'prog-mode-hook #'smartparens-mode)
-  (show-smartparens-global-mode)
+  (turn-off-smartparens-mode)
 
   ;; max column display
   (setq-default fill-column 80)
@@ -368,7 +379,7 @@ This function is called at the very end of Spacemacs initialization."
     ("--verbose" "--gpg-sign=DrPandemic <bipbip500@gmail.com>")))
  '(package-selected-packages
    (quote
-    (flow-minor-mode add-node-modules-path flycheck-flow company-flow rjsx-mode ruby-refactor realgud test-simple loc-changes load-relative password-generator evil-lion editorconfig toml-mode racer flycheck-rust seq cargo rust-mode stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (company-flow stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
