@@ -19,3 +19,16 @@
                      local-eslint
                    global-eslint)))
     (setq-local flycheck-javascript-eslint-executable eslint)))
+
+;; From https://github.com/jdelStrother/dotfiles/tree/master/spacemacs_layers/flow-type
+(defun drpandemic-javascript/known-type-at-pos ()
+  ;; You'll get '(unknown)' while cursoring over comments, whitespace, keywords, etc
+  ;; Don't bother reporting type information for those instances:
+  (let ((type (flow-minor-get-type-at-pos)))
+    (if (not (string-match "^\\(flow is still initializing\\|(unknown)\\)" type))
+        type)))
+
+;; From https://github.com/jdelStrother/dotfiles/tree/master/spacemacs_layers/flow-type
+(defun drpandemic-javascript/enable-eldoc ()
+  (if (and flow-type-enable-eldoc-type-info (flow-minor-configured-p))
+      (set (make-local-variable 'eldoc-documentation-function) 'drpandemic-javascript/known-type-at-pos)))

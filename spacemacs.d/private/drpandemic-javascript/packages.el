@@ -17,7 +17,6 @@
   '(
     rjsx-mode
     eldoc
-    company
     flycheck
     (flow-minor-mode :location (recipe :fetcher github :repo "jdelStrother/flow-minor-mode"))
     (company-flow :toggle (configuration-layer/package-usedp 'company))
@@ -75,37 +74,27 @@
         (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
         ))))
 
-;; (defun drpandemic-javascript/post-init-eldoc()
-;;   (with-eval-after-load 'eldoc-mode
-;;     (message "6")
-;;     (push 'flow-type/enable-eldoc react-mode-hook)))
-
-(defun drpandemic-javascript/post-init-company ()
-  (message "8")
-  (add-to-list 'company-backends 'company-flow)
-  (push 'company-flow company-backends)
-  (message "8")
+(defun drpandemic-javascript/post-init-eldoc()
+  (add-hook 'js2-mode-hook #'drpandemic-javascript/enable-eldoc)
   )
 
 (defun drpandemic-javascript/post-init-company-flow ()
-  (use-package company-flow
-    :defer t
-    :config
-    (progn
-      (push 'rjsx-mode company-flow-modes))))
+  (with-eval-after-load 'company
+    (spacemacs|add-company-backends
+      :backends company-flow
+      :modes
+      js2-mode)
+    ))
 
 (defun drpandemic-javascript/post-init-flycheck ()
   (push 'javascript-jshint flycheck-disabled-checkers)
   (push 'json-jsonlint flycheck-disabled-checkers)
-  (add-hook 'js2-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules)
-  )
+  (add-hook 'js2-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules))
 
 (defun drpandemic-javascript/post-init-rjsx-mode ()
-  (with-eval-after-load 'add-node-modules-path
-    (add-hook 'js2-mode-hook 'add-node-modules-path)
-    )
   (with-eval-after-load 'flycheck
     (add-hook 'js2-mode-hook 'flow-minor-enable-automatically)
-    ))
+    )
+  )
 
 ;;; packages.el ends here
