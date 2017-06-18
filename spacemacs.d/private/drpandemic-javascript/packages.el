@@ -89,7 +89,8 @@
 (defun drpandemic-javascript/post-init-flycheck ()
   (push 'javascript-jshint flycheck-disabled-checkers)
   (push 'json-jsonlint flycheck-disabled-checkers)
-  (add-hook 'js2-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules))
+  (add-hook 'js2-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules)
+  (spacemacs/enable-flycheck 'rjsx-mode))
 
 (defun drpandemic-javascript/post-init-rjsx-mode ()
   (with-eval-after-load 'flycheck

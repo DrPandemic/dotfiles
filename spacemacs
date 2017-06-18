@@ -50,8 +50,6 @@ values."
      semantic
      cscope
      drpandemic-javascript
-     ;; flow-type
-     ;; aj-javascript
      (c-c++ :variables c-c++-default-mode-for-headers 'c++-mode)
      (c-c++ :variables c-c++-enable-clang-support t)
      (colors :variables colors-enable-nyan-cat-progress-bar t)
@@ -229,40 +227,6 @@ user code."
   )
 
 (defun dotspacemacs/user-config ()
-  ;; rjsx mode
-  ;; (eval-after-load 'company
-  ;;   '(add-to-list 'company-backends 'company-flow))
-  ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
-  ;; (eval-after-load 'rjsx-mode
-  ;;   '(flow-minor-enable-automatically))
-  ;; (eval-after-load 'rjsx-mode
-  ;;   '(setq 'company-backend 'company-flow))
-  ;; (eval-after-load 'rjsx-mode
-  ;;   '(flycheck-mode))
-  ;; (remove-hook 'rjsx-mode-hook 'tern-mode)
-  ;; (remove-hook 'rjsx-mode-hook 'emmet-mode)
-  ;; (setq flycheck-checkers '(javascript-eslint))
-  (eval-after-load 'flycheck
-    '(spacemacs/enable-flycheck 'rjsx-mode))
-  (eval-after-load 'rjsx-mode
-    '(add-hook 'rjsx-mode-hook #'add-node-modules-path))
-
-  ;; indentation
-  ;; (setq-default
-  ;;  ;; js2-mode
-  ;;  js2-basic-offset 2
-  ;;  ;; web-mode
-  ;;  css-indent-offset 2
-  ;;  web-mode-markup-indent-offset 2
-  ;;  web-mode-css-indent-offset 2
-  ;;  web-mode-code-indent-offset 2
-  ;;  web-mode-attr-indent-offset 2)
-  ;; (add-hook 'js2-mode-hook (lambda ()
-  ;;                            (setq js2-basic-offset 2)
-  ;;                            (setq js2-mode-show-parse-errors nil)
-  ;;                            (setq js2-mode-show-strict-warnings nil)
-  ;;                            ))
-
   ;; Make linums relative by default
   (linum-relative-global-mode)
 
