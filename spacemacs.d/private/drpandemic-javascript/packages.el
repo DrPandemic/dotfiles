@@ -15,7 +15,7 @@
 
 (defconst drpandemic-javascript-packages
   '(
-    rjsx-mode
+    react-mode
     eldoc
     flycheck
     (flow-minor-mode :location (recipe :fetcher github :repo "jdelStrother/flow-minor-mode"))
@@ -23,20 +23,27 @@
     (flycheck-flow :toggle (configuration-layer/package-usedp 'flycheck))
     ))
 
-(defun drpandemic-javascript/init-rjsx-mode ()
-  (use-package rjsx-mode
+(defun drpandemic-javascript/init-react-mode ()
+  (use-package react-mode
     :defer t
     :init
     (progn
-      (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+      (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
 
-      (setq
-       js2-mode-show-strict-warnings nil
-       js2-mode-show-parse-errors nil
-       js-indent-level 2
+      (setq-default
+       ;; js2-mode
        js2-basic-offset 2
-       js2-strict-trailing-comma-warning nil
-       js2-strict-missing-semi-warning nil)
+       ;; web-mode
+       css-indent-offset 2
+       web-mode-markup-indent-offset 2
+       web-mode-css-indent-offset 2
+       web-mode-code-indent-offset 2
+       web-mode-attr-indent-offset 2)
+      (add-hook 'js2-mode-hook (lambda ()
+                                 (setq js2-basic-offset 2)
+                                 (setq js2-mode-show-parse-errors nil)
+                                 (setq js2-mode-show-strict-warnings nil)
+                                 ))
 
       (advice-add #'js-jsx-indent-line
                   :after
@@ -59,7 +66,7 @@
     :defer t
     :config
     (progn
-      (push 'rjsx-mode company-flow-modes))))
+      (push 'react-mode company-flow-modes))))
 
 (defun drpandemic-javascript/init-flycheck-flow()
   (with-eval-after-load 'flycheck
@@ -70,32 +77,31 @@
           ;; Don't run flow if there's no @flow pragma
           (custom-set-variables '(flycheck-javascript-flow-args (quote ("--respect-pragma"))))
           ;; Run flow in rjsx-mode files
-          (flycheck-add-mode 'javascript-flow 'rjsx-mode)
+          (flycheck-add-mode 'javascript-flow 'react-mode)
           ;; After running js-flow, run js-eslint
           (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
           )))))
 
 (defun drpandemic-javascript/post-init-eldoc()
-  (add-hook 'js2-mode-hook #'drpandemic-javascript/enable-eldoc)
-  )
+  (add-hook 'react-mode-hook #'drpandemic-javascript/enable-eldoc))
 
 (defun drpandemic-javascript/post-init-company-flow ()
   (with-eval-after-load 'company
     (spacemacs|add-company-backends
       :backends company-flow
       :modes
-      js2-mode)
+      react-mode)
     ))
 
 (defun drpandemic-javascript/post-init-flycheck ()
   (push 'javascript-jshint flycheck-disabled-checkers)
   (push 'json-jsonlint flycheck-disabled-checkers)
-  (add-hook 'js2-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules)
-  (spacemacs/enable-flycheck 'rjsx-mode))
+  (add-hook 'react-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules)
+  (spacemacs/enable-flycheck 'react-mode))
 
-(defun drpandemic-javascript/post-init-rjsx-mode ()
+(defun drpandemic-javascript/post-init-react-mode ()
   (with-eval-after-load 'flycheck
-    (add-hook 'js2-mode-hook 'flow-minor-enable-automatically)
+    (add-hook 'react-mode-hook 'flow-minor-enable-automatically)
     )
   )
 
