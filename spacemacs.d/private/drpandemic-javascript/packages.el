@@ -15,20 +15,23 @@
 
 (defconst drpandemic-javascript-packages
   '(
-    react-mode
+    web-mode
     eldoc
     flycheck
-    (flow-minor-mode :location (recipe :fetcher github :repo "jdelStrother/flow-minor-mode"))
+    (flow-minor-mode :location (recipe :fetcher github :repo "an-sh/flow-minor-mode"))
     (company-flow :toggle (configuration-layer/package-usedp 'company))
     (flycheck-flow :toggle (configuration-layer/package-usedp 'flycheck))
     ))
 
-(defun drpandemic-javascript/init-react-mode ()
+(defun drpandemic-javascript/post-init-web-mode ()
   (use-package react-mode
     :defer t
     :init
     (progn
       (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
+
+      (remove-hook 'react-mode-hook 'tern-mode)
+      (remove-hook 'react-mode-hook 'emmet-mode)
 
       (setq-default
        ;; js2-mode
@@ -76,7 +79,7 @@
         (progn
           ;; Don't run flow if there's no @flow pragma
           (custom-set-variables '(flycheck-javascript-flow-args (quote ("--respect-pragma"))))
-          ;; Run flow in rjsx-mode files
+          ;; Run flow in react-mode files
           (flycheck-add-mode 'javascript-flow 'react-mode)
           ;; After running js-flow, run js-eslint
           (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
@@ -91,6 +94,7 @@
       :backends company-flow
       :modes
       react-mode)
+    (add-hook 'react-mode-hook #'drpandemic-javascript/use-flow-from-node-modules)
     ))
 
 (defun drpandemic-javascript/post-init-flycheck ()
