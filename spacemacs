@@ -50,11 +50,11 @@ values."
      semantic
      cscope
      ;; flow-type
-     ;; (drpandemic-javascript :variables drpandemic-javascript-enable-flycheck-flow nil)
-     drpandemic-javascript
+     (drpandemic-javascript :variables drpandemic-javascript-enable-flycheck-flow nil flow-type-enable-eldoc-type-info nil)
+     ;; drpandemic-javascript
      (c-c++ :variables c-c++-default-mode-for-headers 'c++-mode)
      (c-c++ :variables c-c++-enable-clang-support t)
-     (colors :variables colors-enable-nyan-cat-progress-bar t)
+     ;; (colors :variables colors-enable-nyan-cat-progress-bar t)
      )
    ;; List of additional packages that will be installed without (spacemacs/toggle-indent-guide-globally-on)(spacemacs/toggle-indent-guide-globally-on)being
    ;; wrapped in a layer. If you need some configuration for these

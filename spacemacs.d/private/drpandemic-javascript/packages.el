@@ -57,8 +57,8 @@
 
 (defun drpandemic-javascript/init-flow-minor-mode ()
   (use-package flow-minor-mode)
-  (spacemacs/declare-prefix-for-mode 'flow-minor-mode "mf" "flow" "flow type checker commands")
-  (spacemacs/set-leader-keys-for-minor-mode 'flow-minor-mode
+  (spacemacs/declare-prefix-for-mode 'react-mode "mf" "flow" "flow type checker commands")
+  (spacemacs/set-leader-keys-for-minor-mode 'react-mode
     "fd" 'flow-minor-jump-to-definition
     "fc" 'flow-minor-status
     "ft" 'flow-minor-type-at-pos
