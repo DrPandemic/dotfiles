@@ -6,7 +6,7 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PATH="$PATH:$HOME/.gem/ruby/2.4.0/bin" # Add RVM to PATH for scripting
 
 export NVM_DIR="$HOME/.nvm"
-export PATH="$PATH:$HOME/.nvm/versions/node/v8.1.0/bin" # Add NVM to PATH for scripting
+export PATH="$PATH:$HOME/.nvm/versions/node/v8.1.4/bin" # Add NVM to PATH for scripting
 
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:/opt/omnisharp-roslyn"

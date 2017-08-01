@@ -151,8 +151,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
-bindsym Print exec gnome-screenshot -ca
-bindsym $mod+Print exec gnome-screenshot -a
+bindsym $mod+Print exec gnome-screenshot --interactive
 
 # resize window (you can also use the mouse for that)
 mode "resize" {

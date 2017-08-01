@@ -25,7 +25,7 @@ font-1 = unifont:size=6;-1
 font-2 = FontAwesome:size=10;0
 
 modules-left = i3
-modules-center = date
+modules-center = myDate
 
 [bar/bottom]
 width = 100%
@@ -55,7 +55,7 @@ tray-position = left
 
 modules-left = i3
 ;modules-center = i3
-modules-right = wifi volume cpu memory xkeyboard temperature battery pkg date powermenu
+modules-right = wifi volume cpu memory xkeyboard temperature battery pkg myDate powermenu
 
 
 [module/xwindow]
@@ -113,6 +113,12 @@ type = internal/date
 date = %%{F#ddd}%{F#cc} %Y-%m-%d  %%{F#cc}-%%{F#cc} %H:%M
 date-alt = %%{F#ddd}%{F#cc} %Y-%m-%d  %%{F#e60053}%-%{F#cc} %H:%M:%S
 interval = 5
+
+[module/myDate]
+type = custom/script
+exec = getdate
+interval = 5
+click-left = calendar
 
 
 [module/battery]
