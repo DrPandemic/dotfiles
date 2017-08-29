@@ -1,6 +1,6 @@
 #!/bin/sh
 
-xrandr --output DP1 --auto --right-of eDP1
+# xrandr --output DP1 --auto --right-of eDP1
 setxkbmap -layout us,ca -variant ,fr
 setxkbmap -option 'grp:rctrl_rshift_toggle'
 xmodmap ~/.xmodmap
@@ -9,4 +9,4 @@ xmodmap ~/.xmodmap
 
 killall compton
 feh --randomize --bg-fill ~/Pictures/Wallpapers/*
-compton --config ~/Projects/dotfiles/compton.conf -b
+compton --config ~/Projects/dotfiles/compton.conf -b --backend xrender

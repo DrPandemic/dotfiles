@@ -94,13 +94,13 @@
       :backends company-flow
       :modes
       react-mode)
-    (add-hook 'react-mode-hook #'drpandemic-javascript/use-flow-from-node-modules)
+    (add-hook 'web-mode-hook #'drpandemic-javascript/use-flow-from-node-modules)
     ))
 
 (defun drpandemic-javascript/post-init-flycheck ()
   (push 'javascript-jshint flycheck-disabled-checkers)
   (push 'json-jsonlint flycheck-disabled-checkers)
-  (add-hook 'react-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules)
+  (add-hook 'web-mode-hook #'drpandemic-javascript/use-eslint-from-node-modules)
   (spacemacs/enable-flycheck 'react-mode))
 
 (defun drpandemic-javascript/post-init-react-mode ()

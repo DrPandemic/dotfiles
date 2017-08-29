@@ -33,7 +33,8 @@ function load_nvm {
   unset -f load_npm
   unalias npm
   unset -f nvm
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+  # [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+  source /usr/share/nvm/init-nvm.sh
 }
 
 function load_node {

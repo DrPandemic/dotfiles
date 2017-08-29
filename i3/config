@@ -184,7 +184,7 @@ exec --no-startup-id configure-x
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
-exec --no-startup-id libinput-gestures-setup start
+# exec --no-startup-id libinput-gestures-setup start
 exec --no-startup-id xss-lock -- i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
 exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
 
@@ -198,6 +198,5 @@ assign [class="Chromium"] 1
 assign [class="Firefox"] 1
 assign [class="Gnome-terminal"] 2
 assign [class="Emacs"] 3
-assign [class="Franz"] 4
 assign [class="Rambox"] 4
 assign [class="Thunderbird"] 5

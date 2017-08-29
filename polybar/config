@@ -55,7 +55,7 @@ tray-position = left
 
 modules-left = i3
 ;modules-center = i3
-modules-right = wifi volume cpu memory xkeyboard temperature battery pkg myDate powermenu
+modules-right = wifi volume cpu memory xkeyboard temperature pkg myDate powermenu
 
 
 [module/xwindow]

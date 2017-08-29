@@ -13,5 +13,7 @@ fi
 [ -f ~/.xprofile ] && source ~/.xprofile
 [ -f ~/.Xresources ] && xrdb -merge -I$HOME ~/.Xresources
 
-#exec gnome-session
-exec i3 -V > ~/.logs/i3.log 2>&1
+numlockx &
+
+# exec cinnamon-session
+exec i3 -V > /tmp/i3.log 2>&1
