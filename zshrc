@@ -5,11 +5,12 @@ export TERM='screen-256color'
 
 alias htop TERM=screen htop
 alias x=startx
-alias gclean='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'
+alias gclean='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d '
 
 export EDITOR='vim'
 export CC=clang
 export CXX=clang++
+export GOOGLE_APPLICATION_CREDENTIALS=~/.config/google-creds.json
 
 if [[ -z $TMUX ]]; then
   if [[ -n $XAUTHORITY ]] then
@@ -56,3 +57,6 @@ function nvm {
 
 # Theme
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+
+# OPAM configuration
+. /home/parasithe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

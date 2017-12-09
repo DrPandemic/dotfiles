@@ -137,7 +137,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # Launch lockscreen
 bindsym $mod+Control+l exec lock-suspend
-bindsym $mod+Control+Shift+l exec i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
+bindsym $mod+Control+Shift+l exec ~/Projects/betterlockscreen/lock.sh -l
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
@@ -185,7 +185,7 @@ exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
 # exec --no-startup-id libinput-gestures-setup start
-exec --no-startup-id xss-lock -- i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
+exec --no-startup-id xss-lock -- ~/Projects/betterlockscreen/lock.sh -l
 exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
 
 # i3-gaps
@@ -198,5 +198,6 @@ assign [class="Chromium"] 1
 assign [class="Firefox"] 1
 assign [class="Gnome-terminal"] 2
 assign [class="Emacs"] 3
+assign [class="Code"] 3
 assign [class="Rambox"] 4
 assign [class="Thunderbird"] 5

@@ -1,4 +1,5 @@
 #!/bin/bash
-i3lock -i /home/parasithe/Pictures/lockscreen.png -t -u
 
-sleep 20; pgrep i3lock && systemctl suspend
+/home/parasithe/Projects/betterlockscreen/lock.sh -l
+
+sleep 20; pgrep lock.sh && systemctl suspend
