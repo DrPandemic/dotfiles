@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/home/parasithe/Projects/betterlockscreen/lock.sh -l
+/home/parasithe/Projects/betterlockscreen/lock.sh -l &
 
-sleep 20; pgrep lock.sh && systemctl suspend
+sleep 5 && pgrep lock.sh && ~/bin/suspend

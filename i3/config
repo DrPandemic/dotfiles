@@ -36,7 +36,7 @@ bindsym $mod+Return exec gnome-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec rofi -show drun -no-disable-history -levenshtein-sort
+# bindsym $mod+d exec rofi -show drun -no-disable-history -levenshtein-sort
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -140,8 +140,8 @@ bindsym $mod+Control+l exec lock-suspend
 bindsym $mod+Control+Shift+l exec ~/Projects/betterlockscreen/lock.sh -l
 
 # Media keys
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id set-volume -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
@@ -186,7 +186,9 @@ exec --no-startup-id nm-applet
 exec --no-startup-id dunst
 # exec --no-startup-id libinput-gestures-setup start
 exec --no-startup-id xss-lock -- ~/Projects/betterlockscreen/lock.sh -l
-exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
+# exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
+exec --no-startup-id ~/Projects/betterlockscreen/lock.sh -u ~/Pictures/Wallpapers/zdlmqa9qbjaz.jpg 
+exec --no-startup-id sleep 2 && ulauncher --hide-window
 
 # i3-gaps
 gaps inner 10

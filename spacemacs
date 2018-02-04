@@ -236,6 +236,8 @@ user code."
   )
 
 (defun dotspacemacs/user-config ()
+  ;; whitespace
+  (setq show-trailing-whitespace t)
   ;; Indentation
   (setq-default js-indent-level 2)
   (setq-default standard-indent 2)

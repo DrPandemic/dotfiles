@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# xrandr --output DP1 --auto --right-of eDP1
+xrandr --output DisplayPort-1 --auto --right-of HDMI-A-1
 setxkbmap -layout us,ca -variant ,fr
 setxkbmap -option 'grp:rctrl_rshift_toggle'
 xmodmap ~/.xmodmap
