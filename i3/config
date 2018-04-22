@@ -30,7 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec gnome-terminal
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -137,7 +137,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # Launch lockscreen
 bindsym $mod+Control+l exec lock-suspend
-bindsym $mod+Control+Shift+l exec ~/Projects/betterlockscreen/lock.sh -l
+bindsym $mod+Control+Shift+l exec ~/Projects/betterlockscreen/betterlockscreen -l
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
@@ -182,23 +182,29 @@ bindsym $mod+r mode "resize"
 # Custom execs
 exec --no-startup-id configure-x
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
-exec --no-startup-id nm-applet
+# exec --no-startup-id nm-applet
 exec --no-startup-id dunst
 # exec --no-startup-id libinput-gestures-setup start
-exec --no-startup-id xss-lock -- ~/Projects/betterlockscreen/lock.sh -l
+exec --no-startup-id xss-lock -- ~/Projects/betterlockscreen/betterlockscreen -l
 # exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
-exec --no-startup-id ~/Projects/betterlockscreen/lock.sh -u ~/Pictures/Wallpapers/zdlmqa9qbjaz.jpg 
+exec --no-startup-id ~/Projects/betterlockscreen/betterlockscreen -u ~/Pictures/lockscreen.jpg
 exec --no-startup-id sleep 2 && ulauncher --hide-window
+exec --no-startup-id rambox
+exec --no-startup-id firefox
 
 # i3-gaps
 gaps inner 10
 gaps outer 5
 smart_gaps on
 
+# Screens
+workspace 4 output HDMI-A-1
+
 # Workspaces
 assign [class="Chromium"] 1
 assign [class="Firefox"] 1
 assign [class="Gnome-terminal"] 2
+assign [class="kitty"] 2
 assign [class="Emacs"] 3
 assign [class="Code"] 3
 assign [class="Rambox"] 4

@@ -1,7 +1,7 @@
 source ~/.zprofile
 
 # User configuration
-export TERM='screen-256color'
+# export TERM='screen-256color'
 
 alias htop TERM=screen htop
 alias x=startx
@@ -11,6 +11,7 @@ export EDITOR='vim'
 export CC=clang
 export CXX=clang++
 export GOOGLE_APPLICATION_CREDENTIALS=~/.config/google-creds.json
+export DOCKER_ID_USER="drpandemic"
 
 if [[ -z $TMUX ]]; then
   if [[ -n $XAUTHORITY ]] then

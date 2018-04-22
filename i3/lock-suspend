@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/home/parasithe/Projects/betterlockscreen/lock.sh -l &
+/home/parasithe/Projects/betterlockscreen/betterlockscreen -l &
 
-sleep 5 && pgrep lock.sh && ~/bin/suspend
+sleep 5 && pgrep i3lock && ~/bin/suspend

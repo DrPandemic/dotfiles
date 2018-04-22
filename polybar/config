@@ -56,7 +56,7 @@ tray-position = left
 
 modules-left = i3
 ;modules-center = i3
-modules-right = wifi volume cpu memory xkeyboard temperature pkg myDate powermenu
+modules-right = wifi volume cpu memory xkeyboard temperature temperatureGPU pkg myDate powermenu
 
 
 [module/xwindow]
@@ -172,8 +172,10 @@ menu-2-1-exec = menu-open-0
 
 [module/temperature]
 type = internal/temperature
+hwmon-path = /sys/devices/platform/nct6775.656/hwmon/hwmon2/temp2_input
+
 thermal-zone = 0
-warn-temperature = 80
+warn-temperature = 70
 
 format = <ramp> <label>
 format-warn = <ramp> <label-warn>
@@ -186,6 +188,27 @@ label-warn-foreground = #e60053
 ramp-0 = 
 ramp-1 = 
 ramp-2 = 
+ramp-foreground = #ddd
+
+
+[module/temperatureGPU]
+type = internal/temperature
+hwmon-path = /sys/devices/pci0000:00/0000:00:03.1/0000:0b:00.0/hwmon/hwmon1/temp1_input
+
+thermal-zone = 0
+warn-temperature = 70
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+format-warn-underline = #f50a4d
+
+label = %temperature%
+label-warn = %temperature%
+label-warn-foreground = #e60053
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
 ramp-foreground = #ddd
 
 
