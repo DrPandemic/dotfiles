@@ -6,9 +6,15 @@ export TERM='screen-256color'
 alias htop TERM=screen htop
 alias x=startx
 alias gclean='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'
-alias dus='dev down && dev up && dev s'
-alias dut='dev down && dev up && dev t'
-alias dup='dev down && dev up'
+alias devdus='dev down && dev up && dev s'
+alias devdut='dev down && dev up && dev t'
+alias devdu='dev down && dev up'
+alias devus='dev up && dev s'
+alias devst='dev style --include-branch-commits --all-cops'
+alias devt='dev t --include-branch-commits '
+alias devs='dev s'
+alias devu='dev u'
+alias devd='dev d'
 
 export EDITOR='vim'
 export CC=clang
@@ -56,7 +62,7 @@ function nvm {
 }
 
 function sed_regex() {
-  rg -l "$1" | xargs sed -i '' -e "s/$1/$2/g"
+  rg -l "$1" | xargs sed -i '' -e 's|'$1'|'$2'|g'
 }
 
 # Theme
