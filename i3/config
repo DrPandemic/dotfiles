@@ -139,6 +139,9 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 bindsym $mod+Control+l exec lock-suspend
 bindsym $mod+Control+Shift+l exec ~/Projects/betterlockscreen/betterlockscreen -l
 
+# Open Antidote
+bindsym $mod+Mod1+e exec antidote-selection
+
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id set-volume -5% #decrease sound volume
@@ -151,7 +154,8 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
-bindsym $mod+Print exec gnome-screenshot --interactive
+# bindsym $mod+Print exec gnome-screenshot --interactive
+bindsym --release $mod+Print exec ~/bin/screenshot
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -189,8 +193,9 @@ exec --no-startup-id xss-lock -- ~/Projects/betterlockscreen/betterlockscreen -l
 # exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
 exec --no-startup-id ~/Projects/betterlockscreen/betterlockscreen -u ~/Pictures/lockscreen.jpg
 exec --no-startup-id sleep 2 && ulauncher --hide-window
-exec --no-startup-id rambox
+exec --no-startup-id sleep 1 && rambox
 exec --no-startup-id firefox
+exec --no-startup-id artha
 
 # i3-gaps
 gaps inner 10
@@ -208,4 +213,7 @@ assign [class="kitty"] 2
 assign [class="Emacs"] 3
 assign [class="Code"] 3
 assign [class="Rambox"] 4
+assign [class="obs"] 4
 assign [class="Thunderbird"] 5
+assign [class="Spotify"] 5
+

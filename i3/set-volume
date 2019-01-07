@@ -5,3 +5,10 @@ echo $1
 pactl set-sink-volume 0 $1
 pactl set-sink-volume 1 $1
 pactl set-sink-volume 2 $1
+pactl set-sink-volume 3 $1
+pactl set-sink-volume 4 $1
+pactl set-sink-volume 5 $1
+pactl set-sink-volume 6 $1
+pactl set-sink-volume 7 $1
+pactl set-sink-volume 8 $1
+pactl set-sink-volume 9 $1

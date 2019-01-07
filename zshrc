@@ -6,6 +6,7 @@ source ~/.zprofile
 alias htop TERM=screen htop
 alias x=startx
 alias gclean='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d '
+alias pint=prettyping
 
 export EDITOR='vim'
 export CC=clang
@@ -56,8 +57,16 @@ function nvm {
   nvm "$@"
 }
 
+function sed_regex() {
+  rg -l "$1" | xargs sed -i -e "s/$1/$2/g"
+}
+
 # Theme
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 # OPAM configuration
 . /home/parasithe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+# ZFZ
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
