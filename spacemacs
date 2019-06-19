@@ -11,14 +11,17 @@ values."
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(csv
+   '(elixir
+   csv
      rust
-     '((ruby :variables ruby-enable-enh-ruby-mode t ruby-version-manager 'chruby))
+     ruby
+     (ruby-shopify :variables ruby-shopify-default-version "2.5.5")
      ruby-on-rails
      sql
      nginx
      yaml
      html
+     csharp
      auto-completion
      better-defaults
      emacs-lisp
@@ -31,9 +34,10 @@ values."
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-term-shell "/bin/bash"
+            shell-default-shell 'eshell
             )
      ;; spell-checking
-     '((syntax-checking :variables syntax-checking-enable-tooltips nil))
+     (syntax-checking :variables syntax-checking-enable-tooltips nil)
      version-control
      react
      (typescript :variables
@@ -43,11 +47,11 @@ values."
      cscope
      ;; (drpandemic-javascript :variables drpandemic-javascript-enable-flycheck-flow nil flow-type-enable-eldoc-type-info nil)
      ;; drpandemic-symbols
+     ;;ivy
      )
    dotspacemacs-additional-packages
    '(
      ;; rjsx-mode
-     ;  (simon-shopify//configure-ruby)
      ; company-flow
      graphql-mode
      )
@@ -58,7 +62,9 @@ values."
      )
    dotspacemacs-delete-orphan-packages t))
 
-(defun dotspacemacs/config () "")
+(defun dotspacemacs/config ()
+  (setq-default omnisharp-server-executable-path "/usr/local/bin/omnisharp")
+  )
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -71,10 +77,10 @@ values."
    dotspacemacs-verbose-loading nil
    dotspacemacs-startup-banner 'official
    dotspacemacs-startup-lists '(recents projects)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(seoul256
+                         spacemacs-dark
                          misterioso
                          oldlace
-                         seoul256
                          spacemacs-light
                          monokai
                          )
@@ -118,6 +124,7 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  (setq dotspacemacs-helm-use-fuzzy nil)
   )
 
 (defun copy-file-name-to-clipboard ()
@@ -130,59 +137,19 @@ user code."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-(defconst simon-shopify//default-ruby-version "2.4.4")
-
-(defun simon-shopify//file-name-in-project-root (file-name)
-  (concat (file-name-as-directory (projectile-project-root)) file-name))
-
-(defun simon-shopify//read-ruby-version ()
-  (lexical-let ((ruby-version-file-path (simon-shopify//file-name-in-project-root ".ruby-version")))
-    (cond
-     ((file-exists-p ruby-version-file-path)
-      (with-temp-buffer
-        (insert-file-contents (simon-shopify//ruby-version-file-path))
-        (buffer-string)))
-     (t simon-shopify//default-ruby-version))))
-
-(defun simon-shopify//use-local-rubocop ()
-  (lexical-let ((rubocop-path (simon-shopify//file-name-in-project-root "bin/rubocop")))
-    (when (file-executable-p rubocop-path)
-      (setq flycheck-ruby-rubocop-executable rubocop-path))))
-
-(defun simon-shopify//enter-chruby ()
-  (lexical-let ((ruby-version (simon-shopify//read-ruby-version)))
-    (chruby ruby-version)
-    ruby-version))
-
-(defun simon-shopify//ruby-mode-hook ()
-  (simon-shopify//use-local-rubocop)
-  ;; (lexical-let* ((delimiter-face-foreground (face-foreground 'enh-ruby-string-delimiter-face)))
-  ;;   (set-face-foreground 'enh-ruby-regexp-delimiter-face delimiter-face-foreground)
-  ;;   (set-face-foreground 'enh-ruby-heredoc-delimiter-face delimiter-face-foreground))
-  (lexical-let* ((ruby-version (simon-shopify//enter-chruby))
-                 (ruby-version-directory (concat "/opt/rubies/" ruby-version))
-                 (ruby-program (concat (file-name-as-directory ruby-version-directory) "bin/ruby")))
-    (when (file-executable-p ruby-program)
-      (setq enh-ruby-program ruby-program
-            flycheck-ruby-executable ruby-program))))
-
-(defun simon-shopify//configure-ruby ()
-  (setq enh-ruby-add-encoding-comment-on-save nil)
-  (chruby simon-shopify//default-ruby-version)
-  (add-hook 'enh-ruby-mode-hook 'simon-shopify//ruby-mode-hook t)
-  (add-hook 'ruby-mode-hook 'simon-shopify//ruby-mode-hook t)
-  (remove-hook 'enh-ruby-mode-hook 'rubocop-mode)
-  (remove-hook 'ruby-mode-hook 'rubocop-mode))
-
-(defun simon-shopify//rb-config (key)
-  (lexical-let ((command (concat "ruby -e 'print(RbConfig::CONFIG[%(" key ")])'")))
-    (shell-command-to-string command)))
 
 (defun dotspacemacs/user-config ()
-  (simon-shopify//configure-ruby)
+  ;; fast magit
+  (setq magit-commit-show-diff nil
+        magit-revert-buffers 1)
+  ;; flycheck tmp files
+  (setq temporary-file-directory "/tmp/")
 
   ;; faster projectile
-  (setq projectile-enable-caching t)
+  ;; (setq projectile-enable-caching t)
+  (setq helm-candidate-number-limit 40)
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-generic-command "git ls-files -zco --exclude-standard")
   (setq shell-file-name "/bin/sh")
 
   ;; line wrap
@@ -190,7 +157,6 @@ user code."
                                          (setq truncate-lines t)))
 
   ;; Indentation
-  (setq-default rust-indent-offset 2)
   (setq-default
    ;; js2-mode
    js2-basic-offset 2
@@ -208,6 +174,11 @@ user code."
   ;; Default extensions
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+
+  ;; load node modules
+  ;; (eval-after-load 'web-mode
+  ;;   '(progn
+  ;;      (add-hook 'web-mode-hook #'add-node-modules-path)))
 
   ;; Flycheck
   (global-flycheck-mode)
@@ -257,7 +228,6 @@ user code."
   ;; autocomplete keybinding
   (define-key evil-insert-state-map (kbd "C-SPC") 'company-complete)
 
-
   ;; evil save
   (evil-ex-define-cmd "W" 'save-buffer)
 
@@ -286,6 +256,27 @@ user code."
   (custom-set-faces
    '(whitespace-tab ((t (:background "red")))))
   (global-whitespace-mode)
+
+  ;; new line
+  (define-key evil-normal-state-map (kbd "<C-return>") 'spacemacs/evil-insert-line-below)
+
+  ;; ctrl-i
+  (setq dotspacemacs-distinguish-gui-tab t)
+
+  ;; fix weird evil search getting stuck
+  (defun kill-minibuffer ()
+    (interactive)
+    (when (windowp (active-minibuffer-window))
+      (evil-ex-search-exit)))
+
+  ;; Prevent emacs from getting into weird states
+  (add-hook 'mouse-leave-buffer-hook #'kill-minibuffer)
+
+  ;; Stops the creation of #files
+  (setq create-lockfiles nil)
+
+  ;; Nicer ruby syntax
+  (setq ruby-align-to-stmt-keywords t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -321,7 +312,7 @@ This function is called at the very end of Spacemacs initialization."
  '(magit-commit-arguments (quote ("--verbose")))
  '(package-selected-packages
    (quote
-    (rjsx-mode magithub ghub+ apiwrap magit-svn json-navigator hierarchy gitignore-templates evil-goggles dotenv-mode php-extras php-mode winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (helm-xref php-extras php-mode winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
