@@ -11,8 +11,9 @@ values."
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(elixir
-   csv
+   '(
+     elixir
+     csv
      rust
      ruby
      (ruby-shopify :variables ruby-shopify-default-version "2.5.5")
@@ -45,15 +46,14 @@ values."
      scala
      semantic
      cscope
-     ;; (drpandemic-javascript :variables drpandemic-javascript-enable-flycheck-flow nil flow-type-enable-eldoc-type-info nil)
-     ;; drpandemic-symbols
-     ;;ivy
+     multiple-cursors
      )
    dotspacemacs-additional-packages
    '(
-     ;; rjsx-mode
-     ; company-flow
+     undo-tree
      graphql-mode
+     centaur-tabs
+     all-the-icons
      )
    dotspacemacs-excluded-packages
    '(
@@ -152,10 +152,6 @@ user code."
   (setq projectile-generic-command "git ls-files -zco --exclude-standard")
   (setq shell-file-name "/bin/sh")
 
-  ;; line wrap
-  (add-hook 'hack-local-variables-hook (lambda ()
-                                         (setq truncate-lines t)))
-
   ;; Indentation
   (setq-default
    ;; js2-mode
@@ -231,7 +227,7 @@ user code."
   ;; evil save
   (evil-ex-define-cmd "W" 'save-buffer)
 
-  ;; misc
+  ;; line wrap
   (add-hook 'hack-local-variables-hook (lambda () (setq truncate-lines t)))
 
   ;; navigation
@@ -240,9 +236,6 @@ user code."
   ;; parens
   (remove-hook 'prog-mode-hook #'smartparens-mode)
   (turn-off-smartparens-mode)
-
-  ;; Ligature
-  ;; (drpandemic-symbols/init)
 
   ;; Newline at end of file
   (setq require-final-newline t)
@@ -263,13 +256,12 @@ user code."
   ;; ctrl-i
   (setq dotspacemacs-distinguish-gui-tab t)
 
-  ;; fix weird evil search getting stuck
+  ;; Fix weird evil search getting stuck
+  ;; Prevent emacs from getting into weird states
   (defun kill-minibuffer ()
     (interactive)
     (when (windowp (active-minibuffer-window))
       (evil-ex-search-exit)))
-
-  ;; Prevent emacs from getting into weird states
   (add-hook 'mouse-leave-buffer-hook #'kill-minibuffer)
 
   ;; Stops the creation of #files
@@ -277,6 +269,46 @@ user code."
 
   ;; Nicer ruby syntax
   (setq ruby-align-to-stmt-keywords t)
+
+  ;; Tabs
+  (use-package all-the-icons)
+  (use-package centaur-tabs
+    :demand
+    :init (setq centaur-tabs-set-bar 'over)
+    :config
+    (centaur-tabs-mode)
+    (centaur-tabs-headline-match)
+    (setq centaur-tabs-set-modified-marker t
+          centaur-tabs-modified-marker " ● "
+          centaur-tabs-cycle-scope 'tabs
+          centaur-tabs-height 20
+          centaur-tabs-set-icons t
+          centaur-tabs-close-button " × ")
+    (centaur-tabs-group-by-projectile-project)
+    (defun centaur-tabs-hide-tab (x)
+      (let ((name (format "%s" x)))
+	      (or
+         (window-dedicated-p (selected-window))
+	       (string-prefix-p "*epc" name)
+	       (string-prefix-p "*helm" name)
+	       (string-prefix-p "*Helm" name)
+	       (string-prefix-p "*spacemacs*" name)
+	       (string-prefix-p "*Messages*" name)
+	       (string-prefix-p "*Compile-Log*" name)
+	       (string-prefix-p "*which-key*" name)
+	       (string-prefix-p "*lsp" name)
+	       (string-prefix-p "magit" name)
+	       )))
+    :bind
+    ("C-<prior>" . centaur-tabs-backward)
+    ("C-<next>" . centaur-tabs-forward)
+    (:map evil-normal-state-map
+	        ("g l" . centaur-tabs-forward)
+	        ("g h" . centaur-tabs-backward)
+	        ("SPC b n" . centaur-tabs-forward)
+	        ("SPC b p" . centaur-tabs-backward))
+    )
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -286,12 +318,12 @@ user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(magit-commit-arguments
-   (quote
-    ("--verbose")))
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(magit-commit-arguments (quote ("--verbose")))
  '(package-selected-packages
    (quote
-    (php-extras php-mode winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (tide typescript-mode projectile-rails inflections lv graphql-mode feature-mode transient centaur-tabs all-the-icons memoize php-extras php-mode winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
