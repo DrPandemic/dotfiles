@@ -1,7 +1,7 @@
 [user]
-  email   = "bipbip500@gmail.com"
+  email   = "DrPandemic@users.noreply.github.com"
   name    = DrPandemic
-	signingkey = B6A2F8AEC8AD2825
+  signingkey = 7B26A8060A4CD8C1
 [push]
   default = simple
 [alias]
@@ -24,10 +24,12 @@
 [diff]
   tool    = meld
 [magithub]
-	online = false
+  online = false
 [magithub "status"]
-	includeStatusHeader = false
-	includePullRequestsSection = false
-	includeIssuesSection = false
+  includeStatusHeader = false
+  includePullRequestsSection = false
+  includeIssuesSection = false
 [github]
-	user = DrPandemic
+  user = DrPandemic
+[commit]
+	gpgsign = true
