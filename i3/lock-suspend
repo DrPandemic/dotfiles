@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/home/parasithe/Projects/betterlockscreen/betterlockscreen -l &
+swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill &
 
-sleep 5 && pgrep i3lock && ~/bin/suspend
+sleep 5 && pgrep swaylock && ~/bin/suspend

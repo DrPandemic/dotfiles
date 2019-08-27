@@ -22,6 +22,11 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 export PATH=$HOME/.cargo/bin:$PATH
 
-export QT_QPA_PLATFORM='xcb'
+#export QT_QPA_PLATFORM='xcb'
 
-#
+export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+
+# sway
+export SWAYSOCK=$(find /run/user/$UID/ -name 'sway-ipc.*.sock' -print -quit)

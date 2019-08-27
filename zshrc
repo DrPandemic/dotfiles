@@ -15,9 +15,9 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/.config/google-creds.json
 export DOCKER_ID_USER="drpandemic"
 
 if [[ -z $TMUX ]]; then
-  if [[ -n $XAUTHORITY ]] then
+  #if [[ -n $XAUTHORITY ]] then
     tmux a || tmux
-  fi
+  #fi
 fi
 
 function :q() {
@@ -70,3 +70,4 @@ source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 # ZFZ
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+

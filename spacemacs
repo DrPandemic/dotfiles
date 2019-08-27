@@ -104,10 +104,10 @@ values."
    dotspacemacs-verbose-loading nil
    dotspacemacs-startup-banner 'official
    dotspacemacs-startup-lists '(recents projects)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(seoul256
+                         spacemacs-dark
                          misterioso
                          oldlace
-                         seoul256
                          spacemacs-light
                          monokai
                          )
@@ -294,14 +294,6 @@ user code."
   (setq require-final-newline t)
   (setq mode-require-final-newline t)
 
-  ;; org-mode
-  ;; (setq org-log-done 'time)
-  ;; (org-agenda-log-mode)
-
-  ;; reason
-  ;; (add-hook 'reason-mode-hook (lambda ()
-  ;;   (add-hook 'before-save-hook 'refmt-before-save)))
-  ;; Jump forward
   (setq dotspacemacs-distinguish-gui-tab t)
   )
 

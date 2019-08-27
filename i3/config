@@ -125,7 +125,7 @@ bindsym $mod+Control+Left move workspace to output left
 bindsym $mod+Control+Right move workspace to output right
 
 # By default, no border
-new_window pixel 5
+default_border pixel 5
 hide_edge_borders smart
 
 # reload the configuration file
@@ -135,12 +135,17 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exinit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+bindsym $mod+d exec "albert show"
+bindsym Mod1+Shift+w exec "artha"
+
 # Launch lockscreen
+# TODO
 bindsym $mod+Control+l exec lock-suspend
-bindsym $mod+Control+Shift+l exec ~/Projects/betterlockscreen/betterlockscreen -l
+bindsym $mod+Control+Shift+l exec swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill 
 
 # Open Antidote
-bindsym $mod+Mod1+e exec antidote-selection
+# TODO
+# bindsym $mod+Mod1+e exec antidote-selection
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
@@ -150,12 +155,7 @@ bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-# Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
-
-# bindsym $mod+Print exec gnome-screenshot --interactive
-bindsym --release $mod+Print exec ~/bin/screenshot
+bindsym --release $mod+Print exec grim -g "$(slurp)" - | wl-copy 
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -184,19 +184,16 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Custom execs
-exec --no-startup-id configure-x
+exec --no-startup-id xss-lock -- swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill 
+#exec --no-startup-id ~/Projects/betterlockscreen/betterlockscreen -u ~/Pictures/lockscreen.jpg
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
-# exec --no-startup-id nm-applet
 exec --no-startup-id dunst
-# exec --no-startup-id libinput-gestures-setup start
-exec --no-startup-id xss-lock -- ~/Projects/betterlockscreen/betterlockscreen -l
-# exec --no-startup-id "sh -c 'sleep 5; fix-sound'"
-exec --no-startup-id ~/Projects/betterlockscreen/betterlockscreen -u ~/Pictures/lockscreen.jpg
-# exec --no-startup-id sleep 2 && ulauncher --hide-window
 exec --no-startup-id albert
 exec --no-startup-id sleep 1 && rambox
 exec --no-startup-id firefox
 exec --no-startup-id artha
+exec --no-startup-id sleep 1 && rm -f ~/Pictures/wallpaper-right ; ln -s `shuf -n 1 <(ls ~/Pictures/Wallpapers)` ~/Pictures/Wallpapers/wallpaper-right
+exec --no-startup-id sleep 1 && rm -f ~/Pictures/wallpaper-left ; ln -s `shuf -n 1 <(ls ~/Pictures/Wallpapers)` ~/Pictures/Wallpapers/wallpaper-left
 
 # i3-gaps
 gaps inner 10
@@ -216,5 +213,28 @@ assign [class="Code"] 3
 assign [class="Rambox"] 4
 assign [class="obs"] 4
 assign [class="Thunderbird"] 5
-assign [class="spotify"] 5
+for_window [class="Spotify"] move to workspace 5
 
+# Keyboard
+input type:keyboard {
+  xkb_layout us,ca
+  xkb_variant ,fr
+  xkb_options grp:rctrl_rshift_toggle,caps:escape
+  xkb_numlock enabled
+}
+
+# GTK theme
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+    gsettings set $gnome-schema gtk-theme 'Adapta'
+    gsettings set $gnome-schema icon-theme 'Paper'
+    gsettings set $gnome-schema cursor-theme 'Paper'
+}
+
+# Wallpapers
+output HDMI-A-2 bg ~/Pictures/Wallpapers/wallpaper-left stretch
+output DP-2 bg ~/Pictures/Wallpapers/wallpaper-right stretch
+
+bar {
+    swaybar_command waybar
+}
