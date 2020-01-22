@@ -85,12 +85,12 @@ source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 # export PATH="$HOME/.jenv/bin:$PATH"
 # eval "$(jenv init -)"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 bindkey -v
 bindkey fd vi-cmd-mode
 # Timeout after escape
 export KEYTIMEOUT=1
 bindkey '^E' end-of-line
 bindkey '^A' beginning-of-line
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

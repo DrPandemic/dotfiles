@@ -11,12 +11,13 @@ values."
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(
-     elixir
+   '(graphviz
+     lua
+   elixir
      csv
      rust
      ruby
-     (ruby-shopify :variables ruby-shopify-default-version "2.5.5")
+     ;; (ruby-shopify :variables ruby-shopify-default-version "2.5.5")
      ruby-on-rails
      sql
      nginx
@@ -47,18 +48,21 @@ values."
      semantic
      cscope
      multiple-cursors
+     osx
      )
    dotspacemacs-additional-packages
    '(
      undo-tree
      graphql-mode
-     centaur-tabs
-     all-the-icons
+     shadowenv
      )
    dotspacemacs-excluded-packages
    '(
      smartparens
      emmet-mode
+     robe-jump
+     company
+     yasnippet-snippets
      )
    dotspacemacs-delete-orphan-packages t))
 
@@ -86,7 +90,7 @@ values."
                          )
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 15
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -116,7 +120,7 @@ values."
    dotspacemacs-smartparens-strict-mode nil
    dotspacemacs-highlight-delimiters 'all
    dotspacemacs-persistent-server nil
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg")
    dotspacemacs-default-package-repository nil
    ))
 
@@ -144,6 +148,15 @@ user code."
         magit-revert-buffers 1)
   ;; flycheck tmp files
   (setq temporary-file-directory "/tmp/")
+
+  ;; default in spacemacs is 80000
+  (setq undo-limit 800000)
+
+  ;; default in spacemacs is 120000
+  (setq undo-strong-limit 12000000)
+
+  ;; default in spacemacs is 12000000
+  (setq undo-outer-limit 120000000)
 
   ;; faster projectile
   ;; (setq projectile-enable-caching t)
@@ -184,7 +197,7 @@ user code."
     (flycheck-add-mode 'typescript-tide 'typescript-tsx-mode))
 
   ;; Tern autocomplete
-  (push '(company-tern) company-backends-web-mode)
+  ;; (push '(company-tern) company-backends-web-mode)
 
   ;; Indent guide
   (spacemacs/toggle-highlight-indentation-current-column-on)
@@ -210,25 +223,31 @@ user code."
   (setq flycheck-elixir-credo-strict t)
 
   ;; auto-complete
-  (global-company-mode)
-  (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 1)
-  (let ((map company-active-map))
-    ;; use TAB to auto-complete instead of RET
-    ;;    (define-key map [escape] 'company-abort)
-    (define-key map [return] 'nil)
-    (define-key map (kbd "RET") 'nil)
-    (define-key map [tab] 'company-complete)
-    (define-key map (kbd "TAB") 'company-complete-selection)
-    (define-key map (kbd "<tab>") 'company-complete-selection))
-  ;; autocomplete keybinding
-  (define-key evil-insert-state-map (kbd "C-SPC") 'company-complete)
+  (global-auto-complete-mode)
+  ;; (setq popup-use-optimized-column-computation nil)
+  ;; (setq company-minimum-prefix-length 1)
+  ;; (setq company-idle-delay 1)
+  ;; (let ((map company-active-map))
+  ;;   ;; use TAB to auto-complete instead of RET
+  ;;   ;;    (define-key map [escape] 'company-abort)
+  ;;   (define-key map [return] 'nil)
+  ;;   (define-key map (kbd "RET") 'nil)
+  ;;   (define-key map [tab] 'company-complete)
+  ;;   (define-key map (kbd "TAB") 'company-complete-selection)
+  ;;   (define-key map (kbd "<tab>") 'company-complete-selection))
+  ;; ;; autocomplete keybinding
+  (define-key evil-insert-state-map (kbd "C-SPC") 'auto-complete)
 
   ;; evil save
   (evil-ex-define-cmd "W" 'save-buffer)
 
   ;; line wrap
-  (add-hook 'hack-local-variables-hook (lambda () (setq truncate-lines t)))
+  ;; scrolling
+  (add-hook 'hack-local-variables-hook
+            (lambda ()
+              (setq truncate-lines t)
+              (pixel-scroll-mode)
+              ))
 
   ;; navigation
   (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
@@ -269,46 +288,38 @@ user code."
 
   ;; Nicer ruby syntax
   (setq ruby-align-to-stmt-keywords t)
+  (setq enh-ruby-add-encoding-comment-on-save nil)
+  (setq ruby-insert-encoding-magic-comment nil)
 
-  ;; Tabs
-  (use-package all-the-icons)
-  (use-package centaur-tabs
-    :demand
-    :init (setq centaur-tabs-set-bar 'over)
-    :config
-    (centaur-tabs-mode)
-    (centaur-tabs-headline-match)
-    (setq centaur-tabs-set-modified-marker t
-          centaur-tabs-modified-marker " ● "
-          centaur-tabs-cycle-scope 'tabs
-          centaur-tabs-height 20
-          centaur-tabs-set-icons t
-          centaur-tabs-close-button " × ")
-    (centaur-tabs-group-by-projectile-project)
-    (defun centaur-tabs-hide-tab (x)
-      (let ((name (format "%s" x)))
-	      (or
-         (window-dedicated-p (selected-window))
-	       (string-prefix-p "*epc" name)
-	       (string-prefix-p "*helm" name)
-	       (string-prefix-p "*Helm" name)
-	       (string-prefix-p "*spacemacs*" name)
-	       (string-prefix-p "*Messages*" name)
-	       (string-prefix-p "*Compile-Log*" name)
-	       (string-prefix-p "*which-key*" name)
-	       (string-prefix-p "*lsp" name)
-	       (string-prefix-p "magit" name)
-	       )))
-    :bind
-    ("C-<prior>" . centaur-tabs-backward)
-    ("C-<next>" . centaur-tabs-forward)
-    (:map evil-normal-state-map
-	        ("g l" . centaur-tabs-forward)
-	        ("g h" . centaur-tabs-backward)
-	        ("SPC b n" . centaur-tabs-forward)
-	        ("SPC b p" . centaur-tabs-backward))
+  ;; dumb-jump by default
+  (setq-default spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition))
+  (spacemacs/set-leader-keys "jg" #'dumb-jump-go)
+
+  ;; mac window size
+  (setq frame-resize-pixelwise t)
+
+  ;; shadowenv
+  (add-hook 'ruby-mode-hook 'shadowenv-global-mode)
+
+  ;; heml mini show full file name
+  (setq helm-buffer-max-length 'nil)
+
+  ;; meta key
+  (setq-default dotspacemacs-configuration-layers '(
+    (osx :variables osx-use-option-as-meta t)))
+
+  ;; dumb-jump
+  (setq dumb-jump-max-find-time 10)
+
+  ;; org ruby
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '(
+       (ruby . t)
+       )
+     )
     )
-
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -341,15 +352,33 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(magit-commit-arguments (quote ("--verbose")))
  '(package-selected-packages
    (quote
-    (helm-xref php-extras php-mode winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (graphviz-dot-mode tide typescript-mode projectile-rails inflections lv graphql-mode feature-mode transient centaur-tabs all-the-icons memoize php-extras php-mode winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(safe-local-variable-values
+   (quote
+    ((eval setq flycheck-command-wrapper-function
+           (lambda
+             (command)
+             (append
+              (quote
+               ("bundle" "exec"))
+              command)))
+     (typescript-backend . tide)
+     (typescript-backend . lsp)
+     (javascript-backend . tern)
+     (javascript-backend . lsp)
+     (elixir-enable-compilation-checking . t)
+     (elixir-enable-compilation-checking)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(whitespace-tab ((t (:background "red")))))
 )
