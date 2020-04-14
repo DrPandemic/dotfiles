@@ -25,8 +25,20 @@ export PATH=$HOME/.cargo/bin:$PATH
 #export QT_QPA_PLATFORM='xcb'
 
 export QT_QPA_PLATFORMTHEME=qt5ct
-export QT_QPA_PLATFORM=wayland
-export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+export QT_QPA_PLATFORM=xcb
+#export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+
+export MOZ_ENABLE_WAYLAND=1
+#export GDK_BACKEND=x11
+export GDK_BACKEND=wayland
+
+export GDK_SCALE=2
+#export GDK_DPI_SCALE=0.5
+export GDK_DPI_SCALE=2
+export QT_AUTO_SCREEN_SET_FACTOR=0
+export QT_SCALE_FACTOR=2
+export QT_FONT_DPI=96
 
 # sway
-export SWAYSOCK=$(find /run/user/$UID/ -name 'sway-ipc.*.sock' -print -quit)
+# export SWAYSOCK=$(find /run/user/$UID/ -name 'sway-ipc.*.sock' -print -quit)

@@ -18,7 +18,8 @@ values."
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
-   '(elm
+   '(systemd
+   elm
      csv
      rust
      ruby
@@ -55,6 +56,7 @@ values."
      ocaml
      reason
      javascript
+     multiple-cursors
      (typescript :variables
                  typescript-fmt-tool 'typescript-formatter)                                       ;
      ;; flow-type
@@ -74,7 +76,8 @@ values."
      ;; rjsx-mode
      ;; company-flow
      vue-mode
-     eglot
+     ;; eglot
+     gdscript-mode
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages
@@ -113,7 +116,7 @@ values."
                          )
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Hasklig"
-                               :size 15
+                               :size 30
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -146,6 +149,7 @@ values."
    dotspacemacs-default-package-repository nil
    dotspacemacs-line-numbers 'relative
    dotspacemacs-elpa-timeout 5
+   rust-format-on-save t
    ))
 
 (defun dotspacemacs/user-init ()
@@ -161,28 +165,15 @@ user code."
    )
   (setq-default omnisharp--curl-executable-path "/usr/bin/curl")
 
-  ;; rust
-  (use-package eglot
-    :defer t
-    :init
-    (spacemacs/declare-prefix "ae" "eglot")
-    (spacemacs/set-leader-keys "aes" 'eglot
-      "aeR" 'eglot-reconnect
-      "aeq" 'eglot-shutdown
-      "ae=" 'eglot-format
-      "aeh" 'eglot-help-at-point
-      "aeO" 'eglot-events-buffer
-      "aeE" 'eglot-stderr-buffer
-      "aer" 'eglot-rename
-      "aee" 'eglot-code-actions))
-  (add-hook 'rust-mode-hook 'flycheck-disable-checker)
-  (add-hook 'rust-mode-hook 'eglot-ensure)
-
+  ;; ;; rust
+  ;; (add-hook 'rust-mode-hook 'flycheck-disable-checker)
+  (setq rust-format-on-save t)
+  (setq-default lsp-ui-doc-enable nil)
 
   ;; whitespace
   (setq whitespace-style '(face trailing tabs))
-  (custom-set-faces
-   '(whitespace-tab ((t (:background "red")))))
+  ;; (custom-set-faces
+  ;;  '(whitespace-tab ((t (:background "red")))))
   (global-whitespace-mode)
   ;; Indentation
   (setq-default js-indent-level 4)
@@ -283,6 +274,9 @@ user code."
   (defun clang-checker-hook ()
     (flycheck-select-checker 'c/c++-clang))
 
+  (setq-default dotspacemacs-configuration-layers
+                '((c-c++ :variables c-c++-enable-clang-support t)))
+
   ;; Ligature
   ;; (drpandemic-symbols/init)
 
@@ -295,6 +289,14 @@ user code."
   (setq mode-require-final-newline t)
 
   (setq dotspacemacs-distinguish-gui-tab t)
+
+  ;; dumb-jump by default
+  (setq-default spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition))
+  (spacemacs/set-leader-keys "jg" #'dumb-jump-go)
+  (setq dumb-jump-max-find-time 10)
+
+  ;; golden ratio
+  (golden-ratio-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -333,7 +335,7 @@ This function is called at the very end of Spacemacs initialization."
     ("--verbose" "--gpg-sign=DrPandemic <bipbip500@gmail.com>")))
  '(package-selected-packages
    (quote
-    (eglot jsonrpc winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (systemd winum unfill toml-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer shut-up minitest fuzzy flycheck-rust seq flycheck-credo chruby cargo rust-mode bundler inf-ruby dash stickyfunc-enhance srefactor sql-indent pdf-tools tablist omnisharp helm-cscope xcscope disaster csharp-mode company-c-headers cmake-mode clang-format evil-easymotion helm-purpose window-purpose imenu-list vmd-mode nginx-mode yaml-mode magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache ht yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic powerline pug-mode spinner ob-elixir org markdown-mode json-snatcher json-reformat multiple-cursors js2-mode hydra parent-mode hide-comnt projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter pos-tip flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu evil goto-chg undo-tree highlight sbt-mode scala-mode diminish web-completion-data dash-functional tern s bind-map bind-key yasnippet packed company elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build company-emacs-eclim racket-mode faceup eclim skewer-mode simple-httpd dumb-jump f smooth-scrolling ruby-end page-break-lines leuven-theme buffer-move bracketed-paste xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-plus-contrib org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-mix flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav diff-hl define-word company-web company-tern company-statistics company-quickhelp column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

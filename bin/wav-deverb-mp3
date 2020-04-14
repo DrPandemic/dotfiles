@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+file = ENV['NAUTILUS_SCRIPT_SELECTED_FILE_PATHS'].strip
+
+without_extension = file.scan(/(.*)\.wav/).last.first
+system("cd ~/Projects/postfish; ./postfish -B \"#{file}\" > /tmp/converting-ffmpeg")
+system("ffmpeg -i /tmp/converting-ffmpeg -acodec mp3 -ac 1 \"#{without_extension}\".mp3")
+system("rm -f /tmp/converting-ffmpeg")

@@ -4,9 +4,9 @@ source ~/.zprofile
 # export TERM='screen-256color'
 
 alias htop TERM=screen htop
-alias x=startx
 alias gclean='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d '
-alias pint=prettyping
+alias ping=prettyping
+alias vim=nvim
 
 export EDITOR='vim'
 export CC=clang
@@ -15,10 +15,20 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/.config/google-creds.json
 export DOCKER_ID_USER="drpandemic"
 
 if [[ -z $TMUX ]]; then
-  #if [[ -n $XAUTHORITY ]] then
-    tmux a || tmux
-  #fi
+  if [[ -n $WAYLAND_DISPLAY ]] then
+    if [[ -n $TERMINFO ]] then
+      tmux a || tmux
+    fi
+  fi
 fi
+
+function x {
+ sway
+}
+
+function waybar-wayland {
+  GDK_BACKEND=wayland waybar
+}
 
 function :q() {
     exit

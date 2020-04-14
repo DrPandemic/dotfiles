@@ -1,16 +1,16 @@
 {
     "layer": "bottom", // Waybar at top layer
     "position": "bottom",
-    "height": 22,
+    "height": 44,
     "modules-left": ["sway/workspaces", "sway/mode"],
     // "modules-center": ["sway/window"],
     "modules-center": ["clock"],
-    "modules-right": ["cpu", "custom/temp", "memory", "custom/root", "custom/home", "custom/main", "custom/backup", "custom/scratch", "pulseaudio", "network", "tray"],
+    "modules-right": ["custom/layout2", "custom/updates", "cpu", "memory", "pulseaudio", "network", "idle_inhibitor", "tray"],
     // Modules configuration
     "sway/workspaces": {
         "disable-scroll": true,
         "all-outputs": false,
-        "format": "{icon}",
+        "format": " {icon} ",
         "format-icons": {
             "1": "",
             "2": "",
@@ -31,7 +31,7 @@
         "spacing": 10
     },
     "clock": {
-        "format": "{:%m-%d %l:%M}"
+        "format": "{:%Y-%m-%d   %H:%M}"
     },
     "cpu": {
         "format": "  {usage}% "
@@ -74,5 +74,26 @@
             "default": ["", ""]
         },
         "on-click": "pavucontrol"
+    },
+    "custom/updates": {
+    	"exec": "/home/parasithe/Projects/dotfiles/bin/list-updates",
+	"interval": 600,
+	"on-click": "/home/parasithe/Projects/dotfiles/bin/list-updates"
+    },
+    "custom/layout": {
+    	"exec": "/home/parasithe/Projects/dotfiles/bin/layout",
+	"interval": 10,
+	"on-click": "/home/parasithe/Projects/dotfiles/bin/layout"
+    },
+    "custom/layout2": {
+        "exec": "layout2",
+        "tooltip": false
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
     }
 }
