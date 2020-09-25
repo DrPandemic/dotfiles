@@ -1,7 +1,8 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "FontAwesome 5 Free Solid", Roboto, Helvetica, Arial, sans-serif;
+    /*font-family: Roboto, Helvetica, Arial, sans-serif, "FontAwesome 5 Free Solid";*/
+    font-family: Roboto, Helvetica, Arial, sans-serif, "FontAwesome 5 Free Solid";
     font-size: 26px;
     min-height: 0;
 }

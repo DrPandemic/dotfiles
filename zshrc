@@ -77,7 +77,11 @@ source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 # OPAM configuration
 . /home/parasithe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
+# Vi keybindings
+bindkey -v
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+
 # ZFZ
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
-

@@ -11,7 +11,7 @@
     ignore_newline = no
     geometry = "200x5-6+30"
     transparency = 0
-    idle_threshold = 120
+    idle_threshold = 0
     monitor = 0
     follow = mouse
     sticky_history = yes
@@ -43,7 +43,7 @@
 [urgency_normal]
     background = "#181818"
     foreground = "#A3B6CB"
-    timeout = 20
+    timeout = 5
 
 [urgency_critical]
     background = "#181818"

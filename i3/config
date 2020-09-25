@@ -135,13 +135,13 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exinit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym $mod+d exec rofi-with-calc
+bindsym $mod+d exec "rofi-with-calc"
 bindsym Mod1+$mod+w exec "artha"
 bindsym Mod1+$mod+e exec antidote-selection
 
 # Launch lockscreen
-bindsym $mod+Control+l exec lock-suspend
-bindsym $mod+Control+Shift+l exec swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill
+bindsym $mod+Control+q exec lock-suspend
+bindsym $mod+Control+Shift+q exec swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
@@ -192,8 +192,9 @@ exec sleep 1 && env GDK_BACKEND=x11 GDK_DPI_SCALE=0.5 rambox
 exec sleep 1 && firefox
 exec artha
 exec sleep 3 && generate-wallpapers
-exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
-exec sleep 1 && redshift -l 45.53:73.57
+#exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
+#exec sleep 1 && redshift -l 45.53:73.57
+exec --no-startup-id start-jack
 
 # i3-gaps
 gaps inner 20
@@ -224,7 +225,8 @@ for_window [class="Totem"] inhibit_idle
 input type:keyboard {
   xkb_layout us,ca
   xkb_variant ,fr
-  xkb_options grp:rctrl_rshift_toggle,caps:escape
+#  xkb_options grp:rctrl_rshift_toggle,caps:escape
+  xkb_options grp:win_space_toggle,caps:escape
   xkb_numlock enabled
 }
 
@@ -244,7 +246,7 @@ bar {
     swaybar_command waybar-wayland
 }
 
-output DP-2 pos 0 0 res 1920x1080 scale 0.5
+output DP-2 pos 0 0 res 3840x2160 scale 1.0
 output DP-1 pos 3840 0 res 3840x2160 scale 1.0
 
 seat seat0 xcursor_theme default 48

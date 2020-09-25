@@ -1,3 +1,0 @@
-#!/bin/sh
-input=`swaymsg -t get_inputs | jq '.[] | select(.identifier == "5426:270:Razer_Razer_BlackWidow" and .type == "keyboard").xkb_active_layout_name?' | gawk 'match($0, /"(.{2})/, arr) { print arr[1] }'`
-echo " ${input} "

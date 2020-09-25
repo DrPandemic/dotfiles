@@ -76,9 +76,10 @@
         "on-click": "pavucontrol"
     },
     "custom/updates": {
-    	"exec": "/home/parasithe/Projects/dotfiles/bin/list-updates",
+        "format": "♻ {}",
+    	"exec": "checkupdates 2> /dev/null | wc -l",
 	"interval": 600,
-	"on-click": "/home/parasithe/Projects/dotfiles/bin/list-updates"
+	"on-click": "checkupdates 2> /dev/null | wc -l"
     },
     "custom/layout": {
     	"exec": "/home/parasithe/Projects/dotfiles/bin/layout",
