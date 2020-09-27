@@ -239,8 +239,8 @@ exec_always {
 }
 
 # Wallpapers
-output DP-2 bg ~/Pictures/Wallpapers/wallpaper-left stretch
-output DP-1 bg ~/Pictures/Wallpapers/wallpaper-right stretch
+output DP-2 bg ~/Pictures/wallpaper-left stretch
+output DP-1 bg ~/Pictures/wallpaper-right stretch
 
 bar {
     swaybar_command waybar-wayland

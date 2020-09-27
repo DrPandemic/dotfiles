@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sleep 1
+ln -fs "Wallpapers/`shuf -n 1 <(ls ~/Pictures/Wallpapers)`" ~/Pictures/wallpaper-left
+sleep 1
+ln -fs "Wallpapers/`shuf -n 1 <(ls ~/Pictures/Wallpapers)`" ~/Pictures/wallpaper-right
