@@ -81,7 +81,12 @@ function sed_regex() {
 # Theme
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
-[ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+function dev {
+  unset -f dev
+  [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+  dev "$@"
+}
+
 # export PATH="$HOME/.jenv/bin:$PATH"
 # eval "$(jenv init -)"
 
