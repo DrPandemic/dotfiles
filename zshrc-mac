@@ -4,7 +4,6 @@ source ~/.zprofile
 export TERM='screen-256color'
 
 alias htop TERM=screen htop
-alias x=startx
 alias gclean='git branch --merged master | grep -v "\* master" | grep -v ".*master" | xargs -n 1 git branch -d'
 alias ping=prettyping
 
@@ -99,3 +98,4 @@ bindkey '^A' beginning-of-line
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+eval "$(shadowenv init zsh)"

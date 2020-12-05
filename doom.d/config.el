@@ -84,8 +84,7 @@
 (setq projectile-enable-caching t)
 
 ;; Smartparens
-(after! smartparens
-  (smartparens-global-mode -1))
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -113,3 +112,11 @@
 ;;     (define-key map [tab] 'company-complete)
 ;;     (define-key map (kbd "TAB") 'company-complete-selection)
 ;;     (define-key map (kbd "<tab>") 'company-complete-selection)))
+
+;; Magit
+;; (remove-hook 'magit-status-sections-hook #'magit-insert-tags-header)
+;; (remove-hook 'magit-status-sections-hook #'magit-insert-status-header)
+;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpushed-to-pushremote)
+;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpushed-to-upstream-or-recent)
+;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpulled-from-pushremote)
+;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpulled-from-upstream)
