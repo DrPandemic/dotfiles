@@ -75,7 +75,7 @@ function sed_regex() {
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 # OPAM configuration
-. /home/parasithe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+#. /home/parasithe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # Vi keybindings
 bindkey -v

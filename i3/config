@@ -220,6 +220,10 @@ for_window [class="Spotify"] move to workspace 5
 for_window [title="^wl-clipboard$"] floating enable
 for_window [class=".*"] inhibit_idle fullscreen
 for_window [class="Totem"] inhibit_idle
+for_window [class="Hades.*"] inhibit_idle
+
+# Colors
+client.focused          #4c7899 #16a085 #ffffff
 
 # Keyboard
 input type:keyboard {
@@ -248,5 +252,6 @@ bar {
 
 output DP-2 pos 0 0 res 3840x2160 scale 1.0
 output DP-1 pos 3840 0 res 3840x2160 scale 1.0
+#output DP-1 pos 3840 0 res 1920x1080 scale 1.0
 
 seat seat0 xcursor_theme default 48

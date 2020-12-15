@@ -23,6 +23,9 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 export PATH=$HOME/.cargo/bin:$PATH
 
+# Python
+export PATH=$HOME/.local/bin:$PATH
+
 #export QT_QPA_PLATFORM='xcb'
 
 export QT_QPA_PLATFORMTHEME=qt5ct
