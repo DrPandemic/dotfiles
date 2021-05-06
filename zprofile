@@ -3,7 +3,8 @@ export PATH=$PATH"/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/vendor_perl:/
 # export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-export PATH="$PATH:$(ruby -e 'puts Gem.user_dir')/bin"
+#export PATH="$PATH:$(ruby -e 'puts Gem.user_dir')/bin"
+export PATH="$PATH:$HOME/.gem/ruby/2.7.0/bin"
 
 export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:$HOME/.nvm/versions/node/v9.5.0/bin" # Add NVM to PATH for scripting
@@ -13,8 +14,9 @@ export PATH="$PATH:$HOME/Projects/dotfiles/bin"
 export PATH="$PATH:/opt/omnisharp-roslyn"
 export PATH="$PATH:$HOME/bin/omnisharp-server/OmniSharp/bin/Debug"
 
-export ANDROID_HOME=${HOME}/Android/Sdk
-export ANDROID_SDK_ROOT=${HOME}/Android/Sdk
+export ANDROID_HOME=/mnt/green/android
+export ANDROID_SDK_ROOT=/mnt/green/android
+export CHROME_EXECUTABLE=google-chrome-stable
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
@@ -46,5 +48,10 @@ export QT_FONT_DPI=96
 
 export XDG_CURRENT_DESKTOP=sway
 
+# Draw menu in the right position
+export _JAVA_AWT_WM_NONREPARENTING=1
+
 # sway
 # export SWAYSOCK=$(find /run/user/$UID/ -name 'sway-ipc.*.sock' -print -quit)
+
+export RUST_SRC_PATH=/home/parasithe/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library

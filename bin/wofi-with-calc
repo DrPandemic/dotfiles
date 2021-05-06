@@ -1,0 +1,2 @@
+#!/bin/sh
+GDK_BACKEND=wayland wofi --show drun

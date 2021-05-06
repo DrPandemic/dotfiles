@@ -47,7 +47,7 @@ function load_nvm {
   unalias npm
   unset -f nvm
   # [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-  source /usr/share/nvm/init-nvm.sh
+  #source /usr/share/nvm/init-nvm.sh
 }
 
 function load_node {
@@ -85,3 +85,6 @@ bindkey '^E' end-of-line
 # ZFZ
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+
+# .net core
+export PATH="$PATH:/home/parasithe/.dotnet/tools"

@@ -135,7 +135,7 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exinit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym $mod+d exec "rofi-with-calc"
+bindsym $mod+d exec 'rofi-with-calc'
 bindsym Mod1+$mod+w exec "artha"
 bindsym Mod1+$mod+e exec antidote-selection
 
@@ -194,7 +194,9 @@ exec artha
 exec sleep 3 && generate-wallpapers
 #exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 #exec sleep 1 && redshift -l 45.53:73.57
+exec --no-startup-id redshift-gtk
 exec --no-startup-id start-jack
+exec --no-startup-id rofi
 
 # i3-gaps
 gaps inner 20
@@ -223,7 +225,7 @@ for_window [class="Totem"] inhibit_idle
 for_window [class="Hades.*"] inhibit_idle
 
 # Colors
-client.focused          #4c7899 #16a085 #ffffff
+client.focused #4c7899 #16a085 #ffffff
 
 # Keyboard
 input type:keyboard {
@@ -232,6 +234,10 @@ input type:keyboard {
 #  xkb_options grp:rctrl_rshift_toggle,caps:escape
   xkb_options grp:win_space_toggle,caps:escape
   xkb_numlock enabled
+}
+
+input type:mouse {
+  pointer_accel  1
 }
 
 # GTK theme
