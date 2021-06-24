@@ -3,7 +3,8 @@
 (setq user-full-name "John Doe"
       user-mail-address "john@doe.com")
 
-(setq doom-font (font-spec :family "Hasklig" :size 20 :weight 'semi-light))
+;; (setq doom-font (font-spec :family "Hasklig" :size 20 :weight 'semi-light))
+(setq doom-font (font-spec :family "Hasklig" :size 24 :weight 'semi-light))
 
 (setq doom-theme 'doom-nord)
 

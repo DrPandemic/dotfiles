@@ -186,15 +186,29 @@
 {
     "key": "escape",
     "command": "notifications.clearAll",
-    "when": "notificationToastsVisible"
+    "when": "notificationToastsVisible && vim.mode != 'Insert'"
 },
 {
     "key": "escape",
     "command": "workbench.action.toggleSidebarVisibility",
-    "when": "sideBarVisible"
+    "when": "sideBarVisible && vim.mode != 'Insert'"
 },
 {
-    "key": "shift+enter",
+    "key": "shift+ctrl+enter",
     "command": "workbench.action.togglePanel"
-}
+},
+{
+  "key": "",
+  "command": "-workbench.action.terminal.openNativeConsole",
+  "when": "!terminalFocus"
+},
+{
+  "key": "shift+cmd+c",
+  "command": "copyFilePath"
+},
+{
+  "key": "alt+cmd+c",
+  "command": "-copyFilePath",
+  "when": "!editorFocus"
+},
 ]

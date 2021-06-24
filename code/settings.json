@@ -16,7 +16,6 @@
     "vim.hlsearch": true,
     "vim.statusBarColorControl": true,
     "workbench.colorTheme": "Noctis Minimus",
-    "vim.leader": "<space>",
     "vim.otherModesKeyBindingsNonRecursive": [
         {
             "before": [
@@ -652,6 +651,18 @@
                     "args": []
                 }
             ]
+        },
+        {
+            "before": [
+                "="
+            ],
+            "after": [],
+            "commands": [
+                {
+                    "command": "editor.action.reindentselectedlines",
+                    "args": []
+                }
+            ]
         }
     ],
     "vim.insertModeKeyBindings": [
@@ -686,9 +697,9 @@
     "ruby.intellisense": "rubyLocate",
     "files.insertFinalNewline": true,
     "workbench.colorCustomizations": {
-        "statusBar.background": "#005f5f",
-        "statusBar.noFolderBackground": "#005f5f",
-        "statusBar.debuggingBackground": "#005f5f",
+        "statusBar.background": "#86592d",
+        "statusBar.noFolderBackground": "#86592d",
+        "statusBar.debuggingBackground": "#86592d",
         "statusBar.foreground": "#a8dada"
     },
     "editor.formatOnSave": true,
@@ -712,7 +723,29 @@
                     "args": "m"
                 }
             ]
-        }
+        },
+        {
+            "before": [
+                "=",
+                "="
+            ],
+            "after": [],
+            "commands": [
+                {
+                    "command": "editor.action.reindentselectedlines",
+                    "args": []
+                }
+            ]
+        },
+        {
+            "before": [
+                "Y",
+            ],
+            "after": [
+                "y",
+                "$",
+            ],
+        },
     ],
     "vim.visualModeKeyBindingsNonRecursive": [
         {
@@ -734,11 +767,24 @@
                     "args": "m"
                 }
             ]
+        },
+        {
+            "before": [
+                "="
+            ],
+            "after": [],
+            "commands": [
+                {
+                    "command": "editor.action.reindentselectedlines",
+                    "args": []
+                }
+            ]
         }
     ],
     "projectManager.git.baseFolders": [
-        "~/src/github.com/Shopify",
-        "~/Projects"
+        "~/src/github.com",
+        "~/Projects",
+        "~/Personal"
     ],
     "terminal.integrated.rendererType": "experimentalWebgl",
     "trailing-spaces.highlightCurrentLine": false,
@@ -757,4 +803,29 @@
     "editor.autoSurround": "never",
     "editor.autoClosingBrackets": "never",
     "workbench.editor.enablePreviewFromQuickOpen": false,
+    "git.decorations.enabled": false,
+    "vim.commandLineModeKeyBindings": [
+        {
+            "before": ["W"],
+            "commands": [
+                "workbench.action.files.save"
+            ]
+        },
+    ],
+    "diffEditor.ignoreTrimWhitespace": false,
+    "vim.iskeyword": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+    "workbench.panel.opensMaximized": "always",
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "editor.formatOnSaveMode": "modifications",
+    "byesig.showIcon": false,
+    "byesig.opacity": 0.4,
+    "workbench.editor.untitled.hint": "hidden",
+    "editor.cursorStyle": "line",
+    "editor.wordWrap": "off",
+    "vim.textwidth": 120,
+    "vim.camelCaseMotion.enable": true,
+    "vim.highlightedyank.enable": true
 }

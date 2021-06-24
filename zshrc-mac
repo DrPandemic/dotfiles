@@ -4,13 +4,14 @@ source ~/.zprofile
 export TERM='screen-256color'
 
 alias htop TERM=screen htop
-alias gclean='git branch --merged master | grep -v "\* master" | grep -v ".*master" | xargs -n 1 git branch -d'
-alias ping=prettyping
+alias gclean='git branch --merged main | grep -v "\* main" | grep -v ".*main" | xargs -n 1 git branch -d'
+#alias ping=prettyping
 
 alias devdus='dev down && dev up && dev s'
 alias devdut='dev down && dev up && dev t'
 alias devdu='dev down && dev up'
 alias devus='dev up && dev s'
+alias devut='dev up && devt'
 alias devst='dev style --include-branch-commits --all-cops'
 alias devt='dev t --include-branch-commits '
 alias devs='dev s'
@@ -46,33 +47,6 @@ function pvm() {
   pvm "$@"
 }
 
-function load_nvm {
-  unset -f load_node
-  unalias node
-  unset -f load_npm
-  unalias npm
-  unset -f nvm
-  # [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-  source /usr/share/nvm/init-nvm.sh
-}
-
-function load_node {
-  load_nvm
-  node "$@"
-}
-alias node="load_node"
-
-function load_npm {
-  load_nvm
-  npm "$@"
-}
-alias npm="load_npm"
-
-function nvm {
-  load_nvm
-  nvm "$@"
-}
-
 function sed_regex() {
   rg -l "$1" | xargs sed -i '' -e 's|'$1'|'$2'|g'
 }
@@ -85,9 +59,6 @@ function dev {
   [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
   dev "$@"
 }
-
-# export PATH="$HOME/.jenv/bin:$PATH"
-# eval "$(jenv init -)"
 
 bindkey -v
 bindkey fd vi-cmd-mode
