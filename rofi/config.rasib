@@ -1,0 +1,6 @@
+configuration {
+    modi: "drun,calc";
+    font: "hack 25";
+    show-icons: false;
+    sort: false;
+}

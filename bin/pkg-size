@@ -1,0 +1,10 @@
+#!/usr/bin/ruby
+
+packages = `pacman -Qe`
+packages = packages.split("\n").map {|p| p.split(' ')[0] }
+sizes = packages.map {|p| [p, `pacman -Rs --print-format '%s' #{p} | awk '{size+=$1} END {print size/1048576}'`.strip.to_i] }
+sizes.sort_by! {|p| p[1] }
+
+sizes.each do |p|
+  print("#{p[0]} #{p[1]}mb\n")
+end

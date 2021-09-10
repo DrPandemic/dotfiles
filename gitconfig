@@ -1,7 +1,7 @@
 [user]
   email   = "DrPandemic@users.noreply.github.com"
   name    = DrPandemic
-  signingkey = 7B26A8060A4CD8C1
+  signingkey = C6E4E993FA8E4609
 [push]
   default = simple
 [alias]
@@ -21,6 +21,7 @@
   bD      = "branch -D"
   d = "!f() { [ -z \"$GIT_PREFIX\" ] || cd \"$GIT_PREFIX\" && git diff --color \"$@\" | diff-so-fancy  | less --tabs=4 -RFX; }; f"
   dc = "!f() { [ -z \"$GIT_PREFIX\" ] || cd \"$GIT_PREFIX\" && git diff --cached --color \"$@\" | diff-so-fancy  | less --tabs=4 -RFX; }; f"
+	s = switch
 [diff]
   tool    = meld
 [magithub]
@@ -37,3 +38,8 @@
 	rebase = true
 [init]
 	defaultBranch = main
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

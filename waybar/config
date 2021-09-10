@@ -5,7 +5,7 @@
     "modules-left": ["sway/workspaces", "sway/mode"],
     // "modules-center": ["sway/window"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/layout2", "custom/updates", "cpu", "memory", "pulseaudio", "network", "idle_inhibitor", "tray"],
+    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "pulseaudio", "network", "idle_inhibitor", "tray"],
     // Modules configuration
     "sway/workspaces": {
         "disable-scroll": true,
@@ -25,6 +25,9 @@
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>",
         "max-length": 20
+    },
+    "sway/language": {
+        "format": "🏳️ {} "
     },
     "tray": {
         // "icon-size": 21,
@@ -76,7 +79,7 @@
         "on-click": "pavucontrol"
     },
     "custom/updates": {
-        "format": "♻ {}",
+        "format": " ♻ {}",
     	"exec": "checkupdates 2> /dev/null | wc -l",
 	"interval": 600,
 	"on-click": "checkupdates 2> /dev/null | wc -l"

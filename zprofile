@@ -11,8 +11,8 @@ export PATH="$PATH:$HOME/.nvm/versions/node/v9.5.0/bin" # Add NVM to PATH for sc
 
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/Projects/dotfiles/bin"
-export PATH="$PATH:/opt/omnisharp-roslyn"
-export PATH="$PATH:$HOME/bin/omnisharp-server/OmniSharp/bin/Debug"
+# For unity/omnisharp
+export FrameworkPathOverride=/lib/mono/4.5
 
 export ANDROID_HOME=/mnt/green/android
 export ANDROID_SDK_ROOT=/mnt/green/android
@@ -28,7 +28,8 @@ export PATH=$HOME/.cargo/bin:$PATH
 # Python
 export PATH=$HOME/.local/bin:$PATH
 
-#export QT_QPA_PLATFORM='xcb'
+# Dart
+export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 export QT_QPA_PLATFORMTHEME=qt5ct
 export QT_QPA_PLATFORM=xcb
@@ -38,7 +39,6 @@ export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export MOZ_ENABLE_WAYLAND=1
 export GDK_BACKEND=x11
 #export GDK_BACKEND=wayland
-#export GDK_DPI_SCALE=2
 
 export GDK_SCALE=2
 export GDK_DPI_SCALE=0.5

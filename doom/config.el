@@ -6,7 +6,7 @@
 (setq doom-font (font-spec :family "Hasklig" :size 30 :weight 'semi-light)
       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-(setq doom-theme 'doom-material)
+(setq doom-theme 'doom-horizon)
 
 (setq org-directory "~/Projects/org/")
 
@@ -15,14 +15,15 @@
 ;; company
 (after! company
   (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
-(add-hook 'evil-normal-state-entry-hook #'company-abort))
+        company-minimum-prefix-length 2
+        company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)
 
-;; history
-(setq-default history-length 1000)
-(setq-default better-jumper-max-length 1000)
-(setq-default prescient-history-length 1000)
+  (define-key company-active-map (kbd "TAB") 'company-complete)
+  (define-key company-active-map (kbd "<tab>") 'company-complete)
+  (define-key company-active-map (kbd "RET") nil)
+  (define-key company-active-map (kbd "<return>") nil)
+  )
 
 ;; spelling
 (set-company-backend! '(text-mode
@@ -30,6 +31,13 @@
   '(:seperate company-ispell
               company-files
               company-yasnippet))
+;; /company
+
+;; history
+(setq-default history-length 1000)
+(setq-default better-jumper-max-length 1000)
+(setq-default prescient-history-length 1000)
+
 
 ;; spacemacs keybindings
 (map! :leader :desc "Search in project" "/" #'+default/search-project)
@@ -68,6 +76,7 @@
 
 (map! :leader :desc "Describe at point" "h d" #'lsp-describe-thing-at-point)
 (map! :leader :desc "Describe error at point" "h h" #'flycheck-display-error-at-point)
+(map! :leader :desc "Format" "c =" #'lsp-format-region)
 
 ;; LSP doesn't take half the screen when showing doc in the minibuffer
 ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
@@ -75,3 +84,12 @@
 
 ;; Prevent flycheck from putting a "!" at the left of the screen on errors
 (setq flycheck-indication-mode nil)
+
+;; Dart
+(setq dart-format-on-save t)
+
+;; C#
+;; (setq lsp-csharp-server-path "/usr/bin/omnisharp")
+
+;; Godot
+(setq gdscript-indent-offset 2)

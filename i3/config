@@ -136,6 +136,7 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exinit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 bindsym $mod+d exec 'rofi-with-calc'
+#bindsym $mod+d exec 'yofi'
 bindsym Mod1+$mod+w exec "artha"
 bindsym Mod1+$mod+e exec antidote-selection
 
@@ -151,7 +152,7 @@ bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-bindsym --release $mod+Print exec grim -g "$(slurp)" - | wl-copy
+bindsym --release $mod+Control+Shift+4 exec grim -g "$(slurp)" - | wl-copy
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -195,7 +196,7 @@ exec sleep 3 && generate-wallpapers
 #exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 #exec sleep 1 && redshift -l 45.53:73.57
 exec --no-startup-id redshift-gtk
-exec --no-startup-id start-jack
+#exec --no-startup-id start-jack
 exec --no-startup-id rofi
 
 # i3-gaps
