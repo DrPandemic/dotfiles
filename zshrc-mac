@@ -24,6 +24,7 @@ alias devv='dev typecheck && dev style --include-branch-commits && devt'
 alias devuv='devu && devv'
 alias devuv='devdu && devv'
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+alias t="dev test"
 
 export EDITOR='vim'
 export CC=clang
@@ -70,3 +71,10 @@ bindkey '^A' beginning-of-line
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 eval "$(shadowenv init zsh)"
+
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
+
+# Don't save commands starting with a space
+setopt HIST_IGNORE_SPACE
+
+[[ -x /usr/local/bin/brew ]] && eval $(/usr/local/bin/brew shellenv)

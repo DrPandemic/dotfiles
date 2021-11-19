@@ -666,15 +666,6 @@
         }
     ],
     "vim.insertModeKeyBindings": [
-        {
-            "before": [
-                "f",
-                "d"
-            ],
-            "after": [
-                "<Esc>"
-            ]
-        }
     ],
     "vim.easymotion": true,
     "window.zoomLevel": 2,
@@ -697,9 +688,16 @@
     "ruby.intellisense": "rubyLocate",
     "files.insertFinalNewline": true,
     "workbench.colorCustomizations": {
-        "statusBar.background": "#86592d",
-        "statusBar.noFolderBackground": "#86592d",
-        "statusBar.debuggingBackground": "#86592d",
+        "editorBracketHighlight.foreground1": "#5caeef",
+        "editorBracketHighlight.foreground2": "#abb2c0",
+        "editorBracketHighlight.foreground3": "#c172d9",
+        "editorBracketHighlight.foreground4": "#97c26c",
+        "editorBracketHighlight.foreground5": "#dfb976",
+        "editorBracketHighlight.foreground6": "#4fb1bc",
+        "editorBracketHighlight.unexpectedBracket.foreground": "#db6165",
+        "statusBar.background": "#005f5f",
+        "statusBar.noFolderBackground": "#005f5f",
+        "statusBar.debuggingBackground": "#005f5f",
         "statusBar.foreground": "#a8dada"
     },
     "editor.formatOnSave": true,
@@ -790,7 +788,7 @@
     "trailing-spaces.highlightCurrentLine": false,
     "trailing-spaces.deleteModifiedLinesOnly": true,
     "workbench.statusBar.visible": true,
-    "whichkey.bindingOverrides": [
+    "vspacecode.bindingOverrides": [
         {
             "keys": ["m", "languageId:ruby", "t", "t"],
             "name": "Test under cursor",
@@ -827,5 +825,11 @@
     "editor.wordWrap": "off",
     "vim.textwidth": 120,
     "vim.camelCaseMotion.enable": true,
-    "vim.highlightedyank.enable": true
+    "vim.highlightedyank.enable": true,
+    "byesig.fold": false,
+    "workbench.editor.enablePreview": false,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.bracketPairColorization.enabled": true
 }
