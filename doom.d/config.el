@@ -121,3 +121,6 @@
 ;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpushed-to-upstream-or-recent)
 ;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpulled-from-pushremote)
 ;; (remove-hook 'magit-status-sections-hook #'magit-insert-unpulled-from-upstream)
+
+;; Tramp
+(setq tramp-default-method "ssh")

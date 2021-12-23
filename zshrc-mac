@@ -1,4 +1,8 @@
-source ~/.zprofile
+[[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
 
 # User configuration
 export TERM='screen-256color'
@@ -25,10 +29,11 @@ alias devuv='devu && devv'
 alias devuv='devdu && devv'
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias t="dev test"
+alias g="git"
 
 export EDITOR='vim'
-export CC=clang
-export CXX=clang++
+#export CC=clang
+#export CXX=clang++
 
 if [[ -z $TMUX ]]; then
   tmux a || tmux
@@ -42,18 +47,9 @@ function :q() {
   exit
 }
 
-function pvm() {
-  unset -f pvm
-  source ~/Projects/pvm/init-pvm.sh
-  pvm "$@"
-}
-
 function sed_regex() {
   rg -l "$1" | xargs sed -i '' -e 's|'$1'|'$2'|g'
 }
-
-# Theme
-source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 function dev {
   unset -f dev
@@ -77,4 +73,5 @@ eval "$(shadowenv init zsh)"
 # Don't save commands starting with a space
 setopt HIST_IGNORE_SPACE
 
-[[ -x /usr/local/bin/brew ]] && eval $(/usr/local/bin/brew shellenv)
+unset CC
+unset CXX
