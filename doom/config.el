@@ -3,7 +3,7 @@
 (setq user-full-name "John Doe"
       user-mail-address "john@doe.com")
 
-(setq doom-font (font-spec :family "Hasklig" :size 30 :weight 'semi-light)
+(setq doom-font (font-spec :family "Hasklig" :size 15 :weight 'semi-light)
       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
 (setq doom-theme 'doom-horizon)
@@ -82,6 +82,13 @@
 ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
 (setq lsp-signature-render-documentation nil)
 
+;; Disable lsp logs
+;;(setq lsp-log-io nil)
+
+;; Ignoring jsons
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]data\\'"))
+
 ;; Prevent flycheck from putting a "!" at the left of the screen on errors
 (setq flycheck-indication-mode nil)
 
@@ -93,3 +100,33 @@
 
 ;; Godot
 (setq gdscript-indent-offset 2)
+
+;; Gleam
+(use-package! gleam-mode
+  :mode "\\.gleam$")
+
+;; Default indent
+(doom/set-indent-width 2)
+
+;; Godot
+(defun godot-run ()
+  "Run the current Godot project"
+  (interactive)
+  (async-shell-command (concat "godot-mono --path " (projectile-project-root)))
+  )
+(defun godot-build ()
+  "Build the current Godot project"
+  (interactive)
+  (shell-command (concat "msbuild " (projectile-project-root)))
+  )
+
+(defun godot-build-run ()
+  "Build and then run the current Godot project"
+  (interactive)
+  (godot-build)
+  (godot-run)
+  )
+
+;; Deno
+(add-hook 'typescript-mode-hook 'deno-fmt-mode)
+(add-hook 'js2-mode-hook 'deno-fmt-mode)

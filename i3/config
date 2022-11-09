@@ -137,7 +137,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 bindsym $mod+d exec 'rofi-with-calc'
 #bindsym $mod+d exec 'yofi'
-bindsym Mod1+$mod+w exec "artha"
+bindsym Mod1+$mod+w exec "goldendict"
 bindsym Mod1+$mod+e exec antidote-selection
 
 # Launch lockscreen
@@ -197,7 +197,7 @@ exec sleep 3 && generate-wallpapers
 #exec sleep 1 && redshift -l 45.53:73.57
 exec --no-startup-id redshift-gtk
 #exec --no-startup-id start-jack
-exec --no-startup-id rofi
+#exec --no-startup-id rofi
 
 # i3-gaps
 gaps inner 20
@@ -238,7 +238,7 @@ input type:keyboard {
 }
 
 input type:mouse {
-  pointer_accel  1
+  pointer_accel  -1
 }
 
 # GTK theme
@@ -259,6 +259,7 @@ bar {
 
 output DP-2 pos 0 0 res 3840x2160 scale 1.0
 output DP-1 pos 3840 0 res 3840x2160 scale 1.0
+#output DP-1 pos 0 0 res 3840x2160 scale 1.0
 #output DP-1 pos 3840 0 res 1920x1080 scale 1.0
 
 seat seat0 xcursor_theme default 48

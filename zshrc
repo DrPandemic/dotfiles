@@ -88,3 +88,6 @@ source /usr/share/fzf/completion.zsh
 
 # .net core
 export PATH="$PATH:/home/parasithe/.dotnet/tools"
+
+# zsh history
+setopt HIST_IGNORE_SPACE

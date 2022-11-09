@@ -19,12 +19,9 @@
     "rust.mode": "legacy",
     "GodotTools.editorPath": "/opt/godot-mono-bin/godot/Godot_v3.1.1-stable_mono_x11.64",
     "keyboard.dispatch": "keyCode",
-    "workbench.editorAssociations": [
-        {
-            "viewType": "jupyter.notebook.ipynb",
-            "filenamePattern": "*.ipynb"
-        }
-    ],
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
     "vim.easymotion": true,
     "vim.useSystemClipboard": true,
     "vim.normalModeKeyBindingsNonRecursive": [
@@ -102,6 +99,16 @@
         "statusBar.foreground": "#a8dada"
     },
     "workbench.activityBar.visible": false,
-    "omnisharp.monoPath": "/lib/mono/4.5",
-    "omnisharp.useGlobalMono": "auto",
+    "omnisharp.monoPath": "/usr/lib/mono/msbuild/Current",
+    "omnisharp.useGlobalMono": "always",
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.organizeImportsOnFormat": true,
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "vim.handleKeys": {
+        "<C-n>": false,
+        "<C-d>": true,
+        "<C-s>": false,
+        "<C-z>": false
+    },
+    "extensions.ignoreRecommendations": true,
 }

@@ -55,3 +55,5 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # export SWAYSOCK=$(find /run/user/$UID/ -name 'sway-ipc.*.sock' -print -quit)
 
 export RUST_SRC_PATH=/home/parasithe/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
+
+export PATH=/home/parasithe/.cache/rebar3/bin:$PATH

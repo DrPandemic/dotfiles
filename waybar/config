@@ -27,7 +27,7 @@
         "max-length": 20
     },
     "sway/language": {
-        "format": "🏳️ {} "
+        "format": "️ {} "
     },
     "tray": {
         // "icon-size": 21,
@@ -81,13 +81,13 @@
     "custom/updates": {
         "format": " ♻ {}",
     	"exec": "checkupdates 2> /dev/null | wc -l",
-	"interval": 600,
-	"on-click": "checkupdates 2> /dev/null | wc -l"
+        "interval": 600,
+        "on-click": "checkupdates 2> /dev/null | wc -l"
     },
     "custom/layout": {
     	"exec": "/home/parasithe/Projects/dotfiles/bin/layout",
-	"interval": 10,
-	"on-click": "/home/parasithe/Projects/dotfiles/bin/layout"
+        "interval": 10,
+        "on-click": "/home/parasithe/Projects/dotfiles/bin/layout"
     },
     "custom/layout2": {
         "exec": "layout2",

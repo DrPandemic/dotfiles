@@ -50,3 +50,9 @@
 ;(unpin! t)
 
 (package! golden-ratio)
+(package! gleam-mode
+  :recipe (:host github :repo "gleam-lang/gleam-mode"))
+
+(package! csharp-mode :pin "9917e1b97d6a374c8043124817142ea3419a649b")
+
+(package! deno-fmt)
