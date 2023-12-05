@@ -1,3 +1,5 @@
+# zmodload zsh/zprof
+
 [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -25,6 +27,7 @@ alias devc='dev c'
 alias devuc='dev u && dev c'
 alias devduc='dev d && dev u && dev c'
 alias devv='dev typecheck && dev style --include-branch-commits && devt'
+alias devvv='dev typecheck && dev style -a && dev t'
 alias devuv='devu && devv'
 alias devuv='devdu && devv'
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
@@ -57,8 +60,17 @@ function dev {
   dev "$@"
 }
 
-bindkey -v
-bindkey fd vi-cmd-mode
+# gpg
+export GPG_TTY=$(tty) 
+alias yubi="echo test | gpg --status-fd=2 -bsau '3A3DA70B98A24875C07EFA4C29A9006B1AAE5506'\!''"
+
+function ss {
+  #yubi
+  spin shell "$@"
+}
+
+#bindkey -v
+#bindkey fd vi-cmd-mode
 # Timeout after escape
 export KEYTIMEOUT=1
 bindkey '^E' end-of-line
@@ -68,10 +80,23 @@ bindkey '^A' beginning-of-line
 
 eval "$(shadowenv init zsh)"
 
-[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
 
 # Don't save commands starting with a space
 setopt HIST_IGNORE_SPACE
 
 unset CC
 unset CXX
+
+# spin
+zstyle ':completion:*' use-cache on
+# Removed auto completion
+#autoload -Uz compinit && compinit
+source <(spin completion)
+
+export PATH=$PATH:~/Projects/bin
+
+# zprof
+
+# Shopify Hydrogen alias to local projects
+alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'

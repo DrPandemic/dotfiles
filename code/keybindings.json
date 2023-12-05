@@ -194,6 +194,21 @@
     "when": "sideBarVisible && vim.mode != 'Insert'"
 },
 {
+    "key": "shift+escape",
+    "command": "pr.collapseAllComments",
+    "when": "!editorHasSelection && vim.mode != 'Insert'"
+},
+{
+    "key": "escape",
+    "command": "workbench.action.closePanel",
+    "when": "panelVisible && vim.mode != 'Insert'"
+},
+{
+    "key": "escape",
+    "command": "workbench.action.closeSidebar",
+    "when": "sideBarVisible && vim.mode != 'Insert'"
+},
+{
     "key": "shift+ctrl+enter",
     "command": "workbench.action.togglePanel"
 },
@@ -216,4 +231,39 @@
 	"command": "vspacecode.space",
 	"when": "sideBarFocus && !inputFocus && !whichkeyActive"
 },
+{
+  "key": "shift+cmd+t",
+  "command": "workbench.action.reopenClosedEditor"
+},
+{
+  "key": "shift+cmd+t",
+  "command": "-workbench.action.reopenClosedEditor"
+},
+{
+  "key": "shift+cmd+f",
+  "command": "filesExplorer.findInFolder"
+},
+{
+  "key": "shift+alt+f",
+  "command": "-filesExplorer.findInFolder",
+  "when": "explorerResourceIsFolder && explorerViewletVisible && filesExplorerFocus && !inputFocus"
+},
+{
+  "key": "ctrl+alt+d",
+  "command": "editor.action.addSelectionToNextFindMatch",
+  "when": "editorFocus"
+},
+{
+  "key": "cmd+d",
+  "command": "-editor.action.addSelectionToNextFindMatch",
+  "when": "editorFocus"
+},
+{
+  "key": "cmd+k cmd+enter",
+  "command": "workbench.action.keepEditor"
+},
+{
+  "key": "cmd+k enter",
+  "command": "-workbench.action.keepEditor"
+}
 ]

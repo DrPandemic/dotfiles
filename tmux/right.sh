@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-CPU=$(top -l 1 | grep -E '^CPU' | awk '{print $3}')
+CPU="⚙️ $(top -l 1 | grep -E '^CPU' | awk '{print $3}')"
 
-MEMORY_TOTAL=$(sysctl -a | grep memsize | awk '{print $2}')
+MEMORY_TOTAL=$(sysctl -a | grep "hw.memsize:" | awk '{print $2}')
 PAGE_SIZE=$(sysctl -a | grep 'hw.pagesize:' | awk '{print $2}')
 WIRED=$(memory_pressure | grep wired | awk '{print $4}')
 FREE_PAGES=$(vm_stat | grep free | awk '{ print $3 }' | sed 's/\.//')

@@ -8,9 +8,9 @@
         "useRustfmt": true
     },
     "[ruby]": {
-        "editor.formatOnSave": false
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "Shopify.ruby-lsp"
     },
-    "workbench.activityBar.visible": false,
     "editor.smoothScrolling": true,
     "editor.minimap.enabled": false,
     "vim.hlsearch": true,
@@ -668,7 +668,6 @@
     "vim.insertModeKeyBindings": [
     ],
     "vim.easymotion": true,
-    "window.zoomLevel": 2,
     "ruby.rubocop.executePath": "/Users/jeansamuel/.gem/ruby/2.6.5/bin/",
     "ruby.lint": {
         "ruby": true,
@@ -786,33 +785,27 @@
     "terminal.integrated.rendererType": "experimentalWebgl",
     "trailing-spaces.highlightCurrentLine": false,
     "trailing-spaces.deleteModifiedLinesOnly": true,
-    "workbench.statusBar.visible": true,
     "vspacecode.bindingOverrides": [
         {
             "keys": ["m", "languageId:ruby", "t", "t"],
             "name": "Test under cursor",
             "type": "command",
             "command": "runTestLine",
+        },
+        {
+            "keys": "g.b",
+            "name": "Blame file",
+            "type": "command",
+            "command":"gitlens.toggleFileBlame",
         }
     ],
     "editor.autoClosingOvertype": "never",
     "editor.autoClosingQuotes": "never",
     "editor.autoSurround": "never",
     "editor.autoClosingBrackets": "never",
-    "workbench.editor.enablePreviewFromQuickOpen": false,
     "git.decorations.enabled": false,
     "vim.commandLineModeKeyBindings": [
-        {
-            "before": ["W"],
-            "commands": [
-                "workbench.action.files.save"
-            ]
-        },
     ],
-    "diffEditor.ignoreTrimWhitespace": false,
-    "vim.iskeyword": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
-    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
-    "workbench.panel.opensMaximized": "always",
     "[javascript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
@@ -826,7 +819,6 @@
     "vim.camelCaseMotion.enable": true,
     "vim.highlightedyank.enable": true,
     "byesig.fold": false,
-    "workbench.editor.enablePreview": false,
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
@@ -893,5 +885,83 @@
                 }
             ]
         }
-    }
+    },
+    "devTestRunner.alwaysShowRunLastButton": false,
+    "githubPullRequests.queries": [
+        {
+            "label": "Unread",
+            "query": "is:unread"
+        },
+        {
+            "label": "Waiting For My Review",
+            "query": "is:open review-requested:${user}"
+        },
+        {
+            "label": "Assigned To Me",
+            "query": "is:open assignee:${user}"
+        },
+        {
+            "label": "Created By Me",
+            "query": "is:open author:${user}"
+        }
+    ],
+    "workbench.startupEditor": "none",
+    "remote.SSH.defaultExtensions": [
+        "kahole.magit",
+        "fabiospampinato.vscode-highlight",
+        "ybaumes.highlight-trailing-white-spaces",
+        "ziyasal.vscode-open-in-github"
+    ],
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": true,
+        "markdown": true,
+        "scminput": false,
+        "yaml": true,
+        "ruby": true
+    },
+    "editor.inlineSuggest.enabled": true,
+    "rust-analyzer.inlayHints.chainingHints.enable": false,
+    "rust-analyzer.inlayHints.parameterHints.enable": false,
+    "rust-analyzer.inlayHints.typeHints.enable": false,
+    "vale.core.useCLI": true,
+    "terminal.integrated.persistentSessionScrollback": 10000,
+    "terminal.integrated.scrollback": 100000,
+    "editor.stickyScroll.enabled": true,
+    "shopifyGlobal.mysqlEditor": "external",
+    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
+    "explorer.confirmDragAndDrop": false,
+    "githubIssues.queries": [
+        {
+            "label": "My Issues",
+            "query": "is:open is:issue assignee:jsaubry"
+        },
+        {
+            "label": "Created Issues",
+            "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+        },
+        {
+            "label": "Recent Issues",
+            "query": "state:open repo:${owner}/${repository} sort:updated-desc"
+        }
+    ],
+    "window.zoomLevel": 2,
+    "remote.SSH.remotePlatform": {
+        "direct.notary6.jeansamuel-aubryguzzi.us.spin.dev": "linux",
+        "direct.isospin2-hub-2.jeansamuel-aubryguzzi.us.spin.dev": "linux",
+        "direct.ws-5.jeansamuel-aubryguzzi.us.spin.dev": "linux"
+    },
+    "githubPullRequests.pullBranch": "never",
+    "githubPullRequests.commentExpandState": "collapseAll",
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "gitlens.showWelcomeOnInstall": false,
+    "gitlens.currentLine.enabled": false,
+    "gitlens.telemetry.enabled": false,
+    "gitlens.codeLens.authors.enabled": false,
+    "gitlens.codeLens.enabled": false,
+    "workbench.activityBar.visible": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "git.openRepositoryInParentFolders": "never",
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "workbench.editor.enablePreviewFromCodeNavigation": true,
 }
