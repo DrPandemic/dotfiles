@@ -2,7 +2,6 @@
     "workbench.colorTheme": "Noctis Minimus",
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "window.zoomLevel": 1,
     "editor.lineNumbers": "relative",
     "editor.minimap.enabled": false,
     "editor.rulers": [
@@ -16,7 +15,7 @@
         "toolchain": "stable-x86_64-unknown-linux-gnu",
         "nightlyToolchain": "nightly-x86_64-unknown-linux-gnu"
     },
-    "rust.mode": "legacy",
+    "rust.mode": "rls",
     "GodotTools.editorPath": "/opt/godot-mono-bin/godot/Godot_v3.1.1-stable_mono_x11.64",
     "keyboard.dispatch": "keyCode",
     "workbench.editorAssociations": {
@@ -43,6 +42,15 @@
                     "command": "whichkey.triggerKey",
                     "args": "m"
                 }
+            ]
+        },
+        {
+            "before": [
+                "Y"
+            ],
+            "after": [
+                "y",
+                "$"
             ]
         }
     ],
@@ -111,4 +119,20 @@
         "<C-z>": false
     },
     "extensions.ignoreRecommendations": true,
+    "rust-analyzer.inlayHints.chainingHints.enable": false,
+    "rust-analyzer.inlayHints.closingBraceHints.enable": false,
+    "rust-analyzer.inlayHints.typeHints.enable": false,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.tabSize": 2,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "rust-analyzer.inlayHints.parameterHints.enable": false,
+    "rust-analyzer.check.command": "clippy",
+    "redhat.telemetry.enabled": false,
+    "rust.rls": {
+        "useRustfmt": true
+    },
 }

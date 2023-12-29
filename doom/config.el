@@ -3,8 +3,8 @@
 (setq user-full-name "John Doe"
       user-mail-address "john@doe.com")
 
-(setq doom-font (font-spec :family "Hasklig" :size 15 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 13))
+(setq doom-font (font-spec :family "Hasklig" :size 28 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 25))
 
 (setq doom-theme 'doom-horizon)
 
@@ -130,3 +130,11 @@
 ;; Deno
 (add-hook 'typescript-mode-hook 'deno-fmt-mode)
 (add-hook 'js2-mode-hook 'deno-fmt-mode)
+
+;; Javascript
+(setq js-indent-level 2)
+(use-package web-mode
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2))
