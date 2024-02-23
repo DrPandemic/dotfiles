@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+from pysolar.solar import *
+import datetime
+import os
+import time
+from datetime import timedelta
+
+latitude = 45.53
+longitude = -73.57
+max_gamma = 6500
+min_gamma = 4700
+max_angle = 5
+min_angle = -5
+total_max_angle = 70
+
+while True:
+    date = datetime.datetime.now(datetime.timezone.utc)
+    altitude_deg = get_altitude(latitude, longitude, date)
+    if altitude_deg > max_angle:
+        os.system("./gamma-set %s"%(max_gamma))
+    elif altitude_deg < min_angle:
+        os.system("./gamma-set %s"%(min_gamma))
+    else:
+        deg = int(min_gamma + (max_gamma - min_gamma) * (altitude_deg - min_angle) / (total_max_angle - min_angle))
+        os.system("./gamma-set %s"%(deg))
+
+    time.sleep(60 * 10)

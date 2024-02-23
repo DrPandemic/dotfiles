@@ -27,9 +27,9 @@ window#waybar {
     background: transparent;
 }
 
-#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-spotify, #tray, #mode, #custom-temp, #custom-root, #custom-home, #custom-backup, #custom-scratch, #custom-main {
+#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-spotify, #tray, #mode, #custom-temp, #custom-root, #custom-home, #custom-backup, #custom-scratch, #custom-main, #language, #custom-updates {
     padding: 5px 0 0;
-    margin: 0 3px;
+    margin: 0 10px;
 }
 
 #clock {
