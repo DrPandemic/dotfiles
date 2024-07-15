@@ -15,9 +15,9 @@ fi
 
 numlockx &
 
-#exec cinnamon-session
+exec cinnamon-session
 #exec i3 # -V > /tmp/i3.log 2>&1
-export GDK_BACKEND=x11
-export XDG_SESSION_TYPE=x11
+#export GDK_BACKEND=x11
+#export XDG_SESSION_TYPE=x11
 #export GDK_BACKEND=wayland
-exec gnome-session
+#exec gnome-session

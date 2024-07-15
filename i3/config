@@ -5,6 +5,8 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+include /etc/sway/config.d/*
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -149,6 +151,9 @@ bindsym XF86AudioPrev exec playerctl previous
 
 bindsym --release $mod+Control+Shift+4 exec grim -g "$(slurp)" - | wl-copy
 
+# Clipboard manager
+exec wl-paste -t text --watch clipman store --no-persist
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -186,16 +191,18 @@ exec albert
 exec --no-startup-id /home/parasithe/Projects/sway/contrib/keyboard-layout-per-window.py
 exec dunst
 exec sleep 1 && rambox
-exec sleep 1 && env GDK_DPI_SCALE=0.5 firefox
+exec sleep 1 && firefox
 exec artha
 exec sleep 3 && generate-wallpapers
 #exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 #exec sleep 1 && redshift -l 45.53:73.57
 # exec --no-startup-id redshift-gtk
 #exec --no-startup-id gammastep-indicator
-exec --no-startup-id /usr/lib/xdg-desktop-portal-wlr
-exec --no-startup-id /usr/lib/xdg-desktop-portal
+#exec --no-startup-id /usr/lib/xdg-desktop-portal-wlr -r
+#exec --no-startup-id /usr/lib/xdg-desktop-portal-gtk -r
+#exec --no-startup-id /usr/lib/xdg-desktop-portal -r
 #exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/gamma-automatic
+exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/share-screen
 
 # i3-gaps
 gaps inner 20
@@ -203,9 +210,9 @@ gaps outer 10
 smart_gaps on
 
 # Screens
-workspace 1 output DP-2
-workspace 2 output DP-2
-workspace 2 output DP-2
+workspace 1 output DP-1
+workspace 2 output DP-1
+workspace 2 output DP-1
 workspace 4 output DP-3
 
 # Workspaces
@@ -254,15 +261,18 @@ exec_always {
 
 # Wallpapers
 output DP-1 bg ~/Pictures/wallpaper-left stretch
+output HDMI-A-1 bg ~/Pictures/wallpaper-left stretch
 output DP-3 bg ~/Pictures/wallpaper-right stretch
 
 bar {
     swaybar_command waybar-wayland
 }
 
-output DP-2 pos 3840 0 res 3840x2160 scale 1.0
-output DP-3 pos 0 0 res 3840x2160 scale 1.0
-output DP-1 pos 3840 0 res 3840x2160 scale 1.0
+#output DP-2 pos 3840 0 res 3840x2160 scale 1.0
+output DP-3 pos 0 0 res 3840x2160@60Hz scale 1.0
+#output DP-1 pos 3840 0 res 3840x2160 scale 1.0 adaptive_sync on
+output DP-1 pos 3840 0 res 3840x2160@60Hz scale 1.0
+#output HDMI-A-1 pos 3840 0 res 3840x2160 scale 1.0
 #output DP-1 pos 0 0 res 3840x2160 scale 1.0
 #output DP-1 pos 3840 0 res 1920x1080 scale 1.0
 

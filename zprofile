@@ -38,7 +38,7 @@ export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 
 export MOZ_ENABLE_WAYLAND=1
 #export GDK_BACKEND=x11
-export GDK_BACKEND=wayland
+export GDK_BACKEND=wayland,x11
 
 export GDK_SCALE=2
 export GDK_DPI_SCALE=1
@@ -47,7 +47,7 @@ export QT_AUTO_SCREEN_SET_FACTOR=0
 export QT_SCALE_FACTOR=2
 export QT_FONT_DPI=96
 
-export XDG_CURRENT_DESKTOP=sway
+#export XDG_CURRENT_DESKTOP=sway
 
 # Draw menu in the right position
 export _JAVA_AWT_WM_NONREPARENTING=1

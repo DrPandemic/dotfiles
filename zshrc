@@ -7,12 +7,16 @@ alias htop TERM=screen htop
 alias gclean='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d '
 alias ping=prettyping
 alias vim=nvim
+alias xg="XDG_SESSION_TYPE=wayland dbus-run-session gnome-session"
 
 export EDITOR='vim'
 export CC=clang
 export CXX=clang++
 export GOOGLE_APPLICATION_CREDENTIALS=~/.config/google-creds.json
 export DOCKER_ID_USER="drpandemic"
+
+#export WLR_RENDERER=vulkan
+#export WLR_RENDERER=gles2
 
 if [[ -z $TMUX ]]; then
   if [[ -n $WAYLAND_DISPLAY ]] then
@@ -23,7 +27,7 @@ if [[ -z $TMUX ]]; then
 fi
 
 function x {
- sway
+ XDG_CURRENT_DESKTOP=sway dbus-run-session sway
 }
 
 function waybar-wayland {

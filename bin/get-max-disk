@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+disks = [
+  "sda",
+  "sdb",
+  "sdc",
+  "nvme0n1",
+]
+
+output = `sar -d -b 3 | head`.split("\n")
+
+max_usage = 0
+usages = {}
+disks.each do |disk|
+  usage = output.find do |line|
+    line.match(/#{disk}/)
+  end.split(" ").last
+
+  max_usage = [max_usage, usage.to_i].max
+
+  usages[disk] = usage
+end
+
+formatted_usages = ""
+usages.each do |disk, usage|
+  padded_disk = if disk.size < 5
+    disk.ljust(14, " ")
+  else
+    disk
+  end
+  formatted_usages << "#{padded_disk}: #{usage}%\r"
+end
+formatted_usages = formatted_usages[0...-1]
+
+puts([max_usage, formatted_usages].join("\n"))
