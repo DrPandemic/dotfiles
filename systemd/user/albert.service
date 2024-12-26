@@ -4,6 +4,7 @@ Description=Albert launcher service
 [Service]
 Type=simple
 ExecStart=/usr/bin/albert
+ExecStartPre=-killall -9 albert
 Restart=on-failure
 
 [Install]

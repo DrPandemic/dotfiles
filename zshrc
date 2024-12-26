@@ -75,11 +75,12 @@ function sed_regex() {
   rg -l "$1" | xargs sed -i -e "s/$1/$2/g"
 }
 
+function dev() {
+  devcontainer exec --workspace-folder ./ "$@"
+}
+
 # Theme
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-
-# OPAM configuration
-#. /home/parasithe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # Vi keybindings
 bindkey -v

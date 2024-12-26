@@ -1,10 +1,10 @@
 {
     "layer": "bottom", // Waybar at top layer
     "position": "bottom",
-    "height": 44,
+    "height": 35,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "custom/disk", "custom/gpu", "network", "idle_inhibitor", "tray"],
+    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "custom/disk", "custom/gpu", "wireplumber", "network", "idle_inhibitor", "tray"],
     // Modules configuration
     "sway/workspaces": {
         "disable-scroll": true,
@@ -130,7 +130,7 @@
         "on-scroll-down": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -300"
     },
     "custom/gpu": {
-    	"format": " ⛷ {}%",
+    	"format": " ♠ {}%",
         "exec": "cat /sys/class/hwmon/hwmon2/device/gpu_busy_percent",
         //"exec": "amdgpu_top -gm | rg average_gfx_activity: | awk -F ':' '{print $2}' | sed 's/,//'",
         "interval": 10
@@ -139,5 +139,10 @@
     	"format": " 🖴 {}%",
         "exec": "/home/parasithe/Projects/dotfiles/bin/get-max-disk",
         "interval": 10
+    },
+    "wireplumber": {
+        "format": "   {volume}%",
+        "format-muted": "",
+        "on-click": "helvum"
     }
 }

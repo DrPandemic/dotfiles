@@ -104,9 +104,9 @@
         "statusBar.background": "#005f5f",
         "statusBar.noFolderBackground": "#005f5f",
         "statusBar.debuggingBackground": "#005f5f",
-        "statusBar.foreground": "#a8dada"
+        "statusBar.foreground": "#ffffff",
+        "statusBar.debuggingForeground": "#ffffff"
     },
-    "workbench.activityBar.visible": false,
     "omnisharp.monoPath": "/usr/lib/mono/msbuild/Current",
     "omnisharp.useGlobalMono": "always",
     "omnisharp.enableRoslynAnalyzers": true,
@@ -135,4 +135,7 @@
     "rust.rls": {
         "useRustfmt": true
     },
+    "workbench.activityBar.location": "hidden",
+    "gitlens.telemetry.enabled": false,
+    "telemetry.telemetryLevel": "off",
 }

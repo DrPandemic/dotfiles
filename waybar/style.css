@@ -2,11 +2,11 @@
     border: none;
     border-radius: 0;
     /*font-family: Roboto, Helvetica, Arial, sans-serif, "FontAwesome 5 Free Solid";*/
-    font-family: Roboto, Helvetica, Arial, sans-serif, "FontAwesome 5 Free Solid";
-    font-size: 26px;
+    font-family: Roboto, Helvetica, Arial, sans-serif,
+        "FontAwesome 5 Free Solid";
+    font-size: 20px;
     min-height: 0;
 }
-
 
 window#waybar {
     background: rgba(43, 48, 59, 0.3);
@@ -27,7 +27,23 @@ window#waybar {
     background: transparent;
 }
 
-#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-spotify, #tray, #mode, #custom-temp, #custom-root, #custom-home, #custom-backup, #custom-scratch, #custom-main, #language, #custom-updates {
+#clock,
+#battery,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#custom-spotify,
+#tray,
+#mode,
+#custom-temp,
+#custom-root,
+#custom-home,
+#custom-backup,
+#custom-scratch,
+#custom-main,
+#language,
+#custom-updates {
     padding: 5px 0 0;
     margin: 0 10px;
 }
@@ -44,7 +60,7 @@ window#waybar {
 
 #battery.charging {
     color: white;
-    background-color: #26A65B;
+    background-color: #26a65b;
 }
 
 @keyframes blink {
@@ -76,7 +92,7 @@ window#waybar {
 
 #network {
     background: transparent;
-    color: @foreground
+    color: @foreground;
 }
 
 #network.disconnected {
@@ -132,8 +148,8 @@ window#waybar {
 }
 
 #language.us {
-    color:  #f8625c;
+    color: #f8625c;
 }
 #language.ca {
-    color:  #5ed6fe;
+    color: #5ed6fe;
 }
