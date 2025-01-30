@@ -13,6 +13,7 @@ alias htop TERM=screen htop
 alias gclean='git branch --merged main | grep -v "\* main" | grep -v ".*main" | xargs -n 1 git branch -d'
 #alias ping=prettyping
 
+alias g=git
 alias devdus='dev down && dev up && dev s'
 alias devdut='dev down && dev up && dev t'
 alias devdu='dev down && dev up'
@@ -33,6 +34,21 @@ alias devuv='devdu && devv'
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias t="dev test"
 alias g="git"
+alias tap="bin/tapioca"
+alias gql="open 'https://app.myshopify.io/services/internal/shops/1/graphql?appID=1830279&versionHandle=unstable'"
+function kp() {
+  local port="$1"
+  local pids=$(lsof -t -i:"$port")
+  
+  if [[ -z "$pids" ]]; then
+    echo "No process found running on port $port"
+    return 1
+  else
+    echo "Killing process(es) on port $port"
+    echo "$pids" | xargs kill -9
+    echo "Process(es) killed successfully"
+  fi
+}
 
 export EDITOR='vim'
 #export CC=clang
@@ -69,6 +85,22 @@ function ss {
   spin shell "$@"
 }
 
+function ks() {
+  if [ -z "$1" ]; then
+    echo "Usage: ks <port>"
+    return 1
+  fi
+
+  local pids=$(lsof -t -i:$1)
+
+  if [ -n "$pids" ]; then
+    echo "$pids" | xargs kill -9
+    echo "Killed processes on port $1"
+  else
+    echo "No processes found on port $1"
+  fi
+}
+
 #bindkey -v
 #bindkey fd vi-cmd-mode
 # Timeout after escape
@@ -100,3 +132,16 @@ export PATH=$PATH:~/Projects/bin
 
 # Shopify Hydrogen alias to local projects
 alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
+
+# cloudplatform: add Shopify clusters to your local kubernetes config
+export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/jsaubry/.kube/config:/Users/jsaubry/.kube/config.shopify.cloudplatform
+
+# For Graal
+export SDKROOT=$(xcrun --show-sdk-path)
+export SYSTEM_RUBY=/usr/bin/ruby
+alias jt=/Users/jsaubry/Projects/truffleruby-ws/truffleruby/bin/jt
+
+# is-it-shipped
+fpath=(~/.zsh/functions $fpath)
+#autoload -Uz ~/.zsh/functions/[^_]*(.:t)
+autoload -Uz ~/.zsh/functions/*

@@ -19,4 +19,4 @@ BATTERY=⚡$(printf "%2d" $BATTERY)
 
 DATE=$(date '+%H:%M')
 
-echo "$CPU - #[fg=blue]$MEMORY% - #[fg=red]️$BATTERY%#[default] - $DATE"
+echo "$CPU - #[fg=blue]$MEMORY% - #[fg=red]️$BATTERY%#[default] - $DATE  "
