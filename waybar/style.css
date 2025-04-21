@@ -2,8 +2,7 @@
     border: none;
     border-radius: 0;
     /*font-family: Roboto, Helvetica, Arial, sans-serif, "FontAwesome 5 Free Solid";*/
-    font-family: Roboto, Helvetica, Arial, sans-serif,
-        "FontAwesome 5 Free Solid";
+    font-family: Roboto, "Font Awesome 6 Free", Twemoji, Helvetica, Arial, sans-serif;
     font-size: 20px;
     min-height: 0;
 }

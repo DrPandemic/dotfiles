@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'debug'
+
+old_count = 0
+loop do
+  IO.popen(['swaymsg', '-t', 'subscribe', '[ "window" ]']) do |io|
+    io.each do |event|
+      sway_tree = `swaymsg -t get_tree`
+      sway_tree_json = JSON.parse(sway_tree)
+
+      workspaces = sway_tree_json.dig('nodes')
+        .select { |node| node['type'] == 'output' }
+        .flat_map { |output| output['nodes'] }
+        .select { |node| node['type'] == 'workspace' }
+      four = workspaces.find { |workspace| workspace['name'] == '4' }
+      next unless four
+      windows = []
+      nodes = four['nodes'].clone
+      while nodes.any?
+        node = nodes.shift
+        if node['name'].nil?
+          nodes.concat(node['nodes'].clone)
+        else
+          windows << node
+        end
+      end
+
+      if old_count != 1 && windows.size == 1
+        system('swaymsg "[workspace=4]" layout splith')
+      elsif old_count != 2 && windows.size == 2
+        system('swaymsg "[workspace=4] splitv"')
+      end
+
+      old_count = windows.size
+    end
+  end
+  sleep 1
+end

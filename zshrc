@@ -96,3 +96,6 @@ export PATH="$PATH:/home/parasithe/.dotnet/tools"
 
 # zsh history
 setopt HIST_IGNORE_SPACE
+
+# Game HUD
+#export MANGOHUD=1

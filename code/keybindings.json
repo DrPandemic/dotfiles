@@ -138,10 +138,6 @@
 		"when": "sideBarVisible"
 	},
 	{
-		"key": "shift+enter",
-		"command": "workbench.action.togglePanel"
-	},
-	{
 		"key": "ctrl+w",
 		"command": "-extension.vim_ctrl+w",
 		"when": "editorTextFocus && vim.active && vim.use<C-w> && !inDebugRepl"
@@ -154,11 +150,6 @@
 		"key": "escape",
 		"command": "workbench.action.closePanel",
 		"when": "panelVisible"
-	},
-	{
-		"key": "escape",
-		"command": "workbench.action.closeAuxiliaryBar",
-		"when": "auxiliaryBarVisible"
 	},
 	{
 		"key": "ctrl+p",
@@ -178,5 +169,28 @@
 		"key": "shift+alt+f",
 		"command": "-filesExplorer.findInFolder",
 		"when": "explorerResourceIsFolder && filesExplorerFocus && foldersViewVisible && !inputFocus"
-	}
+	},
+	{
+		"key": "ctrl+alt+\\",
+		"command": "github.copilot.toggleCopilot"
+	},
+	{
+		"key": "ctrl+shift+alt+c",
+		"command": "copyRelativeFilePath"
+	},
+	{
+		"key": "ctrl+shift+alt+c",
+		"command": "-copyRelativeFilePath",
+		"when": "!editorFocus"
+	},
+	{
+		"key": "ctrl+k ctrl+shift+alt+c",
+		"command": "-copyRelativeFilePath",
+		"when": "editorFocus"
+	},
+	{
+    "key": "escape",
+    "command": "workbench.action.toggleAuxiliaryBar",
+    "when": "auxiliaryBarVisible && vim.mode == 'Normal'"
+  }
 ]

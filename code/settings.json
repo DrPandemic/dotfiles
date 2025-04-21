@@ -138,4 +138,15 @@
     "workbench.activityBar.location": "hidden",
     "gitlens.telemetry.enabled": false,
     "telemetry.telemetryLevel": "off",
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.snippets.codeActions.enabled": false,
+    "editor.suggest.showSnippets": false,
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "editor.fontFamily": "'Inconsolata Nerd Font Mono', 'Twemoji', 'Droid Sans Mono', 'monospace', monospace",
+    "dev.containers.dockerSocketPath": "/var/run/docker.sockdocker",
 }

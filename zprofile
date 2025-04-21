@@ -21,7 +21,7 @@ export CHROME_EXECUTABLE=google-chrome-stable
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
+export JAVA_HOME="/usr/lib/jvm/java-23-openjdk"
 export PATH=$JAVA_HOME/bin:$PATH
 
 export PATH=$HOME/.cargo/bin:$PATH

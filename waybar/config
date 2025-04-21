@@ -4,7 +4,7 @@
     "height": 35,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "custom/disk", "custom/gpu", "wireplumber", "network", "idle_inhibitor", "tray"],
+    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "temperature", "custom/disk", "custom/gpu", "custom/mouse", "wireplumber", "network", "idle_inhibitor", "tray"],
     // Modules configuration
     "sway/workspaces": {
         "disable-scroll": true,
@@ -81,9 +81,11 @@
     },
     "network": {
         // "interface": "wlp2s0", // (Optional) To force the use of this interface
+	"interval": "3",
         "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "  {ifname}: {ipaddr}/{cidr} ",
-        "format-disconnected": "⚠ Disconnected "
+        "format-ethernet": "  {bandwidthTotalBytes} ",
+        "format-disconnected": "⚠ Disconnected ",
+	"tooltip-format": "{ipaddr}/{cidr}"
     },
     "pulseaudio": {
         //"scroll-step": 5,
@@ -130,10 +132,11 @@
         "on-scroll-down": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -300"
     },
     "custom/gpu": {
-    	"format": " ♠ {}%",
+    	"format": " 🌪 {}%",
         "exec": "cat /sys/class/hwmon/hwmon2/device/gpu_busy_percent",
         //"exec": "amdgpu_top -gm | rg average_gfx_activity: | awk -F ':' '{print $2}' | sed 's/,//'",
-        "interval": 10
+        "interval": 10,
+	"on-click": "amdgpu_top --gui"
     },
     "custom/disk": {
     	"format": " 🖴 {}%",
@@ -144,5 +147,14 @@
         "format": "   {volume}%",
         "format-muted": "",
         "on-click": "helvum"
-    }
+    },
+    "temperature": {
+	"hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
+        "format": "  {temperatureC}°C "
+    },
+    "custom/mouse": {
+    	"format": " 🐁{}",
+        "exec": "upower --dump | awk '/percentage:/ {print $2}' | head -n 1",
+        "interval": 60
+    },
 }

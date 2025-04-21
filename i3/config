@@ -97,6 +97,9 @@ bindsym $mod+Shift+Tab workspace prev_on_output
 bindsym $mod+Control+Left move workspace to output left
 bindsym $mod+Control+Right move workspace to output right
 
+# notifications
+bindsym $mod+Shift+n exec swaync-client -t -sw
+
 # By default, no border
 default_border pixel 5
 hide_edge_borders smart
@@ -160,24 +163,24 @@ exec swayidle -w \
          timeout 300 'swaymsg "output * dpms off" && swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill' \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill'
-# exec xss-lock -- swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill
 exec /usr/lib/gnome-settings-daemon/gnome-settings-daemon
-# Starts gnome-keyring
 exec gnome-keyring-daemon
 exec dbus-update-activation-environment --all
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id sleep 1 && albert
 exec --no-startup-id /home/parasithe/Projects/sway/contrib/keyboard-layout-per-window.py
-exec dunst
+#exec --no-startup-id sleep 1 && dunst
+exec swaync
 exec firefox --class WebApp-Messenger8501 --name WebApp-Messenger8501 --profile /home/parasithe/.local/share/quick-webapps/firefox/Messenger8501 --no-remote https://www.messenger.com
 exec sleep 1 && firefox
-#exec artha
 exec sleep 3 && generate-wallpapers
-#exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 #exec sleep 1 && redshift -l 45.53:73.57
 # exec --no-startup-id redshift-gtk
 #exec --no-startup-id gammastep-indicator
 #exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/gamma-automatic
 exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/share-screen
+#exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/sway-split
+exec autotiling
 
 # i3-gaps
 gaps inner 20
@@ -223,8 +226,8 @@ input type:keyboard {
   xkb_numlock enabled
 }
 
-input type:mouse {
-  pointer_accel  -1
+input type:pointer {
+  pointer_accel  -0.80
 }
 
 # GTK theme
