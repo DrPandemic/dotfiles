@@ -36,6 +36,12 @@ window#waybar {
 #tray,
 #mode,
 #custom-temp,
+#custom-temperature,
+#custom-gpu,
+#custom-disk,
+#custom-mouse,
+#wireplumber,
+#idle_inhibitor,
 #custom-root,
 #custom-home,
 #custom-backup,
@@ -43,8 +49,8 @@ window#waybar {
 #custom-main,
 #language,
 #custom-updates {
-    padding: 5px 0 0;
-    margin: 0 10px;
+    padding: 0 3px;
+    margin: 0 3px;
 }
 
 #clock {
