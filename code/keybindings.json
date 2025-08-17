@@ -192,5 +192,13 @@
     "key": "escape",
     "command": "workbench.action.toggleAuxiliaryBar",
     "when": "auxiliaryBarVisible && vim.mode == 'Normal'"
-  }
+	},
+	{
+		"key": "ctrl+k ctrl+enter",
+		"command": "workbench.action.keepEditor"
+	},
+	{
+		"key": "ctrl+k enter",
+		"command": "-workbench.action.keepEditor"
+	}
 ]

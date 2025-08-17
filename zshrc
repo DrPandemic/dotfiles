@@ -27,7 +27,11 @@ if [[ -z $TMUX ]]; then
 fi
 
 function x {
- XDG_CURRENT_DESKTOP=sway dbus-run-session sway
+  XDG_CURRENT_DESKTOP=sway dbus-run-session sway
+}
+
+function start-gnome {
+  XDG_SESSION_TYPE=wayland dbus-run-session gnome-session
 }
 
 function waybar-wayland {

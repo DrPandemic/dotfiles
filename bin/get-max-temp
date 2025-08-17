@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+# Find all hwmon directories
+hwmon_dirs = Dir.glob('/sys/class/hwmon/hwmon*').sort
+
+max_temp = 0
+temperatures = {}
+
+hwmon_dirs.each do |hwmon_dir|
+  name_file = File.join(hwmon_dir, 'name')
+
+  # Skip if name file doesn't exist
+  next unless File.exist?(name_file)
+
+  # Read hardware name
+  hardware_name = File.read(name_file).strip
+
+  # Find all temperature input files (temp1_input, temp2_input, etc.)
+  temp_files = Dir.glob(File.join(hwmon_dir, 'temp*_input')).sort
+
+  temp_files.each do |temp_file|
+    temp_millicelsius = File.read(temp_file).strip.to_i
+    temp_celsius = temp_millicelsius / 1000
+
+    max_temp = [max_temp, temp_celsius].max
+
+    # Create unique key for each temperature sensor
+    temp_number = File.basename(temp_file).match(/temp(\d+)_input/)[1]
+    key = temp_files.length > 1 ? "#{hardware_name}_temp#{temp_number}" : hardware_name
+
+    temperatures[key] = temp_celsius
+  end
+end
+
+# Format output
+formatted_temps = ""
+temperatures.each do |hardware, temp|
+  padded_hardware = if hardware.size < 14
+    hardware.ljust(14, " ")
+  else
+    hardware
+  end
+  formatted_temps << "#{padded_hardware}: #{temp}°C\r"
+end
+formatted_temps = formatted_temps[0...-1] unless formatted_temps.empty?
+
+puts([max_temp, formatted_temps].join("\n"))

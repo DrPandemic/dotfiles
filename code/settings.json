@@ -141,12 +141,24 @@
     "editor.acceptSuggestionOnEnter": "off",
     "editor.snippets.codeActions.enabled": false,
     "editor.suggest.showSnippets": false,
+    "editor.fontFamily": "'Inconsolata Nerd Font Mono', 'Twemoji', 'Droid Sans Mono', 'monospace', monospace",
+    "dev.containers.dockerSocketPath": "/var/run/docker.sockdocker",
+    "zig.zls.enabled": "on",
+    "zig.zls.inlayHintsShowParameterName": false,
+    "zig.zls.inlayHintsShowVariableTypeHints": false,
+    "[zig]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ziglang.vscode-zig",
+        "editor.stickyScroll.defaultModel": "foldingProviderModel",
+        "editor.tabSize": 4,
+        "files.eol": "\n"
+    },
     "github.copilot.enable": {
-        "*": true,
+        "*": false,
         "plaintext": false,
         "markdown": false,
         "scminput": false
     },
-    "editor.fontFamily": "'Inconsolata Nerd Font Mono', 'Twemoji', 'Droid Sans Mono', 'monospace', monospace",
-    "dev.containers.dockerSocketPath": "/var/run/docker.sockdocker",
+    "zig.path": "zig",
+    "gitlens.currentLine.enabled": false,
 }

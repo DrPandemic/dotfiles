@@ -1,5 +1,5 @@
 #!/bin/bash
 
-swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill &
+swaylock -f -i "DP-1:/home/parasithe/Pictures/lockscreen-1.jpg" -i "DP-3:/home/parasithe/Pictures/lockscreen-0.jpg" &
 
 sleep 5 && pgrep swaylock && ~/bin/suspend

@@ -1,5 +1,20 @@
 include /etc/sway/config.d/*
 
+# AI
+# AMD RX 7700 XT optimizations
+set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && \
+  dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
+# AI
+# AMD GPU environment variables
+exec_always {
+    export WLR_DRM_NO_ATOMIC=1
+    export WLR_RENDERER=vulkan
+    export MESA_LOADER_DRIVER_OVERRIDE=radeonsi
+}
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -117,7 +132,7 @@ bindsym Mod1+$mod+e exec antidote-selection
 
 # Launch lockscreen
 bindsym $mod+Control+q exec lock-suspend
-bindsym $mod+Control+Shift+q exec swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill
+bindsym $mod+Control+Shift+q exec swaylock -f -i "DP-1:/home/parasithe/Pictures/lockscreen-1.jpg" -i "DP-3:/home/parasithe/Pictures/lockscreen-0.jpg"
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
@@ -180,7 +195,7 @@ exec sleep 3 && generate-wallpapers
 #exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/gamma-automatic
 exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/share-screen
 #exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/sway-split
-exec autotiling
+#exec autotiling
 
 # i3-gaps
 gaps inner 20
@@ -191,7 +206,7 @@ smart_gaps on
 workspace 1 output DP-1
 workspace 2 output DP-1
 workspace 2 output DP-1
-workspace 4 output DP-2
+workspace 4 output DP-3
 
 # Workspaces
 assign [class="Chromium"] 1
@@ -205,7 +220,7 @@ assign [class="Emacs"] 3
 assign [app_id="code"] 3
 assign [app_id="WebApp-Messenger8501"] 4
 assign [class="obs"] 4
-assign [class="discord"] 4
+assign [app_id="discord"] 4
 assign [app_id="thunderbird"] 5
 assign [app_id="spotify"] 5
 for_window [class="Spotify"] move to workspace 5
@@ -239,14 +254,16 @@ exec_always {
 }
 
 # Wallpapers
-output DP-1 bg ~/Pictures/wallpaper-left stretch
-output DP-2 bg ~/Pictures/wallpaper-right stretch
+output DP-3 bg ~/Pictures/wallpaper-left stretch
+output DP-1 bg ~/Pictures/wallpaper-right stretch
 
 bar {
     swaybar_command waybar-wayland
 }
 
 output DP-1 pos 2560 0 res 3840x2160@60Hz scale 1.5
-output DP-2 pos 0 0 res 3840x2160@60Hz scale 1.5
+output DP-3 pos 0 0 res 3840x2160@60Hz scale 1.5
+#output HDMI-A-1 pos 0 0 res 3840x2160@60Hz scale 1.5
 
 seat seat0 xcursor_theme default 48
+seat seat0 hide_cursor when-typing disable
