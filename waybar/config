@@ -4,7 +4,7 @@
     "height": 35,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "custom/temperature", "custom/disk", "custom/gpu", "custom/mouse", "wireplumber", "network", "idle_inhibitor", "tray"],
+    "modules-right": ["sway/language", "custom/updates", "cpu", "memory", "custom/temperature", "custom/disk", "custom/gpu", "custom/mouse", "wireplumber", "network", "custom/weather", "idle_inhibitor", "tray"],
     // Modules configuration
     "sway/workspaces": {
         "disable-scroll": true,
@@ -157,5 +157,12 @@
     	"format": " 🐁{}",
         "exec": "upower --dump | awk '/percentage:/ {print $2}' | head -n 1",
         "interval": 60
+    },
+    "custom/weather": {
+        "format": "{}°",
+        "tooltip": true,
+        "interval": 3600,
+        "exec": "wttrbar --location Montreal --hide-conditions",
+        "return-type": "json"
     },
 }

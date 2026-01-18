@@ -24,11 +24,12 @@ hwmon_dirs.each do |hwmon_dir|
     temp_millicelsius = File.read(temp_file).strip.to_i
     temp_celsius = temp_millicelsius / 1000
 
-    max_temp = [max_temp, temp_celsius].max
-
     # Create unique key for each temperature sensor
     temp_number = File.basename(temp_file).match(/temp(\d+)_input/)[1]
     key = temp_files.length > 1 ? "#{hardware_name}_temp#{temp_number}" : hardware_name
+
+    # Only include in max calculation if not amdgpu_temp3
+    max_temp = [max_temp, temp_celsius].max unless key == "amdgpu_temp3"
 
     temperatures[key] = temp_celsius
   end

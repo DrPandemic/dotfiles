@@ -161,4 +161,5 @@
     },
     "zig.path": "zig",
     "gitlens.currentLine.enabled": false,
+    "github.copilot.nextEditSuggestions.enabled": true,
 }

@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+# 1. Get the name of the currently focused workspace
+WS_NAME=$(swaymsg -t get_workspaces | jq -r '.[] | select(.focused).name')
+
+if [ -z "$WS_NAME" ] || [ "$WS_NAME" == "null" ]; then
+    swaynag -m "Error: Could not determine current workspace."
+    exit 1
+fi
+
+# Safety check
+if [ "$WS_NAME" == "__FLATTEN__" ]; then
+    exit 0
+fi
+
+# 2. Get window IDs.
+# We find all nodes on the target workspace that have a 'pid'.
+# This covers both XWayland and native Wayland windows.
+WIN_IDS=$(swaymsg -t get_tree | jq -r --arg ws "$WS_NAME" \
+    '.. 
+    | select(.type? == "workspace" and .name? == $ws) 
+    | .. 
+    | select(.type? == "con" and .pid?) 
+    | .id
+')
+
+# If no windows found, notify and exit
+if [ -z "$WIN_IDS" ]; then
+    swaynag -m "Flatten: No windows found on workspace '$WS_NAME'."
+    exit 0
+fi
+
+# 3. Move ALL windows to temp workspace
+for ID in $WIN_IDS; do
+    swaymsg "[con_id=$ID] move to workspace __FLATTEN__"
+done
+
+# 4. Switch to the original workspace (it should now be empty)
+swaymsg "workspace \"$WS_NAME\""
+
+# 5. Reset layout to default split (horizontal) to ensure a clean slate
+swaymsg layout splith
+
+# 6. Pull windows back one by one
+# By moving them to "current" while we are focused on the empty workspace,
+# they will be appended linearly.
+for ID in $WIN_IDS; do
+    swaymsg "[con_id=$ID] move to workspace current"
+done
+
+# 7. Final layout cleanup
+swaymsg layout splith

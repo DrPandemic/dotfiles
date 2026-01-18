@@ -10,9 +10,11 @@ exec hash dbus-update-activation-environment 2>/dev/null && \
 # AI
 # AMD GPU environment variables
 exec_always {
-    export WLR_DRM_NO_ATOMIC=1
+#    export WLR_DRM_NO_ATOMIC=1
     export WLR_RENDERER=vulkan
     export MESA_LOADER_DRIVER_OVERRIDE=radeonsi
+    export WLR_DRM_DEVICES=/dev/dri/card0:/dev/dri/card1
+    export DRI_PRIME=1
 }
 
 set $mod Mod4
@@ -123,6 +125,7 @@ hide_edge_borders smart
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
+bindsym $mod+Shift+v exec ~/Projects/dotfiles/bin/flatten
 
 bindsym $mod+d exec 'albert toggle'
 #bindsym $mod+d exec 'rofi-with-calc'
@@ -142,6 +145,7 @@ bindsym XF86AudioPlay exec playerctl play-pause -p spotify
 bindsym XF86AudioNext exec playerctl next -p spotify
 bindsym XF86AudioPrev exec playerctl previous -p spotify
 
+bindsym --release $mod+Control+Shift+3 exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused).name') - | wl-copy
 bindsym --release $mod+Control+Shift+4 exec grim -g "$(slurp)" - | wl-copy
 
 # Clipboard manager
@@ -196,6 +200,7 @@ exec sleep 3 && generate-wallpapers
 exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/share-screen
 #exec --no-startup-id /home/parasithe/Projects/dotfiles/bin/sway-split
 #exec autotiling
+exec --no-startup-id kdeconnect-indicator
 
 # i3-gaps
 gaps inner 20
@@ -215,13 +220,13 @@ assign [app_id="firefox-developer-edition"] 1
 assign [class="Gnome-terminal"] 2
 assign [app_id="kitty"] 2
 assign [app_id="com.mitchellh.ghostty"] 2
-assign [class="steam"] 2
+assign [class="steam"] 3
 assign [class="Emacs"] 3
 assign [app_id="code"] 3
 assign [app_id="WebApp-Messenger8501"] 4
 assign [class="obs"] 4
 assign [app_id="discord"] 4
-assign [app_id="thunderbird"] 5
+assign [app_id="org.mozilla.Thunderbird"] 5
 assign [app_id="spotify"] 5
 for_window [class="Spotify"] move to workspace 5
 # to prevent wl-paste from moving everything
@@ -249,8 +254,8 @@ input type:pointer {
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
     gsettings set $gnome-schema gtk-theme 'Adapta'
-    gsettings set $gnome-schema icon-theme 'Paper'
-    gsettings set $gnome-schema cursor-theme 'Paper'
+    gsettings set $gnome-schema icon-theme 'Papirus'
+    gsettings set $gnome-schema cursor-theme 'Pop'
 }
 
 # Wallpapers
@@ -263,7 +268,13 @@ bar {
 
 output DP-1 pos 2560 0 res 3840x2160@60Hz scale 1.5
 output DP-3 pos 0 0 res 3840x2160@60Hz scale 1.5
+# AI
+# AMD dual-monitor flickering fixes
+output DP-1 adaptive_sync off
+output DP-3 adaptive_sync off
+output DP-1 max_render_time 1
+output DP-3 max_render_time 1
 #output HDMI-A-1 pos 0 0 res 3840x2160@60Hz scale 1.5
 
-seat seat0 xcursor_theme default 48
+seat seat0 xcursor_theme Pop 32
 seat seat0 hide_cursor when-typing disable
