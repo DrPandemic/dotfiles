@@ -141,12 +141,13 @@ bindsym $mod+Control+Shift+q exec swaylock -f -i "DP-1:/home/parasithe/Pictures/
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id set-volume -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
-bindsym XF86AudioPlay exec playerctl play-pause -p spotify
+bindsym XF86AudioPlay exec ~/Projects/dotfiles/bin/sway-media-play
 bindsym XF86AudioNext exec playerctl next -p spotify
 bindsym XF86AudioPrev exec playerctl previous -p spotify
 
-bindsym --release $mod+Control+Shift+3 exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused).name') - | wl-copy
+bindsym --release $mod+Control+Shift+3 exec gradia --screenshot
 bindsym --release $mod+Control+Shift+4 exec grim -g "$(slurp)" - | wl-copy
+
 
 # Clipboard manager
 exec wl-paste -t text --watch clipman store --no-persist
@@ -190,7 +191,7 @@ exec --no-startup-id sleep 1 && albert
 exec --no-startup-id /home/parasithe/Projects/sway/contrib/keyboard-layout-per-window.py
 #exec --no-startup-id sleep 1 && dunst
 exec swaync
-exec firefox --class WebApp-Messenger8501 --name WebApp-Messenger8501 --profile /home/parasithe/.local/share/quick-webapps/firefox/Messenger8501 --no-remote https://www.messenger.com
+exec discord
 exec sleep 1 && firefox
 exec sleep 3 && generate-wallpapers
 #exec sleep 1 && redshift -l 45.53:73.57

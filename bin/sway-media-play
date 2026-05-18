@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Check if any media player is active
+if playerctl status > /dev/null 2>&1; then
+    # Toggle play/pause for the active player
+    playerctl play-pause
+else
+    # No media player detected, launch Spotify
+    spotify &
+    
+    # Wait for Spotify to register its MPRIS interface (up to 5 seconds)
+    for i in {1..10}; do
+        if playerctl -p spotify status > /dev/null 2>&1; then
+            # Once it's ready, start playing
+            playerctl -p spotify play
+            break
+        fi
+        sleep 0.5
+    done
+fi

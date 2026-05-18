@@ -1,7 +1,7 @@
 [user]
   email   = "DrPandemic@users.noreply.github.com"
   name    = DrPandemic
-  signingkey = 317F593C650C8D5C
+  signingkey = 9C53D2EE5DE74E65
 [push]
   default = simple
 [alias]

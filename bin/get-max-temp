@@ -2,11 +2,49 @@
 
 require 'json'
 
+FRIENDLY_NAMES = {
+  'acpitz' => 'ACPI Thermal Zone',
+  'nvme' => 'NVMe SSD',
+  'k10temp' => 'AMD CPU',
+  'gigabyte_wmi' => 'Gigabyte MB',
+}
+
+FRIENDLY_NAMES_PATTERN = {
+  /\Ar8169/ => 'Realtek Ethernet',
+  /\Amt7925/ => 'MediaTek WiFi',
+}
+
+def resolve_amdgpu_name(hwmon_dir)
+  pci_addr = File.basename(File.readlink(File.join(hwmon_dir, 'device')))
+  lspci_line = `lspci -s #{pci_addr} 2>/dev/null`.strip
+  if lspci_line.include?('Radeon RX')
+    model = lspci_line[/Radeon RX \S+/] || 'Discrete GPU'
+    model
+  elsif lspci_line.include?('Radeon Graphics')
+    'iGPU'
+  else
+    'AMD GPU'
+  end
+rescue
+  'AMD GPU'
+end
+
+def friendly_name(hardware_name, hwmon_dir)
+  return resolve_amdgpu_name(hwmon_dir) if hardware_name == 'amdgpu'
+  return FRIENDLY_NAMES[hardware_name] if FRIENDLY_NAMES.key?(hardware_name)
+
+  FRIENDLY_NAMES_PATTERN.each do |pattern, name|
+    return name if hardware_name.match?(pattern)
+  end
+
+  hardware_name
+end
+
 # Find all hwmon directories
 hwmon_dirs = Dir.glob('/sys/class/hwmon/hwmon*').sort
 
 max_temp = 0
-temperatures = {}
+temperatures = []
 
 hwmon_dirs.each do |hwmon_dir|
   name_file = File.join(hwmon_dir, 'name')
@@ -16,6 +54,7 @@ hwmon_dirs.each do |hwmon_dir|
 
   # Read hardware name
   hardware_name = File.read(name_file).strip
+  display_name = friendly_name(hardware_name, hwmon_dir)
 
   # Find all temperature input files (temp1_input, temp2_input, etc.)
   temp_files = Dir.glob(File.join(hwmon_dir, 'temp*_input')).sort
@@ -27,23 +66,32 @@ hwmon_dirs.each do |hwmon_dir|
     # Create unique key for each temperature sensor
     temp_number = File.basename(temp_file).match(/temp(\d+)_input/)[1]
     key = temp_files.length > 1 ? "#{hardware_name}_temp#{temp_number}" : hardware_name
+    label = temp_files.length > 1 ? "#{display_name} #{temp_number}" : display_name
 
-    # Only include in max calculation if not amdgpu_temp3
-    max_temp = [max_temp, temp_celsius].max unless key == "amdgpu_temp3"
+    # Exclude GPU memory and network cards from max calculation
+    exclude_from_max = key == "amdgpu_temp3" ||
+      hardware_name.match?(/\Ar8169/) ||
+      hardware_name.match?(/\Amt7925/)
+    max_temp = [max_temp, temp_celsius].max unless exclude_from_max
 
-    temperatures[key] = temp_celsius
+    temperatures << { key: key, label: label, temp: temp_celsius }
   end
+end
+
+SORT_ORDER = {
+  'k10temp' => 0,
+  'amdgpu' => 1,
+}
+
+temperatures.sort_by! do |entry|
+  base_name = entry[:key].sub(/_temp\d+$/, '')
+  [SORT_ORDER.fetch(base_name, 99), entry[:key]]
 end
 
 # Format output
 formatted_temps = ""
-temperatures.each do |hardware, temp|
-  padded_hardware = if hardware.size < 14
-    hardware.ljust(14, " ")
-  else
-    hardware
-  end
-  formatted_temps << "#{padded_hardware}: #{temp}°C\r"
+temperatures.each do |entry|
+  formatted_temps << "#{entry[:label]} (#{entry[:key]} : #{entry[:temp]}°C)\r"
 end
 formatted_temps = formatted_temps[0...-1] unless formatted_temps.empty?
 
