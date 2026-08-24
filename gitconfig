@@ -7,13 +7,15 @@
 [alias]
   st      = status
   lg      = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lgg     = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
   co      = checkout
+  s       = switch
   ca      = commit -S -am
   cm      = commit -S -m
   au      = add -u
   A       = add -A
-  amend   = commit -S --amend --reuse-message HEAD
-  puf     = "!git push origin +\"$(git rev-parse --abbrev-ref HEAD)\""
+  amend   = commit -S --amend --date=now --reuse-message HEAD
+  puf     = "!git push --force-with-lease=\"$(git rev-parse --abbrev-ref HEAD)\""
   pu      = "!git push -u origin \"$(git rev-parse --abbrev-ref HEAD)\""
   bm      = "branch --merged"
   br      = "branch"
@@ -21,5 +23,13 @@
   bD      = "branch -D"
   d = "!f() { [ -z \"$GIT_PREFIX\" ] || cd \"$GIT_PREFIX\" && git diff --color \"$@\" | diff-so-fancy  | less --tabs=4 -RFX; }; f"
   dc = "!f() { [ -z \"$GIT_PREFIX\" ] || cd \"$GIT_PREFIX\" && git diff --cached --color \"$@\" | diff-so-fancy  | less --tabs=4 -RFX; }; f"
+  default-branch = "!f() { if $(git rev-parse --verify master > /dev/null 2>&1); then echo master; else echo main; fi }; f"
+  fixup = "!git commit --fixup $(git log --oneline -v $(git rev-parse --abbrev-ref HEAD) ^origin/$(git default-branch) | fzf | cut -d' ' -f1)"
+  rf = "!git rebase -i HEAD~$(git log --oneline -v $(git rev-parse --abbrev-ref HEAD) ^origin/$(git default-branch) | wc -l) --autosquash"
+  fr      = "!git fetch origin $(git rev-parse --abbrev-ref HEAD) && git rebase"
+  fmr = "!git fetch origin main && git rebase origin/main"
+  prune-branches = "!git branch -vv | grep \": gone]\" | awk \"{print \\$1}\" | xargs --no-run-if-empty git branch -D"
+  go = "!git fetch origin $1 && git switch"
+  cleanup = !"f() { git fetch --prune; b=$(git branch --merged main --no-contains main --format='%(refname:short)'); [ -n \"$b\" ] && git branch --delete $b; }; f"
 [diff]
   tool    = meld
