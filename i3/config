@@ -135,6 +135,7 @@ bindsym Mod1+$mod+e exec antidote-selection
 
 # Launch lockscreen
 bindsym $mod+Control+q exec lock-suspend
+bindsym --locked XF86PowerOff exec ~/.config/sway/power-button
 bindsym $mod+Control+Shift+q exec swaylock -f -i "DP-1:/home/parasithe/Pictures/lockscreen-1.jpg" -i "DP-3:/home/parasithe/Pictures/lockscreen-0.jpg"
 
 # Media keys
@@ -180,9 +181,10 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Custom execs
+exec systemd-inhibit --what=handle-power-key --who=sway --why="Power button handled by sway" swaymsg -t subscribe '["shutdown"]'
 exec swayidle -w \
          timeout 300 'swaymsg "output * dpms off" && swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill' \
-              resume 'swaymsg "output * dpms on"' \
+              resume 'touch "$XDG_RUNTIME_DIR/screens-woken"; swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill'
 exec /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec gnome-keyring-daemon --start --components=pkcs11,secrets

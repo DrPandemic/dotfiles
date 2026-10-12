@@ -1,0 +1,12 @@
+#!/bin/bash
+
+woken="$XDG_RUNTIME_DIR/screens-woken"
+
+if swaymsg -t get_outputs | jq -e 'any(.[]; .active and (.power | not))' >/dev/null; then
+    swaymsg 'output * dpms on'
+# The press is itself input, so swayidle's resume may have woken the screens just before this ran.
+elif [ -e "$woken" ] && (( $(date +%s) - $(stat -c %Y "$woken") < 3 )); then
+    exit 0
+else
+    systemctl poweroff
+fi
