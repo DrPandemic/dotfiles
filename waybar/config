@@ -22,6 +22,7 @@
     "network",
     "custom/weather",
     "idle_inhibitor",
+    "custom/oats",
     "tray"
   ],
   // Modules configuration
@@ -77,6 +78,12 @@
       "on-scroll-up": "shift_up",
       "on-scroll-down": "shift_down"
     }
+  },
+  "custom/oats": {
+    "exec": "oats waybar",
+    "return-type": "json",
+    "on-click": "oats toggle",
+    "restart-interval": 5
   },
   "cpu": {
     "format": "  {usage}%"
