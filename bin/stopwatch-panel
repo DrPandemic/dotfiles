@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# Toggles the stopwatch history panel on the focused output.
+
+bin="$(dirname "$(readlink -f "$0")")"
+config="$bin/../quickshell/stopwatch"
+
+if ! qs list -p "$config" 2>&1 | grep -q "No running instances"; then
+  qs kill -p "$config"
+else
+  STOPWATCH_BIN="$bin/stopwatch" STOPWATCH_SCREEN="$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')" qs -p "$config" -d
+fi

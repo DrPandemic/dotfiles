@@ -1,62 +1,129 @@
 #!/usr/bin/env ruby
 
 require 'json'
+require 'fileutils'
+require 'date'
 
-STATE_DIR = ENV['XDG_RUNTIME_DIR'] || Dir.tmpdir
-STATE_FILE = File.join(STATE_DIR, 'waybar-stopwatch')
-ICON = "\uf2f2"
+# stopwatch.json holds the live state; stopwatch.jsonl is append-only, one {day, start, end} row per finished session.
+STATE_DIR = ENV['XDG_STATE_HOME'] || File.join(Dir.home, '.local', 'state')
+STATE = File.join(STATE_DIR, 'stopwatch.json')
+HISTORY = File.join(STATE_DIR, 'stopwatch.jsonl')
+LOCK = File.join(STATE_DIR, 'stopwatch.lock')
+ICON = ""
+HEARTBEAT_SECS = 15
+# A heartbeat older than this means the machine was off or suspended, and that time is not counted.
+GAP_SECS = 60
 
-def read_state
-  JSON.parse(File.read(STATE_FILE))
-rescue StandardError
-  nil
+def day_of(t)
+  Time.at(t).strftime('%F')
 end
 
-def write_state(state)
-  File.write(STATE_FILE, JSON.generate(state))
+def next_midnight(t)
+  Date.parse(day_of(t)).next_day.to_time.to_f
 end
 
-def monotonic
-  Process.clock_gettime(Process::CLOCK_MONOTONIC)
-end
-
-def elapsed(state)
-  acc = state['accumulated'].to_f
-  return acc unless state['start']
-  acc + monotonic - state['start'].to_f
-end
-
-case ARGV.first
-when 'toggle'
-  state = read_state
-  if state.nil?
-    write_state('start' => monotonic, 'accumulated' => 0)
-  elsif state['start']
-    write_state('accumulated' => elapsed(state))
-  else
-    write_state('start' => monotonic, 'accumulated' => state['accumulated'].to_f)
+def locked
+  FileUtils.mkdir_p(STATE_DIR)
+  File.open(LOCK, File::RDWR | File::CREAT) do |f|
+    f.flock(File::LOCK_EX)
+    yield
   end
-  exit 0
-when 'reset'
-  File.delete(STATE_FILE) if File.exist?(STATE_FILE)
+end
+
+def load
+  JSON.parse(File.read(STATE))
+rescue StandardError
+  { 'running_since' => nil, 'heartbeat' => nil, 'today' => nil, 'today_closed' => 0 }
+end
+
+def save(state)
+  tmp = "#{STATE}.tmp"
+  File.write(tmp, JSON.generate(state))
+  File.rename(tmp, STATE)
+end
+
+# The row is appended before the state is saved, so a crash in between leaves a duplicate start that readers drop.
+def close_session(state, finish)
+  start = state['running_since']
+  state['running_since'] = nil
+  return if finish - start < 1
+
+  day = day_of(start)
+  File.write(HISTORY, "#{JSON.generate('day' => day, 'start' => start.round, 'end' => finish.round)}\n", mode: 'a')
+  state['today_closed'] += finish.round - start.round if day == state['today']
+end
+
+# Returns true when the state changed and needs saving.
+def settle(state, now)
+  changed = state['running_since'] ? settle_running(state, now) : false
+  if state['today'] != day_of(now)
+    state['today'] = day_of(now)
+    state['today_closed'] = 0
+    changed = true
+  end
+  changed
+end
+
+def settle_running(state, now)
+  changed = false
+  if now - state['heartbeat'].to_f > GAP_SECS
+    close_session(state, [state['heartbeat'].to_f, state['running_since']].max)
+    state['running_since'] = now
+    changed = true
+  end
+  while day_of(state['running_since']) != day_of(now)
+    midnight = next_midnight(state['running_since'])
+    close_session(state, midnight)
+    state['running_since'] = midnight
+    changed = true
+  end
+  if changed || now - state['heartbeat'].to_f >= HEARTBEAT_SECS
+    state['heartbeat'] = now
+    changed = true
+  end
+  changed
+end
+
+def today_total(state, now)
+  state['today_closed'] + (state['running_since'] ? now - state['running_since'] : 0)
+end
+
+if ARGV.first == 'toggle'
+  locked do
+    now = Time.now.to_f
+    state = load
+    settle(state, now)
+    if state['running_since']
+      close_session(state, now)
+    else
+      state['running_since'] = now
+      state['heartbeat'] = now
+    end
+    save(state)
+  end
   exit 0
 end
 
 last = nil
 loop do
-  state = read_state
-  output = if state.nil?
+  now = Time.now.to_f
+  state = locked do
+    s = load
+    save(s) if settle(s, now)
+    s
+  end
+  total_minutes = (today_total(state, now) / 60.0).floor
+  output = if total_minutes.zero? && !state['running_since']
              ICON
            else
-             total_minutes = (elapsed(state) / 60.0).floor
              hours, minutes = total_minutes.divmod(60)
              display = hours.positive? ? format('%d:%02d', hours, minutes) : minutes.to_s
-             state['start'] ? "#{ICON} #{display}" : "#{ICON} <span color='#ffcc66'>#{display}</span>"
+             state['running_since'] ? "#{ICON} #{display}" : "#{ICON} <span color='#ffcc66'>#{display}</span>"
            end
   if output != last
     puts output
     $stdout.flush
     last = output
   end
-  sleep 0.5
+  sleep 1
 end

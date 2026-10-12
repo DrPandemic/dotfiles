@@ -84,7 +84,7 @@
   "custom/stopwatch": {
     "exec": "/home/parasithe/Projects/dotfiles/bin/stopwatch",
     "on-click": "/home/parasithe/Projects/dotfiles/bin/stopwatch toggle",
-    "on-click-right": "/home/parasithe/Projects/dotfiles/bin/stopwatch reset",
+    "on-click-right": "/home/parasithe/Projects/dotfiles/bin/stopwatch-panel",
     "restart-interval": 5,
     "tooltip": false
   },
