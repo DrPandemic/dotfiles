@@ -64,3 +64,4 @@ export RUST_SRC_PATH=/home/parasithe/.rustup/toolchains/nightly-x86_64-unknown-l
 export PATH=/home/parasithe/.cache/rebar3/bin:$PATH
 
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
+export GNOME_KEYRING_CONTROL=$XDG_RUNTIME_DIR/keyring

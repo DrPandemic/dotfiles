@@ -43,8 +43,12 @@ end
 # Find all hwmon directories
 hwmon_dirs = Dir.glob('/sys/class/hwmon/hwmon*').sort
 
+# Same order as the board's fan headers in the it87 sensors config for the X870 EAGLE WIFI7.
+SIO_FANS = %w[cpu_fan sys_fan1 sys_fan2 sys_fan3 cpu_fan sys_fan4]
+
 max_temp = 0
 temperatures = []
+fans = Hash.new { |h, k| h[k] = [] }
 
 hwmon_dirs.each do |hwmon_dir|
   name_file = File.join(hwmon_dir, 'name')
@@ -55,6 +59,14 @@ hwmon_dirs.each do |hwmon_dir|
   # Read hardware name
   hardware_name = File.read(name_file).strip
   display_name = friendly_name(hardware_name, hwmon_dir)
+
+  Dir.glob(File.join(hwmon_dir, 'fan*_input')).each do |fan_file|
+    n = File.basename(fan_file)[/\d+/].to_i
+    series = hardware_name == 'amdgpu' ? 'gpu_fan' : (SIO_FANS[n - 1] if hardware_name.start_with?('it8696'))
+    fans[series] << File.read(fan_file).to_i if series
+  end
+  # Mirrors gigabyte_wmi's readings, which already cover these.
+  next if hardware_name.start_with?('it8696')
 
   # Find all temperature input files (temp1_input, temp2_input, etc.)
   temp_files = Dir.glob(File.join(hwmon_dir, 'temp*_input')).sort
@@ -77,6 +89,38 @@ hwmon_dirs.each do |hwmon_dir|
     temperatures << { key: key, label: label, temp: temp_celsius }
   end
 end
+
+HISTORY = File.join(ENV['XDG_RUNTIME_DIR'] || '/tmp', 'temp-history.jsonl')
+HISTORY_EVERY_SECS = 25
+HISTORY_SERIES = {
+  'k10temp_temp1' => 'cpu',
+  'amdgpu_temp1' => 'gpu',
+  'amdgpu_temp2' => 'gpu_hot',
+  'amdgpu_temp3' => 'vram',
+  'nvme_temp1' => 'nvme',
+}
+
+# One waybar per output runs this concurrently, hence the lock; a file last written before boot is a previous boot's history.
+def log_history(temperatures, fans)
+  boot = File.foreach('/proc/stat').find { |l| l.start_with?('btime ') }.split[1].to_i
+  File.open(HISTORY, File::WRONLY | File::APPEND | File::CREAT) do |f|
+    f.flock(File::LOCK_EX)
+    f.truncate(0) if f.mtime.to_i < boot
+    return if f.size.positive? && Time.now - f.mtime < HISTORY_EVERY_SECS
+
+    row = { 't' => Time.now.to_i }
+    temperatures.each { |e| row[HISTORY_SERIES[e[:key]]] = e[:temp] if HISTORY_SERIES.key?(e[:key]) }
+    fans.each do |series, rpms|
+      spinning = rpms.select(&:positive?)
+      row[series] = spinning.empty? ? 0 : (spinning.sum.to_f / spinning.size).round
+    end
+    f.puts JSON.generate(row)
+  end
+rescue SystemCallError
+  nil
+end
+
+log_history(temperatures, fans)
 
 SORT_ORDER = {
   'k10temp' => 0,

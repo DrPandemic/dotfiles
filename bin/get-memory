@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+def human(kb)
+  if kb >= 1024 * 1024
+    format('%.1f GB', kb / (1024.0 * 1024))
+  else
+    format('%d MB', kb / 1024)
+  end
+end
+
+meminfo = File.read('/proc/meminfo')
+total_kb = meminfo[/MemTotal:\s+(\d+)/, 1].to_i
+available_kb = meminfo[/MemAvailable:\s+(\d+)/, 1].to_i
+used_kb = total_kb - available_kb
+used_percent = (100.0 * used_kb / total_kb).round
+
+totals = Hash.new(0)
+`ps -eo rss=,comm=`.each_line do |line|
+  rss, comm = line.strip.split(' ', 2)
+  totals[comm] += rss.to_i
+end
+
+top = totals.sort_by { |_, rss| -rss }.first(10)
+sizes = top.map { |_, rss| human(rss) }
+width = sizes.map(&:size).max
+
+tooltip = ["<tt>#{human(used_kb)} / #{human(total_kb)} used</tt>"]
+tooltip += top.each_with_index.map do |(comm, _), i|
+  "<tt>#{sizes[i].rjust(width)}  #{comm}</tt>"
+end
+
+puts JSON.generate(text: "🐏 #{used_percent}%", tooltip: tooltip.join("\n"))

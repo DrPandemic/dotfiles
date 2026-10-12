@@ -1,0 +1,2 @@
+# Refreshes waybar's custom/keyboard-battery module ("signal": 8), so a reconnect or level change is logged at once.
+ACTION=="add|change", SUBSYSTEM=="power_supply", KERNEL=="hid-2FFECADD364616C2-battery-*", RUN+="/usr/bin/pkill -RTMIN+8 -x waybar"

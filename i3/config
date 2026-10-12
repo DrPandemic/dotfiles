@@ -145,8 +145,9 @@ bindsym XF86AudioPlay exec ~/Projects/dotfiles/bin/sway-media-play
 bindsym XF86AudioNext exec playerctl next -p spotify
 bindsym XF86AudioPrev exec playerctl previous -p spotify
 
-bindsym --release $mod+Control+Shift+3 exec gradia --screenshot
+bindsym --release $mod+Control+Shift+3 exec ~/Projects/dotfiles/bin/gradia-shot
 bindsym --release $mod+Control+Shift+4 exec grim -g "$(slurp)" - | wl-copy
+bindsym --release $mod+Control+Shift+5 exec ~/Projects/dotfiles/bin/gradia-shot full
 
 
 # Clipboard manager
@@ -184,7 +185,7 @@ exec swayidle -w \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -i ~/Pictures/Wallpapers/nolq2m6919j01.jpg -s fill'
 exec /usr/lib/gnome-settings-daemon/gnome-settings-daemon
-exec gnome-keyring-daemon
+exec gnome-keyring-daemon --start --components=pkcs11,secrets
 exec dbus-update-activation-environment --all
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id sleep 1 && albert
@@ -230,11 +231,23 @@ assign [app_id="discord"] 4
 assign [app_id="org.mozilla.Thunderbird"] 5
 assign [app_id="spotify"] 5
 for_window [class="Spotify"] move to workspace 5
+assign [app_id="com.anthropic.Claude"] 3
+assign [app_id="md.obsidian.Obsidian"] 6
 # to prevent wl-paste from moving everything
 for_window [title="^wl-clipboard$"] floating enable
 for_window [class=".*"] inhibit_idle fullscreen
 for_window [class="Totem"] inhibit_idle
 for_window [class="Hades.*"] inhibit_idle
+
+# Steam notification toasts ("friend started playing", messages, ...):
+# keep them floating at the bottom-right of DP-1, just above the waybar (35px)
+no_focus [class="steam" title="(?i)toast"]
+for_window [class="steam" title="(?i)toast"] floating enable, sticky enable, border none, move output DP-1, move position 2125 1290
+# sway cannot move Steam's toast windows (they are override-redirect), so this
+# helper does it over plain X11. Source: ~/Projects/dotfiles/bin/steam-toast-place.c
+# exec_always + a lock file in the helper = it is restarted on reload and never
+# runs twice.
+exec_always --no-startup-id ~/.local/bin/steam-toast-place
 
 # Colors
 client.focused #4c7899 #16a085 #ffffff

@@ -7,8 +7,9 @@ alias htop TERM=screen htop
 alias gclean='git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d '
 alias ping=prettyping
 alias vim=nvim
-alias xg="XDG_SESSION_TYPE=wayland dbus-run-session gnome-session"
+alias xg=start-gnome
 
+export OPENCODE_ENABLE_EXA=1
 export EDITOR='vim'
 export CC=clang
 export CXX=clang++
@@ -26,12 +27,17 @@ if [[ -z $TMUX ]]; then
   fi
 fi
 
+# Session launchers run on the systemd user bus, never a private one:
+# gnome-keyring-daemon owns org.freedesktop.secrets on $XDG_RUNTIME_DIR/bus, so on a
+# second bus that name is only activatable and never claimed — every secret-service
+# lookup (gpg-agent's passphrase cache, hence every signed commit) waits out a 25s
+# D-Bus timeout before falling back to a prompt.
 function x {
-  XDG_CURRENT_DESKTOP=sway dbus-run-session sway
+  XDG_CURRENT_DESKTOP=sway DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" sway
 }
 
 function start-gnome {
-  XDG_SESSION_TYPE=wayland dbus-run-session gnome-session
+  XDG_SESSION_TYPE=wayland DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" gnome-session
 }
 
 function waybar-wayland {
@@ -103,3 +109,4 @@ setopt HIST_IGNORE_SPACE
 
 # Game HUD
 #export MANGOHUD=1
+export GPG_TTY=$(tty)

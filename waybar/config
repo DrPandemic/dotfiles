@@ -7,17 +7,18 @@
     "sway/mode"
   ],
   "modules-center": [
-    "clock"
+    "clock",
+    "custom/stopwatch"
   ],
   "modules-right": [
     "sway/language",
     "custom/updates",
     "cpu",
-    "memory",
+    "custom/memory",
     "custom/temperature",
     "custom/disk",
     "custom/gpu",
-    "upower",
+    "custom/keyboard-battery",
     "wireplumber",
     "network",
     "custom/weather",
@@ -53,7 +54,7 @@
     "spacing": 10
   },
   "clock": {
-    "format": "{:%Y-%m-%d   %H:%M}",
+    "format": "{:%Y-%m-%d  %H:%M}",
     "format-alt": "{:%Y-%m-%d   %H:%M}",
     "format-alt": "{:%A, %B %d, %Y   %H:%M}",
     "tooltip-format": "<tt><small>{calendar}</small></tt>",
@@ -79,6 +80,13 @@
       "on-scroll-down": "shift_down"
     }
   },
+  "custom/stopwatch": {
+    "exec": "/home/parasithe/Projects/dotfiles/bin/stopwatch",
+    "on-click": "/home/parasithe/Projects/dotfiles/bin/stopwatch toggle",
+    "on-click-right": "/home/parasithe/Projects/dotfiles/bin/stopwatch reset",
+    "restart-interval": 5,
+    "tooltip": false
+  },
   "custom/oats": {
     "exec": "oats waybar",
     "return-type": "json",
@@ -86,10 +94,13 @@
     "restart-interval": 5
   },
   "cpu": {
-    "format": "  {usage}%"
+    "format": " {usage}%"
   },
-  "memory": {
-    "format": "🐏 {}%"
+  "custom/memory": {
+    "exec": "/home/parasithe/Projects/dotfiles/bin/get-memory",
+    "interval": 5,
+    "return-type": "json",
+    "tooltip": true
   },
   "battery": {
     "states": {
@@ -111,21 +122,20 @@
   "battery#bat2": {
     "bat": "BAT2"
   },
-  "upower": {
-    "native-path": "hid-2FFECADD364616C2-battery",
-    "format": "{percentage}",
-    "format-alt": "{percentage} {time}",
-    "icon-size": 16,
-    "hide-if-empty": false,
-    "tooltip": true,
-    "tooltip-spacing": 20
+  "custom/keyboard-battery": {
+    "format": "⌨ {}",
+    "exec": "~/.config/waybar/keyboard-battery.rb",
+    "on-click": "/home/parasithe/Projects/dotfiles/bin/keyboard-battery-chart",
+    "signal": 8,
+    "return-type": "json",
+    "interval": 30
   },
   "network": {
     // "interface": "wlp2s0", // (Optional) To force the use of this interface
     "interval": "3",
     "format-wifi": "{essid} ({signalStrength}%) ",
-    "format-ethernet": "   {bandwidthTotalBytes} ",
-    "format-disconnected": "⚠ Disconnected ",
+    "format-ethernet": " {bandwidthTotalBytes}",
+    "format-disconnected": "⚠ Disconnected",
     "tooltip-format": "{ipaddr}/{cidr}"
   },
   "pulseaudio": {
@@ -165,12 +175,12 @@
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
-      "activated": " ",
-      "deactivated": " "
+      "activated": "",
+      "deactivated": ""
     }
   },
   "custom/wl-gammarelay-temperature": {
-    "format": " {} ",
+    "format": "{} ",
     "exec": "wl-gammarelay-rs watch {t}",
     "on-scroll-up": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +300",
     "on-scroll-down": "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -300"
@@ -183,18 +193,19 @@
     "on-click": "amdgpu_top --gui"
   },
   "custom/disk": {
-    "format": " 🖴 {}%",
+    "format": "🖴 {}%",
     "exec": "/home/parasithe/Projects/dotfiles/bin/get-max-disk",
     "interval": 10
   },
   "wireplumber": {
-    "format": "    {volume}%",
+    "format": " {volume}%",
     "format-muted": "",
     "on-click": "helvum"
   },
   "custom/temperature": {
-    "format": "  {}°C ",
+    "format": " {}°C",
     "exec": "/home/parasithe/Projects/dotfiles/bin/get-max-temp",
+    "on-click": "/home/parasithe/Projects/dotfiles/bin/temperature-chart",
     "interval": 10
   },
   "custom/weather": {

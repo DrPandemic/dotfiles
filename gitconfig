@@ -24,6 +24,7 @@
   s = switch
   default-branch = "!f() { if $(git rev-parse --verify master > /dev/null 2>&1); then echo master; else echo main; fi }; f"
   fixup = "!git commit --fixup $(git log --oneline -v $(git rev-parse --abbrev-ref HEAD) ^origin/$(git default-branch) | fzf | cut -d' ' -f1)"
+	lgg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
 [diff]
   tool    = meld
 [magithub]
@@ -45,3 +46,9 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential

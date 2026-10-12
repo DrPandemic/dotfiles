@@ -1,0 +1,13 @@
+#!/bin/sh
+# Take a screenshot that includes the cursor, then open it in gradia.
+# usage: gradia-shot [region|full]
+mode=${1:-region}
+dir=$HOME/Pictures/screenshots
+mkdir -p "$dir"
+shot=$dir/gradia-$(date +%Y-%m-%d-%H-%M-%S).png
+if [ "$mode" = full ]; then
+	grim -c "$shot" || exit 1
+else
+	grim -c -g "$(slurp)" "$shot" || exit 1
+fi
+exec gradia --screenshot-file="$shot"

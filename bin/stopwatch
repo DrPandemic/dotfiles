@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+STATE_DIR = ENV['XDG_RUNTIME_DIR'] || Dir.tmpdir
+STATE_FILE = File.join(STATE_DIR, 'waybar-stopwatch')
+ICON = "\uf2f2"
+
+def read_state
+  JSON.parse(File.read(STATE_FILE))
+rescue StandardError
+  nil
+end
+
+def write_state(state)
+  File.write(STATE_FILE, JSON.generate(state))
+end
+
+def monotonic
+  Process.clock_gettime(Process::CLOCK_MONOTONIC)
+end
+
+def elapsed(state)
+  acc = state['accumulated'].to_f
+  return acc unless state['start']
+  acc + monotonic - state['start'].to_f
+end
+
+case ARGV.first
+when 'toggle'
+  state = read_state
+  if state.nil?
+    write_state('start' => monotonic, 'accumulated' => 0)
+  elsif state['start']
+    write_state('accumulated' => elapsed(state))
+  else
+    write_state('start' => monotonic, 'accumulated' => state['accumulated'].to_f)
+  end
+  exit 0
+when 'reset'
+  File.delete(STATE_FILE) if File.exist?(STATE_FILE)
+  exit 0
+end
+
+last = nil
+loop do
+  state = read_state
+  output = if state.nil?
+             ICON
+           else
+             total_minutes = (elapsed(state) / 60.0).floor
+             hours, minutes = total_minutes.divmod(60)
+             display = hours.positive? ? format('%d:%02d', hours, minutes) : minutes.to_s
+             state['start'] ? "#{ICON} #{display}" : "#{ICON} <span color='#ffcc66'>#{display}</span>"
+           end
+  if output != last
+    puts output
+    $stdout.flush
+    last = output
+  end
+  sleep 0.5
+end

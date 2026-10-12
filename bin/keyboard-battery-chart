@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+# Toggles the keyboard battery chart popup on the focused output.
+
+config="$(dirname "$(readlink -f "$0")")/../quickshell/keyboard-battery"
+
+if ! qs list -p "$config" 2>&1 | grep -q "No running instances"; then
+  qs kill -p "$config"
+else
+  KB_SCREEN="$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')" qs -p "$config" -d
+fi
