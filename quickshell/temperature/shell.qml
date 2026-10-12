@@ -221,6 +221,8 @@ ShellRoot {
         }
     }
 
+    DismissLayer {}
+
     PanelWindow {
         id: win
 
@@ -253,17 +255,6 @@ ShellRoot {
             border.width: 1
             focus: true
             Keys.onEscapePressed: Qt.quit()
-
-            property bool entered: false
-
-            HoverHandler {
-                onHoveredChanged: {
-                    if (hovered)
-                        panel.entered = true;
-                    else if (panel.entered)
-                        Qt.quit();
-                }
-            }
 
             Text {
                 x: 16
