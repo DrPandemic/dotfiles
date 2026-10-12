@@ -50,6 +50,7 @@ window#waybar {
 #language,
 #custom-updates,
 #custom-stopwatch,
+#custom-sun-tint,
 #custom-oats {
     padding: 0 3px;
     margin: 0 3px;
@@ -159,6 +160,10 @@ window#waybar {
 }
 #language.ca {
     color: #5ed6fe;
+}
+
+#custom-sun-tint.error {
+    color: #f8625c;
 }
 
 #custom-oats.recording {

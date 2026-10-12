@@ -23,6 +23,7 @@
     "network",
     "custom/weather",
     "idle_inhibitor",
+    "custom/sun-tint",
     "custom/oats",
     "tray"
   ],
@@ -178,6 +179,12 @@
       "activated": "",
       "deactivated": ""
     }
+  },
+  "custom/sun-tint": {
+    "exec": "/home/parasithe/Projects/dotfiles/bin/sun-tint --timezone America/Montreal --intensity 50 --default on",
+    "on-click": "/home/parasithe/Projects/dotfiles/bin/sun-tint toggle",
+    "return-type": "json",
+    "restart-interval": 5
   },
   "custom/wl-gammarelay-temperature": {
     "format": "{} ",

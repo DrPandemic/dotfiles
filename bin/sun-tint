@@ -1,0 +1,194 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'optparse'
+
+RUNTIME_DIR = ENV['XDG_RUNTIME_DIR'] || '/tmp'
+STATE = File.join(RUNTIME_DIR, 'sun-tint-enabled')
+STATUS = File.join(RUNTIME_DIR, 'sun-tint.json')
+LOCK = File.join(RUNTIME_DIR, 'sun-tint.lock')
+PIDFILE = File.join(RUNTIME_DIR, 'sun-tint-gammastep.pid')
+ZONEINFO = '/usr/share/zoneinfo'
+DAY_K = 6500
+WARMEST_K = 2500
+RETRY_SECS = 30
+ICONS = { true => "", false => "" }
+
+def enabled?
+  File.read(STATE).strip == 'on'
+rescue SystemCallError
+  false
+end
+
+if ARGV.first == 'toggle'
+  File.write(STATE, enabled? ? 'off' : 'on')
+  exit
+end
+
+def system_zone
+  File.readlink('/etc/localtime')[%r{zoneinfo/(.+)}, 1]
+end
+
+# zone1970.tab only lists canonical zones, so links like America/Montreal resolve through tzdata.zi first.
+def canonical_zone(zone)
+  File.foreach(File.join(ZONEINFO, 'tzdata.zi')) do |line|
+    kind, target, link = line.split
+    return target if kind == 'L' && link == zone
+  end
+  zone
+end
+
+# ISO 6709 as used by zone1970.tab: +DDMM[SS] latitude, +DDDMM[SS] longitude.
+def degrees(iso, deg_digits)
+  sign = iso.start_with?('-') ? -1 : 1
+  digits = iso[1..]
+  d = digits[0, deg_digits].to_i
+  m = digits[deg_digits, 2].to_i
+  s = digits[deg_digits + 2, 2].to_i
+  (sign * (d + m / 60.0 + s / 3600.0)).round(2)
+end
+
+def coordinates(zone)
+  name = canonical_zone(zone)
+  File.foreach(File.join(ZONEINFO, 'zone1970.tab')) do |line|
+    next if line.start_with?('#')
+
+    _, iso, tz = line.chomp.split("\t")
+    next unless tz == name
+
+    lat, lon = iso.match(/\A([+-]\d+)([+-]\d+)\z/).captures
+    return [degrees(lat, 2), degrees(lon, 3)]
+  end
+  abort "sun-tint: no coordinates for timezone #{zone}"
+end
+
+opts = { timezone: system_zone, intensity: 50, default: 'on' }
+OptionParser.new do |o|
+  o.on('--timezone ZONE') { |v| opts[:timezone] = v }
+  o.on('--intensity PERCENT', Integer) { |v| opts[:intensity] = v.clamp(0, 100) }
+  o.on('--default STATE', %w[on off]) { |v| opts[:default] = v }
+end.parse!
+
+LAT, LON = coordinates(opts[:timezone])
+NIGHT_K = (DAY_K - (DAY_K - WARMEST_K) * opts[:intensity] / 100.0).round
+SETTING = "#{opts[:timezone]} (#{LAT}, #{LON}), intensity #{opts[:intensity]}% → night #{NIGHT_K}K"
+
+begin
+  File.open(STATE, File::WRONLY | File::CREAT | File::EXCL) { |f| f.write(opts[:default]) }
+rescue Errno::EEXIST
+  nil
+end
+
+def write_status(status)
+  tmp = "#{STATUS}.#{Process.pid}"
+  File.write(tmp, JSON.generate(status))
+  File.rename(tmp, STATUS)
+end
+
+def read_status
+  JSON.parse(File.read(STATUS))
+rescue SystemCallError, JSON::ParserError
+  {}
+end
+
+def gammastep_pid?(pid)
+  File.read("/proc/#{pid}/comm").strip == 'gammastep'
+rescue SystemCallError
+  false
+end
+
+# A previous leader killed without cleanup leaves its gammastep holding the outputs' gamma control.
+def kill_stale_gammastep
+  pid = File.read(PIDFILE).to_i
+  return unless pid.positive? && gammastep_pid?(pid)
+
+  Process.kill('TERM', pid)
+  50.times do
+    return unless gammastep_pid?(pid)
+
+    sleep 0.1
+  end
+  Process.kill('KILL', pid)
+rescue SystemCallError
+  nil
+end
+
+def spawn_gammastep
+  kill_stale_gammastep
+  status = {}
+  write_status(status)
+  reader, writer = IO.pipe
+  pid = Process.spawn('stdbuf', '-oL', 'gammastep', '-v', '-c', '/dev/null', '-m', 'wayland',
+                      '-l', "#{LAT}:#{LON}", '-t', "#{DAY_K}:#{NIGHT_K}", out: writer, err: writer)
+  writer.close
+  File.write(PIDFILE, pid.to_s)
+  Thread.new do
+    reader.each_line do |line|
+      case line
+      when /Color temperature: (\d+)K/ then status['temp'] = Regexp.last_match(1).to_i
+      when /Period: (.+)/ then status['period'] = Regexp.last_match(1).strip
+      when /Solar elevation: (-?[\d.]+)/ then status['elevation'] = Regexp.last_match(1).to_f.round(1)
+      else status['log'] = line.strip
+      end
+      write_status(status)
+    end
+  end
+  [pid, status]
+end
+
+def render(status)
+  on = enabled?
+  if on && status['error']
+    { text: ICONS[on], class: 'error', tooltip: "Sun tint failed: #{status['error']}\n#{SETTING}" }
+  elsif on
+    now = [status['temp'] && "#{status['temp']}K", status['period'], status['elevation'] && "sun #{status['elevation']}°"].compact
+    { text: ICONS[on], class: 'on', tooltip: "Sun tint on: #{now.join(', ')}\n#{SETTING}" }
+  else
+    { text: ICONS[on], class: 'off', tooltip: "Sun tint off\n#{SETTING}" }
+  end
+end
+
+lock = File.open(LOCK, File::RDWR | File::CREAT)
+leader = false
+child = nil
+stopping = false
+failed_at = nil
+last_output = nil
+at_exit { Process.kill('TERM', child) if child }
+
+loop do
+  leader ||= lock.flock(File::LOCK_EX | File::LOCK_NB)
+  if leader
+    if child && Process.waitpid(child, Process::WNOHANG)
+      unless stopping
+        failed_at = Time.now
+        reason = read_status['log'] || "exit #{$?.exitstatus}"
+        write_status('error' => "#{reason}, retrying in #{RETRY_SECS}s")
+      end
+      child = nil
+      stopping = false
+    end
+
+    want = enabled?
+    failed_at = nil unless want
+    if want && child.nil? && (failed_at.nil? || Time.now - failed_at > RETRY_SECS)
+      begin
+        child, = spawn_gammastep
+      rescue SystemCallError => e
+        failed_at = Time.now
+        write_status('error' => e.message)
+      end
+    elsif !want && child && !stopping
+      Process.kill('TERM', child)
+      stopping = true
+    end
+  end
+
+  output = JSON.generate(render(read_status))
+  if output != last_output
+    puts output
+    $stdout.flush
+    last_output = output
+  end
+  sleep 0.5
+end
