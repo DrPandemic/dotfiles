@@ -191,7 +191,7 @@ exec gnome-keyring-daemon --start --components=pkcs11,secrets
 exec dbus-update-activation-environment --all
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id sleep 1 && albert
-exec --no-startup-id /home/parasithe/Projects/sway/contrib/keyboard-layout-per-window.py
+exec ~/Projects/dotfiles/bin/keyboard-layout-per-window 2>>"$XDG_RUNTIME_DIR/keyboard-layout-per-window.log"
 #exec --no-startup-id sleep 1 && dunst
 exec swaync
 exec discord

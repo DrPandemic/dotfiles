@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+# Keeps track of the active keyboard layout per window.
+# Based on sway's contrib/keyboard-layout-per-window.py. Requires python-i3ipc.
+
+import i3ipc
+
+
+def current_layouts(ipc: i3ipc.Connection) -> dict[str, int]:
+    return {input.identifier: input.xkb_active_layout_index
+            for input in ipc.get_inputs()
+            if input.xkb_active_layout_index is not None}
+
+
+def on_window_focus(ipc: i3ipc.Connection, event: i3ipc.WindowEvent):
+    global windows, prev_focused
+
+    layouts = current_layouts(ipc)
+    windows[prev_focused] = layouts
+
+    for kbd_id, layout_index in windows.get(event.container.id, {}).items():
+        current = layouts.get(kbd_id)
+        if current is not None and current != layout_index:
+            ipc.command(f'input "{kbd_id}" xkb_switch_layout {layout_index}')
+            break
+
+    prev_focused = event.container.id
+
+
+def on_window_close(ipc: i3ipc.Connection, event: i3ipc.WindowEvent):
+    windows.pop(event.container.id, None)
+
+
+def on_window(ipc: i3ipc.Connection, event: i3ipc.WindowEvent):
+    if event.change == "focus":
+        on_window_focus(ipc, event)
+    elif event.change == "close":
+        on_window_close(ipc, event)
+
+
+if __name__ == "__main__":
+    ipc = i3ipc.Connection(auto_reconnect=True)
+    focused = ipc.get_tree().find_focused()
+    prev_focused = focused.id if focused else None
+    windows = {}
+
+    ipc.on("window", on_window)
+    ipc.main()
