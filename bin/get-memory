@@ -31,4 +31,5 @@ tooltip += top.each_with_index.map do |(comm, _), i|
   "<tt>#{sizes[i].rjust(width)}  #{comm}</tt>"
 end
 
-puts JSON.generate(text: "🐏 #{used_percent}%", tooltip: tooltip.join("\n"))
+puts JSON.generate(text: "🐏 #{used_percent}%", tooltip: tooltip.join("\n"),
+                   used_kb: used_kb, total_kb: total_kb, top: top)

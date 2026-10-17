@@ -242,7 +242,7 @@ for_window [class="Totem"] inhibit_idle
 for_window [class="Hades.*"] inhibit_idle
 
 # Steam notification toasts ("friend started playing", messages, ...):
-# keep them floating at the bottom-right of DP-1, just above the waybar (35px)
+# keep them floating at the bottom-right of DP-1, just above the bar (35px)
 no_focus [class="steam" title="(?i)toast"]
 for_window [class="steam" title="(?i)toast"] floating enable, sticky enable, border none, move output DP-1, move position 2125 1290
 # sway cannot move Steam's toast windows (they are override-redirect), so this
@@ -278,9 +278,7 @@ exec_always {
 output DP-3 bg ~/Pictures/wallpaper-left stretch
 output DP-1 bg ~/Pictures/wallpaper-right stretch
 
-bar {
-    swaybar_command waybar-wayland
-}
+exec qs -p ~/Projects/dotfiles/quickshell/bar
 
 output DP-1 pos 2560 0 res 3840x2160@60Hz scale 1.5
 output DP-3 pos 0 0 res 3840x2160@60Hz scale 1.5
