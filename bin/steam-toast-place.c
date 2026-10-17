@@ -36,7 +36,7 @@
 #include <unistd.h>
 
 /* Placement, in X11 layout coordinates (xrandr shows the same as sway). */
-static const int OUTPUT_X = 2560; /* DP-1, the main monitor */
+static const int OUTPUT_X = 2560; /* HDMI-A-1, the main monitor */
 static const int OUTPUT_W = 2560;
 static const int OUTPUT_H = 1440;
 static const int BAR_H = 35; /* waybar is along the bottom of the output */

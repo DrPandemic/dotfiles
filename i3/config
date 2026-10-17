@@ -136,7 +136,7 @@ bindsym Mod1+$mod+e exec antidote-selection
 # Launch lockscreen
 bindsym $mod+Control+q exec lock-suspend
 bindsym --locked XF86PowerOff exec ~/.config/sway/power-button
-bindsym $mod+Control+Shift+q exec swaylock -f -i "DP-1:/home/parasithe/Pictures/lockscreen-1.jpg" -i "DP-3:/home/parasithe/Pictures/lockscreen-0.jpg"
+bindsym $mod+Control+Shift+q exec swaylock -f -i "HDMI-A-1:/home/parasithe/Pictures/lockscreen-1.jpg" -i "DP-3:/home/parasithe/Pictures/lockscreen-0.jpg"
 
 # Media keys
 bindsym XF86AudioRaiseVolume exec --no-startup-id set-volume +5% #increase sound volume
@@ -212,9 +212,9 @@ gaps outer 10
 smart_gaps on
 
 # Screens
-workspace 1 output DP-1
-workspace 2 output DP-1
-workspace 2 output DP-1
+workspace 1 output HDMI-A-1
+workspace 2 output HDMI-A-1
+workspace 2 output HDMI-A-1
 workspace 4 output DP-3
 
 # Workspaces
@@ -242,9 +242,9 @@ for_window [class="Totem"] inhibit_idle
 for_window [class="Hades.*"] inhibit_idle
 
 # Steam notification toasts ("friend started playing", messages, ...):
-# keep them floating at the bottom-right of DP-1, just above the bar (35px)
+# keep them floating at the bottom-right of HDMI-A-1, just above the bar (35px)
 no_focus [class="steam" title="(?i)toast"]
-for_window [class="steam" title="(?i)toast"] floating enable, sticky enable, border none, move output DP-1, move position 2125 1290
+for_window [class="steam" title="(?i)toast"] floating enable, sticky enable, border none, move output HDMI-A-1, move position 2125 1290
 # sway cannot move Steam's toast windows (they are override-redirect), so this
 # helper does it over plain X11. Source: ~/Projects/dotfiles/bin/steam-toast-place.c
 # exec_always + a lock file in the helper = it is restarted on reload and never
@@ -276,19 +276,18 @@ exec_always {
 
 # Wallpapers
 output DP-3 bg ~/Pictures/wallpaper-left stretch
-output DP-1 bg ~/Pictures/wallpaper-right stretch
+output HDMI-A-1 bg ~/Pictures/wallpaper-right stretch
 
 exec qs -p ~/Projects/dotfiles/quickshell/bar
 
-output DP-1 pos 2560 0 res 3840x2160@60Hz scale 1.5
+output HDMI-A-1 pos 2560 0 res 3840x2160@60Hz scale 1.5
 output DP-3 pos 0 0 res 3840x2160@60Hz scale 1.5
 # AI
 # AMD dual-monitor flickering fixes
-output DP-1 adaptive_sync off
+output HDMI-A-1 adaptive_sync off
 output DP-3 adaptive_sync off
-output DP-1 max_render_time 1
+output HDMI-A-1 max_render_time 1
 output DP-3 max_render_time 1
-#output HDMI-A-1 pos 0 0 res 3840x2160@60Hz scale 1.5
 
 seat seat0 xcursor_theme Pop 32
 seat seat0 hide_cursor when-typing disable
