@@ -1,0 +1,29 @@
+#!/bin/sh
+# WirePlumber can leave the Scarlett on the "off" profile, or stop following the configured default sink, when the KVM re-enumerates it in quick bursts.
+
+card=alsa_card.usb-Focusrite_Scarlett_2i2_USB_Y8K3CAK981CB4B-00
+sink=alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8K3CAK981CB4B-00.HiFi__Line__sink
+
+profile() {
+  pactl -f json list cards | jq -r --arg card "$card" '.[] | select(.name == $card) | .active_profile'
+}
+
+# Give WirePlumber time to make its own choice first.
+sleep 5
+for _ in $(seq 10); do
+  [ -n "$(profile)" ] && break
+  sleep 1
+done
+[ -n "$(profile)" ] || exit 0
+
+if [ "$(profile)" != HiFi ]; then
+  echo "profile was $(profile), setting HiFi"
+  pactl set-card-profile "$card" HiFi
+  sleep 2
+fi
+
+if pw-metadata -n default 0 default.configured.audio.sink | grep -q "\"$sink\"" &&
+  [ "$(pactl get-default-sink)" != "$sink" ]; then
+  echo "default sink is $(pactl get-default-sink), restarting wireplumber"
+  systemctl --user restart wireplumber
+fi

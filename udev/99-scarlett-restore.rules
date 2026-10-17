@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="card*", ATTRS{idVendor}=="1235", ATTRS{idProduct}=="8210", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="scarlett-restore.service"

@@ -1,0 +1,6 @@
+[Unit]
+Description=Restore the Scarlett 2i2 profile and default sink after a reconnect
+
+[Service]
+Type=oneshot
+ExecStart=%h/Projects/dotfiles/bin/scarlett-restore
