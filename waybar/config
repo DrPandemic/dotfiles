@@ -207,7 +207,8 @@
   "wireplumber": {
     "format": " {volume}%",
     "format-muted": "",
-    "on-click": "helvum"
+    "on-click": "helvum",
+    "on-click-right": "/home/parasithe/Projects/dotfiles/bin/audio-output-panel"
   },
   "custom/temperature": {
     "format": " {}°C",
