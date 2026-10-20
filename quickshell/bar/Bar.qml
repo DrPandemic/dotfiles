@@ -155,8 +155,10 @@ PanelWindow {
 
         Module {
             text: Stats.kb.text ? "⌨ " + Stats.kb.text : ""
-            tooltip: Stats.kb.tooltip ?? ""
             onClicked: bar.run(Theme.bin + "keyboard-battery-chart")
+            popup: Component {
+                KeyboardPopup {}
+            }
         }
 
         Module {

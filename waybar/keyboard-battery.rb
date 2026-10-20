@@ -307,13 +307,18 @@ def run
   l = levels['L']
   r = levels['R']
   hours = SIDES.keys.map { |name| (sides[name]['closed'] || sides[name]['pending_closed'] || {})['hours'] || 0 }.max
-  tooltip = [
-    "Left: #{l}%",
-    "Right: #{r}%",
-    format('Closed (%.1fh): L %s, R %s', hours, closed_text(sides['L']), closed_text(sides['R'])),
-    "Awake drain: L #{rate_text(sides['L'])}, R #{rate_text(sides['R'])}"
-  ].join("\n")
-  puts JSON.generate({ 'text' => "#{[l, r].min}%", 'tooltip' => tooltip })
+  closed = format('Closed (%.1fh): L %s, R %s', hours, closed_text(sides['L']), closed_text(sides['R']))
+  drain = "Awake drain: L #{rate_text(sides['L'])}, R #{rate_text(sides['R'])}"
+  tooltip = ["Left: #{l}%", "Right: #{r}%", closed, drain].join("\n")
+  # The quickshell bar renders left/right as bars and uses closed/drain as detail text.
+  puts JSON.generate({
+    'text' => "#{[l, r].min}%",
+    'tooltip' => tooltip,
+    'left' => l,
+    'right' => r,
+    'closed' => closed,
+    'drain' => drain
+  })
 end
 
 def locked
