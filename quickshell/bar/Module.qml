@@ -10,6 +10,7 @@ Item {
     property Component popup: tooltip ? tooltipComponent : null
     property int popupDelay: 250
     property bool dismissOnClick: true
+    property bool popupOnClick: false
     property string widthSample
     readonly property alias hovered: hover.hovered
 
@@ -50,7 +51,9 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
         onClicked: mouse => {
-            if (mod.dismissOnClick)
+            if (mouse.button === Qt.LeftButton && mod.popupOnClick)
+                hoverPopup.toggle();
+            else if (mod.dismissOnClick)
                 hoverPopup.dismiss();
             if (mouse.button === Qt.RightButton)
                 mod.rightClicked();
@@ -65,7 +68,7 @@ Item {
     HoverPopup {
         id: hoverPopup
         target: mod
-        targetHovered: hover.hovered
+        targetHovered: mod.popupOnClick ? false : hover.hovered
         content: mod.popup
         openDelay: mod.popupDelay
     }

@@ -81,11 +81,9 @@ PanelWindow {
         height: parent.height
 
         Module {
-            property bool alt: false
-            text: alt ? Qt.formatDateTime(clock.date, "dddd, MMMM dd, yyyy   HH:mm") : Qt.formatDateTime(clock.date, "yyyy-MM-dd  HH:mm")
+            text: Qt.formatDateTime(clock.date, "yyyy-MM-dd  HH:mm")
             dismissOnClick: false
-            popupDelay: 150
-            onClicked: alt = !alt
+            popupOnClick: true
             popup: Component {
                 CalendarPopup {
                     now: clock.date

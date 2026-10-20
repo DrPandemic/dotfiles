@@ -19,6 +19,11 @@ Scope {
         open = false;
     }
 
+    function toggle() {
+        suppressed = false;
+        open = !open;
+    }
+
     onHoveredChanged: {
         if (hovered) {
             closeTimer.stop();
