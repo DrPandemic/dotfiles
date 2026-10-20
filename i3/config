@@ -234,6 +234,8 @@ assign [app_id="org.mozilla.Thunderbird"] 5
 assign [app_id="spotify"] 5
 for_window [class="Spotify"] move to workspace 5
 assign [app_id="com.anthropic.Claude"] 3
+assign [app_id="bb"] 3
+assign [class="bb"] 3
 assign [app_id="md.obsidian.Obsidian"] 6
 # to prevent wl-paste from moving everything
 for_window [title="^wl-clipboard$"] floating enable
