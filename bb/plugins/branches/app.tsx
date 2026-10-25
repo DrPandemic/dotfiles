@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import {
@@ -40,6 +40,29 @@ function errorMessage(error: unknown): string {
 function snippet(text: string, max: number): string {
   const flat = text.replace(/\s+/g, " ").trim();
   return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat;
+}
+
+// The SDK has no API to close the side panel, so press the host's "Hide right
+// panel" toggle — the visible one nearest `from` when several panes are open.
+// It ignores a bare `.click()`, so replay the full pointer sequence.
+function closeSidePanel(from: Element | null): void {
+  const visibleToggle = (root: ParentNode) =>
+    Array.from(root.querySelectorAll<HTMLElement>('button[aria-label^="Hide right panel"]')).find((button) => {
+      const rect = button.getBoundingClientRect();
+      return rect.width > 0 && rect.right > 0 && rect.left < window.innerWidth;
+    });
+  let toggle: HTMLElement | undefined;
+  for (let node = from?.parentElement ?? null; node !== null && toggle === undefined; node = node.parentElement) {
+    toggle = visibleToggle(node);
+  }
+  toggle ??= visibleToggle(document);
+  if (toggle === undefined) return;
+  const init = { bubbles: true, cancelable: true, view: window, button: 0 };
+  toggle.dispatchEvent(new PointerEvent("pointerdown", init));
+  toggle.dispatchEvent(new MouseEvent("mousedown", init));
+  toggle.dispatchEvent(new PointerEvent("pointerup", init));
+  toggle.dispatchEvent(new MouseEvent("mouseup", init));
+  toggle.dispatchEvent(new MouseEvent("click", { ...init, detail: 1 }));
 }
 
 function openBranch(openPanel: OpenPanel, node: { id: string; title: string }): boolean {
@@ -134,18 +157,19 @@ function TreeView({
 
 function TreePanel({ threadId }: { threadId: string; params: JsonValue | null }) {
   const navigate = useBbNavigate();
+  const ref = useRef<HTMLDivElement>(null);
   return (
-    <TreeView
-      threadId={threadId}
-      activeId={threadId}
-      onOpen={(node) => {
-        if (!node.isBranch) {
-          if (node.id !== threadId) navigate.toThread(node.id);
-          return;
-        }
-        openBranch(navigate.openThreadPanel, node);
-      }}
-    />
+    <div ref={ref}>
+      <TreeView
+        threadId={threadId}
+        activeId={threadId}
+        onOpen={(node) => {
+          if (node.isBranch) openBranch(navigate.openThreadPanel, node);
+          else if (node.id !== threadId) navigate.toThread(node.id);
+          else closeSidePanel(ref.current);
+        }}
+      />
+    </div>
   );
 }
 
@@ -224,6 +248,7 @@ function BranchPanel({ threadId, params }: { threadId: string; params: JsonValue
   const branchId = parsed?.threadId ?? threadId;
   const { rpc, nodes } = useTree(branchId);
   const [showTree, setShowTree] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const branch = nodes?.find((node) => node.id === branchId) ?? null;
   const parent = branch?.parentId ? nodes?.find((node) => node.id === branch.parentId) ?? null : null;
 
@@ -261,7 +286,7 @@ function BranchPanel({ threadId, params }: { threadId: string; params: JsonValue
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    <div ref={ref} className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-1.5 border-b border-border px-2 py-1.5 text-xs">
         <Icon name="Fork" fallback="SideChat" className="size-3.5 text-muted-foreground" />
         <span className="min-w-0 flex-1 truncate text-muted-foreground">
@@ -274,6 +299,7 @@ function BranchPanel({ threadId, params }: { threadId: string; params: JsonValue
                 onClick={() => {
                   if (parent.isBranch) openBranch(navigate.openThreadPanel, parent);
                   else if (parent.id !== threadId) navigate.toThread(parent.id);
+                  else closeSidePanel(ref.current);
                 }}
               >
                 {parent.isBranch ? snippet(parent.title, 40) : "Main"}
@@ -302,6 +328,7 @@ function BranchPanel({ threadId, params }: { threadId: string; params: JsonValue
             onOpen={(node) => {
               if (node.isBranch) openBranch(navigate.openThreadPanel, node);
               else if (node.id !== threadId) navigate.toThread(node.id);
+              else closeSidePanel(ref.current);
               setShowTree(false);
             }}
           />
