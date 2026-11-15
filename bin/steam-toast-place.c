@@ -36,7 +36,7 @@
 #include <unistd.h>
 
 /* Placement, in X11 layout coordinates (xrandr shows the same as sway). */
-static const int OUTPUT_X = 2560; /* DP-1, the main monitor */
+static const int OUTPUT_X = 2560; /* HDMI-A-1, the main monitor */
 static const int OUTPUT_W = 2560;
 static const int OUTPUT_H = 1440;
 static const int BAR_H = 35; /* waybar is along the bottom of the output */
@@ -67,6 +67,23 @@ static void logmsg(const char *fmt, ...)
     va_end(ap);
     fputc('\n', logf);
     fflush(logf);
+}
+
+/* Windows vanish between an event and our query of them; the default handler
+ * exits the process on the resulting BadWindow. */
+static int on_x_error(Display *dpy, XErrorEvent *e)
+{
+    char msg[128];
+    XGetErrorText(dpy, e->error_code, msg, sizeof msg);
+    logmsg("x error 0x%lx: %s (request %d)", e->resourceid, msg, e->request_code);
+    return 0;
+}
+
+static int on_x_io_error(Display *dpy)
+{
+    (void)dpy;
+    logmsg("lost the X connection, exiting");
+    exit(1);
 }
 
 static double now_s(void)
@@ -305,6 +322,9 @@ int main(void)
     logf = fopen("/tmp/steam-toast-place.log", "a");
     if (!logf)
         logf = stderr;
+
+    XSetErrorHandler(on_x_error);
+    XSetIOErrorHandler(on_x_io_error);
 
     Display *dpy = XOpenDisplay(NULL);
     if (!dpy) {
