@@ -7,6 +7,11 @@ exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
 exec hash dbus-update-activation-environment 2>/dev/null && \
   dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
+# hokum.service is D-Bus activated during login before sway can host its
+# layer-shell overlay, so it claims org.freedesktop.Notifications but never
+# draws the cards. Restart it now that sway is up (also recovers on reload).
+exec_always --no-startup-id systemctl --user restart hokum.service
+
 # AI
 # AMD GPU environment variables
 exec_always {
@@ -115,7 +120,7 @@ bindsym $mod+Control+Left move workspace to output left
 bindsym $mod+Control+Right move workspace to output right
 
 # notifications
-bindsym $mod+Shift+n exec swaync-client -t -sw
+#bindsym $mod+Shift+n exec swaync-client -t -sw
 
 # By default, no border
 default_border pixel 5
@@ -193,7 +198,7 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id sleep 1 && albert
 exec ~/Projects/dotfiles/bin/keyboard-layout-per-window 2>>"$XDG_RUNTIME_DIR/keyboard-layout-per-window.log"
 #exec --no-startup-id sleep 1 && dunst
-exec swaync
+#exec swaync
 exec discord
 exec sleep 1 && firefox
 exec sleep 3 && generate-wallpapers
