@@ -66,10 +66,11 @@ end
 
 def settle_running(state, now)
   changed = false
+  # A gap means the machine was off or suspended: close the session at the
+  # last heartbeat and leave the stopwatch stopped instead of auto-resuming.
   if now - state['heartbeat'].to_f > GAP_SECS
     close_session(state, [state['heartbeat'].to_f, state['running_since']].max)
-    state['running_since'] = now
-    changed = true
+    return true
   end
   while day_of(state['running_since']) != day_of(now)
     midnight = next_midnight(state['running_since'])
@@ -98,6 +99,38 @@ if ARGV.first == 'toggle'
     else
       state['running_since'] = now
       state['heartbeat'] = now
+    end
+    save(state)
+  end
+  exit 0
+end
+
+# Drops every session of a day (today by default). A running timer is restarted
+# from now so the day still counts up from zero instead of being stopped.
+if ARGV.first == 'reset'
+  locked do
+    now = Time.now.to_f
+    state = load
+    settle(state, now)
+    target = ARGV[1] || day_of(now)
+    if File.exist?(HISTORY)
+      kept = File.readlines(HISTORY).reject do |line|
+        begin
+          JSON.parse(line)['day'] == target
+        rescue StandardError
+          false
+        end
+      end
+      tmp = "#{HISTORY}.tmp"
+      File.write(tmp, kept.join)
+      File.rename(tmp, HISTORY)
+    end
+    if target == day_of(now)
+      state['today_closed'] = 0
+      if state['running_since']
+        state['running_since'] = now
+        state['heartbeat'] = now
+      end
     end
     save(state)
   end

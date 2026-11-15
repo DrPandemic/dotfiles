@@ -15,6 +15,9 @@ ShellRoot {
     property date month: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
     property string selected: dayKey(new Date())
     readonly property string today: dayKey(new Date(now * 1000))
+    property bool confirmingReset: false
+
+    onSelectedChanged: confirmingReset = false
 
     function dayKey(d) {
         return Qt.formatDate(d, "yyyy-MM-dd");
@@ -118,6 +121,17 @@ ShellRoot {
         command: [Quickshell.env("STOPWATCH_BIN"), "toggle"]
     }
 
+    Process {
+        id: resetter
+        command: [Quickshell.env("STOPWATCH_BIN"), "reset", root.selected]
+    }
+
+    Timer {
+        id: resetConfirm
+        interval: 4000
+        onTriggered: root.confirmingReset = false
+    }
+
     Timer {
         interval: 1000
         running: true
@@ -130,12 +144,13 @@ ShellRoot {
 
         property string label
         property bool active: false
+        property bool danger: false
         signal clicked
 
         width: btnText.implicitWidth + 16
         height: btnText.implicitHeight + 8
         radius: 4
-        color: active ? "#5e81ac" : (btnMouse.containsMouse ? "#434c5e" : "transparent")
+        color: danger ? (active || btnMouse.containsMouse ? "#bf616a" : "transparent") : active ? "#5e81ac" : (btnMouse.containsMouse ? "#434c5e" : "transparent")
 
         Text {
             id: btnText
@@ -202,6 +217,22 @@ ShellRoot {
                     label: root.runningSince ? "Stop" : "Start"
                     active: root.runningSince > 0
                     onClicked: toggler.running = true
+                }
+
+                Button {
+                    label: root.confirmingReset ? "Confirm" : "Reset"
+                    danger: root.confirmingReset
+                    active: root.confirmingReset
+                    onClicked: {
+                        if (root.confirmingReset) {
+                            resetConfirm.stop();
+                            root.confirmingReset = false;
+                            resetter.running = true;
+                        } else {
+                            root.confirmingReset = true;
+                            resetConfirm.restart();
+                        }
+                    }
                 }
 
                 Button {
