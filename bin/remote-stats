@@ -1,0 +1,158 @@
+#!/usr/bin/env ruby
+# CPU/RAM/process usage for a set of machines, printed once and then exit:
+#   [{"host":"flying-dutchman","online":true,"cpu":12.3,"load":"0.1 0.2 0.3",
+#     "nproc":8,"uptime":12345.6,"memused":4096,"memtotal":16384,
+#     "procs":[{"name":"firefox","cpu":12.3}, ...]}, ...]
+#
+# Nothing is sampled in the background; the bar runs this on hover. The machine
+# this runs on is sampled in-process; every other host is sampled over SSH, so
+# the account running the bar needs passwordless access to it. Unreachable and
+# unauthorized hosts are reported with "online":false plus a status instead of
+# being dropped.
+#
+# Config:
+#   REMOTE_STATS_HOSTS     space/comma list of hosts; an entry may be
+#                          "label=ssh-target" (eg. "nautilus=dev@nautilus")
+#   REMOTE_STATS_TIMEOUT   ssh timeout in seconds (default 4)
+#   REMOTE_STATS_TOP       number of processes per host (default 4)
+#   REMOTE_STATS_USER      ssh login user (default: ssh config / current user)
+
+require 'json'
+require 'socket'
+require 'open3'
+
+HOSTS = (ENV['REMOTE_STATS_HOSTS'] || 'flying-dutchman=root@flying-dutchman nautilus=dev@nautilus')
+        .split(/[,\s]+/).reject(&:empty?)
+        .map { |spec| spec.include?('=') ? spec.split('=', 2) : [spec, spec] }
+TIMEOUT = (ENV['REMOTE_STATS_TIMEOUT'] || '4').to_f
+TOP = (ENV['REMOTE_STATS_TOP'] || '4').to_i
+USER = ENV['REMOTE_STATS_USER']
+
+Thread.report_on_exception = false
+
+# Runs on the remote side (fed to `sh -s` over ssh). Prints one `key value` line
+# per fact so nothing here has to know about JSON.
+REMOTE_SCRIPT = <<~'SH'
+  read_cpu() { awk '/^cpu /{printf "%s %s %s %s %s %s %s %s\n", $2,$3,$4,$5,$6,$7,$8,$9}' /proc/stat; }
+  printf 'host %s\n' "$(cat /proc/sys/kernel/hostname 2>/dev/null || echo unknown)"
+  printf 'nproc %s\n' "$(nproc 2>/dev/null || grep -c '^processor' /proc/cpuinfo)"
+  printf 'load %s\n' "$(cut -d' ' -f1-3 /proc/loadavg)"
+  printf 'uptime %s\n' "$(cut -d' ' -f1 /proc/uptime)"
+  awk '/^MemTotal:|^MemAvailable:/{print "mem", $1, $2}' /proc/meminfo
+  printf 'cpu1 %s\n' "$(read_cpu)"
+  sleep 0.4
+  printf 'cpu2 %s\n' "$(read_cpu)"
+  ps -eo pcpu=,comm= --sort=-pcpu 2>/dev/null | grep -vE '[[:space:]](ps|awk|head|sh|cut|df|grep|sleep|sed|tr)$' | head -n TOPCOUNT | while read -r pct name; do printf 'proc %s %s\n' "$pct" "$name"; done
+  df -P -B1 2>/dev/null | awk 'NR>1 && $1 ~ /^\/dev\// { mount=$6; for (i=7;i<=NF;i++) mount=mount" "$i; if ($2+0 > 0 && mount !~ /^\/(boot|efi)/ && mount !~ /^\/var\/lib\/(incus\/devices|containers)\//) printf "disk %s %s %s\n", mount, $3, $2 }'
+SH
+
+LOCAL_HOSTNAMES = [Socket.gethostname, Socket.gethostname.split('.').first].uniq
+
+def local?(host)
+  LOCAL_HOSTNAMES.include?(host.split('.').first)
+end
+
+def ssh_command(host)
+  cmd = ['timeout', TIMEOUT.to_s, 'ssh',
+         '-o', 'BatchMode=yes',
+         '-o', 'ConnectTimeout=3',
+         '-o', 'StrictHostKeyChecking=accept-new',
+         '-o', 'ControlMaster=auto',
+         '-o', 'ControlPersist=60']
+  cmd += ['-l', USER] if USER
+  cmd + [host, 'sh -s']
+end
+
+# Classify the failure so the popup can say why a host has no stats. "locked"
+# is reserved for a passphrase/agent problem; a key the server refuses is
+# "denied" (the key simply isn't authorized there). BatchMode keeps ssh from
+# ever prompting, so an encrypted key never blocks the bar.
+def ssh_failure(host, err)
+  text = err.to_s
+  detail = text.strip.lines.first&.strip.to_s
+  if text =~ /incorrect passphrase|agent refused|error in libcrypto|load key .*: (bad|invalid)/i
+    { host: host, online: false, status: 'locked', error: 'ssh key locked' }
+  elsif text =~ /permission denied|publickey|too many authentication/i
+    { host: host, online: false, status: 'denied', error: 'ssh key not accepted' }
+  else
+    { host: host, online: false, status: 'offline', error: detail }
+  end
+end
+
+def run(host, script)
+  args = local?(host) ? ['sh', '-s'] : ssh_command(host)
+  out, err, status = Open3.capture3(*args, stdin_data: script)
+  [status.success? && out.include?('cpu2'), out, err]
+end
+
+def parse(host, text, top)
+  fields = {}
+  procs = []
+  disks = []
+  cpu1 = cpu2 = nil
+  text.to_s.each_line do |line|
+    key, value = line.strip.split(' ', 2)
+    next if value.nil?
+    case key
+    when 'host' then fields[:hostname] = value
+    when 'nproc' then fields[:nproc] = value.to_i
+    when 'load' then fields[:load] = value
+    when 'uptime' then fields[:uptime] = value.to_f
+    when 'mem'
+      name, kb = value.split(' ')
+      fields[:memtotal] = kb.to_i if name == 'MemTotal:'
+      fields[:memavail] = kb.to_i if name == 'MemAvailable:'
+    when 'cpu1' then cpu1 = value.split.map(&:to_i)
+    when 'cpu2' then cpu2 = value.split.map(&:to_i)
+    when 'proc'
+      pct, name = value.split(' ', 2)
+      procs << { name: name, cpu: pct.to_f }
+    when 'disk'
+      *mount, used, total = value.split(' ')
+      next if total.nil?
+      disks << { mount: mount.join(' '), used: used.to_i, total: total.to_i }
+    end
+  end
+
+  total = fields[:memtotal].to_i
+  used = total - fields[:memavail].to_i
+  cpu = 0.0
+  if cpu1 && cpu2 && cpu1.length == cpu2.length
+    delta = cpu2.sum - cpu1.sum
+    idle = (cpu2[3].to_i + cpu2[4].to_i) - (cpu1[3].to_i + cpu1[4].to_i)
+    cpu = 100.0 * (1.0 - idle.to_f / delta) if delta > 0
+  end
+
+  {
+    host: host,
+    hostname: fields[:hostname] || host,
+    online: true,
+    status: 'online',
+    cpu: cpu.round(1),
+    nproc: fields[:nproc] || 0,
+    load: fields[:load] || '',
+    uptime: fields[:uptime] || 0,
+    memtotal: total,
+    memused: [used, 0].max,
+    procs: procs.first(top),
+    # Fullest filesystem first.
+    disks: disks.sort_by { |d| -d[:used].to_f / [d[:total], 1].max }
+  }
+end
+
+script = REMOTE_SCRIPT.sub('TOPCOUNT', TOP.to_s)
+
+threads = HOSTS.map do |label, target|
+  Thread.new do
+    ok, out, err = run(target, script)
+    if ok && out
+      parse(label, out, TOP)
+    else
+      ssh_failure(label, err)
+    end
+  rescue StandardError => e
+    { host: label, online: false, status: 'offline', error: e.message }
+  end
+end
+
+$stdout.puts JSON.generate(threads.map(&:value))

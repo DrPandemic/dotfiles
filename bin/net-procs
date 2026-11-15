@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+# Per-application network throughput, one JSON array per refresh:
+#   [{"name":"steam","rx":12345,"tx":678}, ...]   (bytes per second)
+#
+# Prefers `nethogs -t` when it can capture packets (needs CAP_NET_ADMIN/CAP_NET_RAW
+# or root), because it sees UDP/QUIC too. Falls back to diffing the per-socket
+# byte counters printed by `ss -tinp`, which needs no privileges but only sees
+# established TCP connections owned by the calling user.
+
+require 'json'
+
+TOP = 3
+INTERVAL = (ENV['NET_PROC_INTERVAL'] || '2').to_f
+
+def loopback?(addr)
+  host = addr.sub(/:\d+\z/, '')
+  host = host[1..-2] if host.start_with?('[') && host.end_with?(']')
+  host == '::1' || host.start_with?('127.') || host.start_with?('::ffff:127.')
+end
+
+def emit(tally)
+  list = tally.map { |name, v| { name: name, rx: v[:rx].round, tx: v[:tx].round } }
+               .select { |h| h[:rx] > 0 || h[:tx] > 0 }
+               .sort_by { |h| -(h[:rx] + h[:tx]) }
+               .first(TOP)
+  $stdout.puts JSON.generate(list)
+  $stdout.flush
+end
+
+# --- ss backend -----------------------------------------------------------------
+
+def ss_sample
+  conns = {}
+  pending = nil
+  IO.popen(['ss', '-tinp'], err: File::NULL) do |io|
+    io.each_line do |line|
+      if line =~ /\A[A-Z]+\s/ # a connection line
+        pending = nil
+        next unless (m = line.match(/users:\(\("([^"]+)",pid=(\d+)/))
+        f = line.split
+        next if f.length < 5
+        next if loopback?(f[3]) || loopback?(f[4])
+        pending = { name: m[1], local: f[3], peer: f[4] }
+      elsif pending && (b = line.match(/bytes_sent:(\d+)/))
+        recv = line[/bytes_received:(\d+)/, 1].to_i
+        conns["#{pending[:local]}|#{pending[:peer]}"] = { name: pending[:name], sent: b[1].to_i, recv: recv }
+        pending = nil
+      end
+    end
+  end
+  conns
+end
+
+def ss_loop
+  prev = ss_sample
+  loop do
+    sleep INTERVAL
+    cur = ss_sample
+    tally = Hash.new { |h, k| h[k] = { rx: 0.0, tx: 0.0 } }
+    cur.each do |key, c|
+      p = prev[key]
+      next unless p
+      tx = [c[:sent] - p[:sent], 0].max / INTERVAL
+      rx = [c[:recv] - p[:recv], 0].max / INTERVAL
+      next if tx.zero? && rx.zero?
+      t = tally[c[:name]]
+      t[:rx] += rx
+      t[:tx] += tx
+    end
+    emit(tally)
+    prev = cur
+  end
+end
+
+# --- nethogs backend ------------------------------------------------------------
+
+def nethogs_loop
+  delay = INTERVAL.round
+  delay = 1 if delay < 1
+  emitted = false
+  IO.popen(['nethogs', '-t', '-d', delay.to_s], err: File::NULL) do |io|
+    block = nil
+    io.each_line do |line|
+      if line.strip == 'Refreshing:'
+        if block
+          emit(block)
+          emitted = true
+        end
+        block = Hash.new { |h, k| h[k] = { rx: 0.0, tx: 0.0 } }
+      elsif block && (m = line.match(/\A(.+)\/(\d+)\/(\d+)\t([\d.]+)\t([\d.]+)\s*\z/))
+        next if m[2] == '0'
+        name = File.basename(m[1])
+        t = block[name]
+        t[:tx] += m[4].to_f * 1024
+        t[:rx] += m[5].to_f * 1024
+      end
+    end
+    emit(block) if block
+  end
+  emitted
+rescue Errno::ENOENT
+  false
+end
+
+def nethogs_available?
+  system('command -v nethogs >/dev/null 2>&1')
+end
+
+if nethogs_available? && nethogs_loop
+  exit 0
+end
+
+$stderr.puts 'net-procs: nethogs unavailable, using ss (TCP only)' if ENV['NET_PROC_DEBUG']
+ss_loop

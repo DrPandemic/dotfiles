@@ -184,6 +184,14 @@ PanelWindow {
         }
 
         Module {
+            text: ""
+            widthSample: ""
+            popup: Component {
+                RemotePopup {}
+            }
+        }
+
+        Module {
             text: Stats.weather.text ? Stats.weather.text + "°" : ""
             tooltip: Stats.weather.tooltip ?? ""
         }

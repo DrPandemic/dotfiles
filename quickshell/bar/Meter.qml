@@ -8,6 +8,7 @@ Item {
     property string valueText: Math.round(value * 100) + "%"
     property color barColor: value >= 0.9 ? Theme.red : value >= 0.7 ? Theme.yellow : Theme.accent
     property int labelWidth: 110
+    property int valueWidth: 64
 
     implicitWidth: 320
     implicitHeight: 22
@@ -52,7 +53,7 @@ Item {
         id: amount
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        width: 64
+        width: meter.valueWidth
         horizontalAlignment: Text.AlignRight
         text: meter.valueText
         color: Theme.text

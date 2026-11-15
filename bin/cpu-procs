@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+# Top CPU-consuming processes, one JSON array per refresh:
+#   [{"name":"firefox","cpu":45.2}, ...]
+#
+# cpu is the share of a single core, so a busy multithreaded app can exceed 100.
+# Processes sharing a name are summed (like get-memory), which keeps a browser
+# with dozens of helpers from crowding out everything else.
+
+require 'json'
+
+TOP = 5
+INTERVAL = (ENV['CPU_PROC_INTERVAL'] || '2').to_f
+CLK_TCK = `getconf CLK_TCK`.to_i
+CLK_TCK = 100 if CLK_TCK <= 0
+
+def sample
+  procs = {}
+  Dir.each_child('/proc') do |pid|
+    next unless pid.match?(/\A\d+\z/)
+    begin
+      stat = File.read("/proc/#{pid}/stat")
+      lp = stat.rindex(')')
+      name = stat[stat.index('(') + 1...lp]
+      fields = stat[(lp + 2)..].split
+      # fields starts at state (field 3); utime/stime are fields 14/15.
+      procs[pid] = { name: name, ticks: fields[11].to_i + fields[12].to_i }
+    rescue Errno::ENOENT, Errno::EACCES, Errno::ESRCH
+    end
+  end
+  procs
+end
+
+prev = sample
+loop do
+  sleep INTERVAL
+  cur = sample
+  budget = INTERVAL * CLK_TCK
+  tally = Hash.new(0.0)
+  cur.each do |pid, c|
+    p = prev[pid]
+    next unless p
+    d = c[:ticks] - p[:ticks]
+    next if d <= 0
+    tally[c[:name]] += 100.0 * d / budget
+  end
+  list = tally.map { |name, cpu| { name: name, cpu: cpu.round(1) } }
+              .sort_by { |h| -h[:cpu] }
+              .first(TOP)
+  $stdout.puts JSON.generate(list)
+  $stdout.flush
+  prev = cur
+end

@@ -11,6 +11,7 @@ Singleton {
     property var cores: []
     property var loadavg: []
     property var cpuPrev: []
+    property var cpuProcs: []
     property int cpuWatchers: 0
 
     property var mem: ({})
@@ -41,6 +42,10 @@ Singleton {
     property real txRate: 0
     property var netHistory: []
     property var netPrev: null
+    property var netProcs: []
+
+    property var remoteHosts: []
+    property var remoteHistory: ({})
 
     property string stopwatch: ""
     property var oats: ({})
@@ -112,6 +117,27 @@ Singleton {
             netHistory = netHistory.concat([{ rx: rxRate, tx: txRate }]).slice(-60);
         }
         netPrev = cur;
+    }
+
+    function parseRemote(text) {
+        const hosts = parseJson(text, []);
+        if (!hosts.length)
+            return;
+        remoteHosts = hosts;
+        const history = Object.assign({}, remoteHistory);
+        for (const host of hosts) {
+            if (!host.online)
+                continue;
+            history[host.host] = (history[host.host] || []).concat([host.cpu]).slice(-60);
+        }
+        remoteHistory = history;
+    }
+
+    // Only the open popup asks for remote data, so the bar never samples hosts
+    // in the background.
+    function refreshRemote() {
+        if (!remoteProc.running)
+            remoteProc.running = true;
     }
 
     function parseRoute(text) {
@@ -202,6 +228,24 @@ Singleton {
         interval: 3000
         command: ["cat", "/proc/net/dev"]
         onOutput: text => root.parseNetDev(text)
+    }
+
+    Stream {
+        command: [Theme.bin + "net-procs"]
+        onLine: data => root.netProcs = root.parseJson(data, root.netProcs)
+    }
+
+    Process {
+        id: remoteProc
+        command: [Theme.bin + "remote-stats"]
+        stdout: StdioCollector {
+            onStreamFinished: root.parseRemote(text)
+        }
+    }
+
+    Stream {
+        command: [Theme.bin + "cpu-procs"]
+        onLine: data => root.cpuProcs = root.parseJson(data, root.cpuProcs)
     }
 
     Stream {

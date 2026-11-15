@@ -4,9 +4,12 @@ Column {
     id: root
 
     readonly property real peak: Math.max(1024, ...Stats.netHistory.map(s => Math.max(s.rx, s.tx)))
+    readonly property real rxPeak: Math.max(1, ...Stats.netProcs.map(p => p.rx))
+    readonly property real txPeak: Math.max(1, ...Stats.netProcs.map(p => p.tx))
+    readonly property int maxRows: 3
 
     spacing: 6
-    width: 320
+    width: 360
 
     Title {
         width: parent.width
@@ -85,5 +88,58 @@ Column {
         color: Theme.dim
         font.family: Theme.font
         font.pixelSize: 12
+    }
+
+    Item {
+        width: parent.width
+        implicitHeight: header.implicitHeight
+
+        Text {
+            id: header
+            text: "Top bandwidth"
+            color: Theme.dim
+            font.family: Theme.font
+            font.pixelSize: 12
+        }
+
+        Row {
+            anchors.right: parent.right
+            anchors.baseline: header.baseline
+            spacing: 10
+
+            Text {
+                text: "◀ down"
+                color: Theme.green
+                font.family: Theme.font
+                font.pixelSize: 12
+            }
+
+            Text {
+                text: "up ▶"
+                color: Theme.accentLight
+                font.family: Theme.font
+                font.pixelSize: 12
+            }
+        }
+    }
+
+    // Fixed delegate count so updates reuse the same rows instead of rebuilding
+    // (and resizing) the popup every refresh.
+    Repeater {
+        model: root.maxRows
+
+        NetProcRow {
+            required property int index
+
+            readonly property var proc: Stats.netProcs[index] ?? null
+
+            width: parent.width
+            label: proc ? proc.name : ""
+            rx: proc ? proc.rx : 0
+            tx: proc ? proc.tx : 0
+            rxPeak: root.rxPeak
+            txPeak: root.txPeak
+            valueText: proc ? "↓" + Theme.bytes(proc.rx, "B/s") + "  ↑" + Theme.bytes(proc.tx, "B/s") : ""
+        }
     }
 }

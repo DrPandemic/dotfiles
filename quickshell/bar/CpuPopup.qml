@@ -62,4 +62,49 @@ Column {
         font.family: Theme.font
         font.pixelSize: 12
     }
+
+    Item {
+        width: 1
+        height: 4
+    }
+
+    Item {
+        width: parent.width
+        implicitHeight: procsHeader.implicitHeight + 6
+
+        Text {
+            id: procsHeader
+            text: "Top processes"
+            color: Theme.dim
+            font.family: Theme.font
+            font.pixelSize: 12
+        }
+
+        Text {
+            anchors.right: parent.right
+            anchors.baseline: procsHeader.baseline
+            text: "% of one core"
+            color: Theme.dim
+            font.family: Theme.font
+            font.pixelSize: 12
+        }
+    }
+
+    // Fixed delegate count so refreshes reuse rows instead of rebuilding and
+    // resizing the popup.
+    Repeater {
+        model: 5
+
+        Meter {
+            required property int index
+
+            readonly property var proc: Stats.cpuProcs[index] ?? null
+
+            width: parent.width
+            label: proc ? proc.name : ""
+            value: proc ? proc.cpu / 100 : 0
+            valueText: proc ? proc.cpu.toFixed(1) + "%" : ""
+            labelWidth: 130
+        }
+    }
 }
