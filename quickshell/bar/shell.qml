@@ -1,4 +1,5 @@
 //@ pragma Env QT_QUICK_BACKEND=software
+//@ pragma UseQApplication
 
 import Quickshell
 import Quickshell.Services.Pipewire
